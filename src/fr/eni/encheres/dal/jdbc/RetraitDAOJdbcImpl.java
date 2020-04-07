@@ -9,12 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Retrait;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.RetraitDAO;
 import fr.eni.encheres.exception.DalException;
+import fr.eni.encheres.log.MonLogger;
 
 /**
  * Classe en charge de
@@ -23,6 +25,8 @@ import fr.eni.encheres.exception.DalException;
  * @date 7 avr. 2020
  */
 public class RetraitDAOJdbcImpl implements RetraitDAO {
+	
+	private static Logger LOGGER = MonLogger.getLogger("RetraitDAOJdbcImpl");
 	
 	private ArticleDAO articleDAO = new ArticleDAOJdbcImpl();
 	
@@ -50,7 +54,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
                 retrait = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	// TODO: handle exception
+        	LOGGER.severe("Erreur dans Retrait selectById(int noArticle) : " + e.getMessage());
         }
 
         return retrait;
@@ -74,7 +78,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 				retraits.add(itemBuilder(rs));				
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+        	LOGGER.severe("Erreur dans Retrait selectAll() : " + e.getMessage());
 		}
 		
 		return retraits;
@@ -97,7 +101,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 			
 			int rs = requete.executeUpdate();
 		} catch (Exception e) {
-			// TODO: handle exception
+        	LOGGER.severe("Erreur dans Retrait insert(Retrait retrait) : " + e.getMessage());
 		}
 		
 	}
@@ -119,7 +123,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 
             requete.executeUpdate();
 		} catch (Exception e) {
-			// TODO: handle exception
+        	LOGGER.severe("Erreur dans Retrait update(Retrait retrait) : " + e.getMessage());
 		}
 		
 	}
@@ -136,7 +140,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
             requete.setInt(1, noArticle);
             requete.executeUpdate();
         } catch (Exception e) {
-            // TODO: handle exception
+        	LOGGER.severe("Erreur dans Retrait delete(int noArticle) : " + e.getMessage());
         }
 
     }

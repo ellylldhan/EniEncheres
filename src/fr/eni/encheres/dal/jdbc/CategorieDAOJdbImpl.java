@@ -9,11 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.exception.DalException;
+import fr.eni.encheres.log.MonLogger;
 
 /**
  * Classe en charge de
@@ -22,6 +24,8 @@ import fr.eni.encheres.exception.DalException;
  * @date 7 avr. 2020
  */
 public class CategorieDAOJdbImpl implements CategorieDAO {
+	
+	private static Logger LOGGER = MonLogger.getLogger("CategorieDAOJdbcImpl");
 	
 	private static String RQT_SELECT_BY_ID = "SELECT * FROM CATEGORIES WHERE no_categorie = ?";
 	private static String RQT_SELECT_ALL = "SELECT * FROM CATEGORIES";
@@ -47,7 +51,7 @@ public class CategorieDAOJdbImpl implements CategorieDAO {
                 categorie = itemBuilder(rs);
             }
         } catch (Exception e) {
-            // TODO: handle exception
+        	LOGGER.severe("Erreur dans Categorie selectById(int noCategorie) : " + e.getMessage());
         }
 
         return categorie;
@@ -72,7 +76,7 @@ public class CategorieDAOJdbImpl implements CategorieDAO {
                 categories.add(itemBuilder(rs));
             }
         } catch (Exception e) {
-            // TODO: handle exception
+        	LOGGER.severe("Erreur dans Categorie selectAll() : " + e.getMessage());
         }
 
         return categories;
@@ -100,7 +104,7 @@ public class CategorieDAOJdbImpl implements CategorieDAO {
                 categorie.setNoCategorie(rs.getInt(1));
             }
         } catch (Exception e) {
-            //TODO: handle exception
+        	LOGGER.severe("Erreur dans Categorie insert(Categorie categorie) : " + e.getMessage());
         }
 
     }
@@ -121,7 +125,7 @@ public class CategorieDAOJdbImpl implements CategorieDAO {
             requete.executeUpdate();
 
         } catch (Exception e) {
-            //TODO: handle exception
+        	LOGGER.severe("Erreur dans Categorie update(Categorie categorie) : " + e.getMessage());
         }
 
     }
@@ -138,7 +142,7 @@ public class CategorieDAOJdbImpl implements CategorieDAO {
             requete.setInt(1, noCategorie);
             requete.executeUpdate();
         } catch (Exception e) {
-            //TODO: handle exception
+        	LOGGER.severe("Erreur dans Categorie delete(int noCategorie) : " + e.getMessage());
         }
 
     }
