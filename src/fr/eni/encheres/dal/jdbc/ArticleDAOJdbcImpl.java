@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
-import fr.eni.encheres.dal.DAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -29,7 +29,7 @@ import fr.eni.encheres.log.MonLogger;
  * @version EniEncheres - v1.0
  * @date 7 Apr 2020
  */
-public class ArticleDAOJdbcImpl implements DAO<Article> {
+public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 //	private static Logger LOGGER = MonLogger.getLogger("ArticleDAOJdbcImpl");
     private static Logger logger;
@@ -44,6 +44,7 @@ public class ArticleDAOJdbcImpl implements DAO<Article> {
 			+ " prix_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?,?)";
 	private static String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
 	private static String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
+	private static String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
 	
 	
 	/**
@@ -104,6 +105,30 @@ public class ArticleDAOJdbcImpl implements DAO<Article> {
 
         return articles;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.ArticleDAO#findByName(java.lang.String)
+	 */
+	@Override
+	public List<Article> findByName(String nom) throws DalException {
+	    List<Article> articles = new ArrayList<Article>();
+
+        try (Connection connection = ConnectionProvider.getConnection()) {
+            PreparedStatement requete = connection.prepareStatement(RQT_FIND);
+
+            ResultSet rs = requete.executeQuery();
+
+            while (rs.next()) {
+                articles.add(itemBuilder(rs));
+            }
+		} catch (Exception e) {
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+		}
+
+        return articles;
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -117,8 +142,8 @@ public class ArticleDAOJdbcImpl implements DAO<Article> {
         
         try (Connection conn = ConnectionProvider.getConnection()) {
             PreparedStatement requete = conn.prepareStatement(RQT_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
-            int index = 1;
             
+            int index = 1;
             requete.setString(index++, article.getNomArticle());
             requete.setString(index++, article.getDescription());
             requete.setDate(index++, Date.valueOf(article.getDateDebut()));
@@ -183,6 +208,16 @@ public class ArticleDAOJdbcImpl implements DAO<Article> {
 
 	}
 
+	
+
+	
+	/**
+	 * Méthode en charge de construire un objet Article avec tous ses attributs.
+	 * @param rs ResultSet
+	 * @return Article
+	 * @throws SQLException
+	 * @throws DalException
+	 */
 	private Article itemBuilder(ResultSet rs) throws SQLException, DalException {
 
 		Utilisateur utilisateur = DAOFactory.getUtilisateurDAO().selectById(rs.getInt("no_utilisateur"));
@@ -199,5 +234,7 @@ public class ArticleDAOJdbcImpl implements DAO<Article> {
 				utilisateur, 
 				categorie);
 	}
+
+
 
 }

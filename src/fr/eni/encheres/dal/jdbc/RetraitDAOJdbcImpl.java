@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Retrait;
+import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
-import fr.eni.encheres.dal.DAO;
 import fr.eni.encheres.dal.RetraitDAO;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -29,7 +29,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	
 	private static Logger LOGGER = MonLogger.getLogger("RetraitDAOJdbcImpl");
 	
-	private DAO<Article> articleDAO = new ArticleDAOJdbcImpl();
+	private ArticleDAO articleDAO = new ArticleDAOJdbcImpl();
 	
 	private static final String RQT_SELECT_BY_ID = "SELECT * FROM RETRAITS WHERE no_article = ?";
 	private static final String RQT_SELECT_ALL = "SELECT * FROM RETRAITS";
