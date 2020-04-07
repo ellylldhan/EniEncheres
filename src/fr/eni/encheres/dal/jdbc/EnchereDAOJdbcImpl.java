@@ -1,13 +1,15 @@
 /**
  * 
  */
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dal.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.dal.ConnectionProvider;
+import fr.eni.encheres.dal.EnchereDAO;
 import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 
@@ -17,7 +19,7 @@ import fr.eni.encheres.exception.DalException;
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class EnchereDAOJdbcImpl implements IEnchere{
+public class EnchereDAOJdbcImpl implements EnchereDAO{
 
 	private static String RQT_SelectByIdArticleMustEnchere = "SELECT * FROM Enchere where no_article = ?";
 	private static String RQT_SelectAllByIdArticle = "SELECT * FROM Enchere where no_article = ? and montant_enchere = ( select TOP 1 Max(montant_enchere) from Enchere where no_article = ?)";
@@ -28,7 +30,7 @@ public class EnchereDAOJdbcImpl implements IEnchere{
 	/**
 	 * {@inheritDoc}
 	 * @throws DalException 
-	 * @see fr.eni.encheres.dal.IEnchere#Create(fr.eni.encheres.bo.Enchere)
+	 * @see fr.eni.encheres.dal.EnchereDAO#Create(fr.eni.encheres.bo.Enchere)
 	 */
 	@Override
 	public void create(Enchere enchere) throws DalException {
@@ -50,7 +52,7 @@ public class EnchereDAOJdbcImpl implements IEnchere{
 
 	/**
 	 * {@inheritDoc}
-	 * @see fr.eni.encheres.dal.IEnchere#SelectByIdArticleMustEnchere(int)
+	 * @see fr.eni.encheres.dal.EnchereDAO#SelectByIdArticleMustEnchere(int)
 	 */
 	@Override
 	public Enchere selectByIdArticleMustEnchere(int idArticle)  throws DalException {
@@ -60,7 +62,7 @@ public class EnchereDAOJdbcImpl implements IEnchere{
 
 	/**
 	 * {@inheritDoc}
-	 * @see fr.eni.encheres.dal.IEnchere#SelectAllByIdArticle(int)
+	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllByIdArticle(int)
 	 */
 	@Override
 	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException {

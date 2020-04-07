@@ -3,6 +3,8 @@
  */
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.dal.jdbc.EnchereDAOJdbcImpl;
+
 /**
  * Classe en charge de
  * @author thomas
@@ -11,7 +13,7 @@ package fr.eni.encheres.dal;
  */
 public class DAOFactory {
 
-	public static IEnchere getEnchereDAO()
+	public static EnchereDAO getEnchereDAO()
 	{
 		return new EnchereDAOJdbcImpl();
 	}

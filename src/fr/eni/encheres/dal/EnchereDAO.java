@@ -16,7 +16,7 @@ import fr.eni.encheres.exception.DalException;
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public interface IEnchere {
+public interface EnchereDAO {
 
 	public void create(Enchere enchere)  throws DalException ;
 	public Enchere selectByIdArticleMustEnchere(int idArticle)  throws DalException ;
