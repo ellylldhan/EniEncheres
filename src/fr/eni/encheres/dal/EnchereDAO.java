@@ -21,6 +21,4 @@ public interface EnchereDAO {
 	public void create(Enchere enchere)  throws DalException ;
 	public Enchere selectByIdArticleMustEnchere(int idArticle)  throws DalException ;
 	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException ;
-
-	
 }
