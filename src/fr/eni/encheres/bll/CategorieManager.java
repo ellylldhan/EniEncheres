@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
-import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
+import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -23,7 +23,7 @@ public class CategorieManager {
     private static Logger LOGGER = MonLogger.getLogger("CategorieManager");
     private static CategorieManager INSTANCE;
     
-    private CategorieDAO categorieDAO = new CategorieDAOJdbcImpl();
+    private CategorieDAO categorieDAO = DAOFactory.getCategorieDAO();
 
 	private CategorieManager() throws DalException {
 	}
