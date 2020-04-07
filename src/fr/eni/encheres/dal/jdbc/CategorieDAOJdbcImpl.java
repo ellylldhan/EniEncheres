@@ -23,7 +23,7 @@ import fr.eni.encheres.log.MonLogger;
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class CategorieDAOJdbImpl implements CategorieDAO {
+public class CategorieDAOJdbcImpl implements CategorieDAO {
 	
 	private static Logger LOGGER = MonLogger.getLogger("CategorieDAOJdbcImpl");
 	
