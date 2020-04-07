@@ -63,7 +63,6 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 			LOGGER.severe("Erreur dans Enchere create(Enchere enchere) : " + e.getMessage());
 			throw new DalException(CodesResultatDAL.INSERT_OBJET_ECHEC); 
 		}
-		
 	}
 
 	/**

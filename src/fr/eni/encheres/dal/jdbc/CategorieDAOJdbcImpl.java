@@ -32,7 +32,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	private static final String RQT_INSERT = "INSERT INTO CATEGORIES VALUES(?)";
 	private static final String RQT_UPDATE = "UPDATE CATEGORIES SET libelle = ? WHERE no_categorie = ?";
 	private static final String RQT_DELETE = "DELETE CATEGORIES WHERE no_categorie = ?";
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see fr.eni.encheres.dal.CategorieDAO#selectById(int)
