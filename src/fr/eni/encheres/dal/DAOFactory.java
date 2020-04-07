@@ -3,8 +3,10 @@
  */
 package fr.eni.encheres.dal;
 
+import fr.eni.encheres.dal.jdbc.ArticleDAOJdbcImpl;
 import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
 import fr.eni.encheres.dal.jdbc.EnchereDAOJdbcImpl;
+import fr.eni.encheres.dal.jdbc.UtilisateurDAOJdbcImpl;
 import fr.eni.encheres.dal.jdbc.RetraitDAOJdbcImpl;
 
 /**
@@ -31,10 +33,10 @@ public abstract class DAOFactory {
 	}
 	public static UtilisateurDAO getUtilisateurDAO()
 	{
-		return null;
+		return new UtilisateurDAOJdbcImpl();
 	}
 	public static ArticleDAO getArticleDAO()
 	{
-		return null;
+		return new ArticleDAOJdbcImpl();
 	}
 }

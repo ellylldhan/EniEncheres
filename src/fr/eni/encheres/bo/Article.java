@@ -205,6 +205,7 @@ public class Article {
 		this.noArticle = noArticle;
 	}
 
+	
 	/**
 	 * {@inheritDoc}
 	 * @see java.lang.Object#toString()

@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import fr.eni.encheres.bo.Article;
-import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.EnchereDAO;
@@ -38,7 +37,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
 	
 	private static UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
-	private static ArticleDao articleDAO = DAOFactory.getArticleDAO();
+	private static ArticleDAO articleDAO = DAOFactory.getArticleDAO();
 
 
 	/**
@@ -139,8 +138,9 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * @param rs
 	 * @return categorie : Instance d'objet Categorie
 	 * @throws SQLException
+	 * @throws DalException 
 	 */
-	private Enchere itemBuilder(ResultSet rs) throws SQLException {
+	private Enchere itemBuilder(ResultSet rs) throws SQLException, DalException {
 		
 		Enchere  enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
 		

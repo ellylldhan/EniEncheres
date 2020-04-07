@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Retrait;
+import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.RetraitDAO;
 import fr.eni.encheres.exception.DalException;
@@ -150,8 +151,9 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @param rs
 	 * @return retrait : Instance d'objet Retrait
 	 * @throws SQLException
+	 * @throws DalException 
 	 */
-	private Retrait itemBuilder(ResultSet rs) throws SQLException {
+	private Retrait itemBuilder(ResultSet rs) throws SQLException, DalException {
 		Article article = articleDAO.selectById(rs.getInt("no_article"));
 		Retrait retrait = new Retrait(article, rs.getString("rue"), rs.getString("code_postal"), rs.getString("ville"));
 		
