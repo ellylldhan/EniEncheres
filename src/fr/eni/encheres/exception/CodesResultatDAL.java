@@ -21,4 +21,13 @@ public abstract class CodesResultatDAL {
 	 */
 	public static final int INSERT_OBJET_ECHEC=10001;
 	
+	/**
+	 * Echec général quand la récupération de données a recontré un problème 
+	 */
+	public static final int SELECT_OBJET_ECHEC=10002;
+	
+	/**
+	 * Echec général quand la mise à jour de données à recontré un problème 
+	 */
+	public static final int UPDATE_OBJET_ECHEC=1003;
 }
