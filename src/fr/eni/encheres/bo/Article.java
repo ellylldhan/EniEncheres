@@ -204,7 +204,16 @@ public class Article {
 		this(nomArticle, description, dateDebut, dateFinEncheres, prixInitial, prixVente, utilisateur, categorie);
 		this.noArticle = noArticle;
 	}
-	
-	
+
+	/**
+	 * {@inheritDoc}
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Article [noArticle=" + noArticle + ", nomArticle=" + nomArticle + ", description=" + description
+				+ ", dateDebut=" + dateDebut + ", dateFinEncheres=" + dateFinEncheres + ", prixInitial=" + prixInitial
+				+ ", prixVente=" + prixVente + ", utilisateur=" + utilisateur + ", categorie=" + categorie + "]";
+	}
 	
 }
