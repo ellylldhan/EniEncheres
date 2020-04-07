@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Utilisateur;
-import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
+import fr.eni.encheres.dal.DAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -29,7 +29,7 @@ import fr.eni.encheres.log.MonLogger;
  * @version EniEncheres - v1.0
  * @date 7 Apr 2020
  */
-public class ArticleDAOJdbcImpl implements ArticleDAO {
+public class ArticleDAOJdbcImpl implements DAO<Article> {
 
 //	private static Logger LOGGER = MonLogger.getLogger("ArticleDAOJdbcImpl");
     private static Logger logger;

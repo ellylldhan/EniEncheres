@@ -11,9 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Enchere;
-import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
+import fr.eni.encheres.dal.DAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.EnchereDAO;
 import fr.eni.encheres.dal.UtilisateurDAO;
@@ -37,7 +38,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
 	
 	private static UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
-	private static ArticleDAO articleDAO = DAOFactory.getArticleDAO();
+	private static DAO<Article> articleDAO = DAOFactory.getArticleDAO();
 
 
 	/**
