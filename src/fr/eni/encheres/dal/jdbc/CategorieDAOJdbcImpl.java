@@ -32,7 +32,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	private static final String RQT_INSERT = "INSERT INTO CATEGORIES VALUES(?)";
 	private static final String RQT_UPDATE = "UPDATE CATEGORIES SET libelle = ? WHERE no_categorie = ?";
 	private static final String RQT_DELETE = "DELETE CATEGORIES WHERE no_categorie = ?";
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see fr.eni.encheres.dal.CategorieDAO#selectById(int)
@@ -51,7 +51,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
                 categorie = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans selectById(int noCategorie) : " + e.getMessage());
+        	LOGGER.severe("Erreur dans Categorie selectById(int noCategorie) : " + e.getMessage());
         }
 
         return categorie;
@@ -155,6 +155,10 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	 */
 	private Categorie itemBuilder(ResultSet rs) throws SQLException {
 		
-		return new Categorie(rs.getInt("no_categorie"), rs.getString("libelle"));
+		Categorie categorie = new Categorie(rs.getInt("no_categorie"), rs.getString("libelle"));
+		
+		return categorie;
+		
 	}
+
 }

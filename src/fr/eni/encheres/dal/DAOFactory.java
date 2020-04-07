@@ -3,7 +3,7 @@
  */
 package fr.eni.encheres.dal;
 
-import fr.eni.encheres.dal.jdbc.CategorieDAOJdbImpl;
+import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
 import fr.eni.encheres.dal.jdbc.EnchereDAOJdbcImpl;
 import fr.eni.encheres.dal.jdbc.RetraitDAOJdbcImpl;
 
@@ -27,7 +27,7 @@ public abstract class DAOFactory {
 	
 	public static CategorieDAO getCategorieDAO()
 	{
-		return new CategorieDAOJdbImpl();
+		return new CategorieDAOJdbcImpl();
 	}
 	public static UtilisateurDAO getUtilisateurDAO()
 	{

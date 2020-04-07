@@ -8,7 +8,8 @@ import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
-import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
+import fr.eni.encheres.dal.DAOFactory;
+import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -23,12 +24,12 @@ public class CategorieManager {
     private static Logger LOGGER = MonLogger.getLogger("CategorieManager");
     private static CategorieManager INSTANCE;
     
-    private CategorieDAO categorieDAO = new CategorieDAOJdbcImpl();
+    private CategorieDAO categorieDAO = DAOFactory.getCategorieDAO();
 
-	private CategorieManager() throws DalException {
+	private CategorieManager() throws DalException, BllException {
 	}
     
-    public static CategorieManager getInstance() throws DalException {
+    public static CategorieManager getInstance() throws DalException, BllException {
     	
     	if (INSTANCE == null) {
 			INSTANCE = new CategorieManager();
@@ -43,11 +44,12 @@ public class CategorieManager {
         	categories = categorieDAO.selectAll();
         } catch (DalException e) {
             LOGGER.severe("Erreur dans CategorieManager getCategories() : " + e.getMessage());
+            e.printStackTrace();
         }
         return categories;
     }
     
-    public int addCategorie(Categorie categorie) { //TODO throws BLLException
+    public int addCategorie(Categorie categorie) throws BllException {
 
         try {
         	categorieDAO.insert(categorie);
@@ -58,7 +60,7 @@ public class CategorieManager {
 
     }
     
-    public void updateCategorie(Categorie categorie) { //TODO throws BLLException
+    public void updateCategorie(Categorie categorie) throws BllException {
 
         try {
             categorieDAO.update(categorie);
@@ -67,7 +69,7 @@ public class CategorieManager {
         }
     }
     
-    public void removeCategorie(int noCategorie) { //TODO throws BLLException
+    public void removeCategorie(int noCategorie) throws BllException {
 
         try {
             categorieDAO.delete(noCategorie);
@@ -77,7 +79,7 @@ public class CategorieManager {
 
     }
     
-    public Categorie getCategorie(int noCategorie) { //TODO throws BLLException
+    public Categorie getCategorie(int noCategorie) throws BllException {
 
     	Categorie categorie = null;
         try {
