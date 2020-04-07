@@ -30,10 +30,10 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class EnchereDAOJdbcImpl implements EnchereDAO{
 
-	private static String RQT_SelectAllByIdArticle = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Enchere where no_article = ?";
-	private static String RQT_SelectByIdArticleMustEnchere = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Enchere where no_article = ? and montant_enchere = ( select TOP 1 Max(montant_enchere) from Enchere where no_article = ?)";
-	private static String RQT_INSERT = "INSERT INTO Enchere VALUES(?,?,?,?)";
-	private static String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
+	private static final String RQT_SelectAllByIdArticle = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Enchere where no_article = ?";
+	private static final String RQT_SelectByIdArticleMustEnchere = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Enchere where no_article = ? and montant_enchere = ( select TOP 1 Max(montant_enchere) from Enchere where no_article = ?)";
+	private static final String RQT_INSERT = "INSERT INTO Enchere VALUES(?,?,?,?)";
+	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
 	   
 	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
 	
