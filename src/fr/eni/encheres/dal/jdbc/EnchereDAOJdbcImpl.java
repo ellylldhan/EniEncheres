@@ -71,7 +71,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * @see fr.eni.encheres.dal.EnchereDAO#SelectByIdArticleMustEnchere(int)
 	 */
 	@Override
-	public Enchere selectByIdArticleMustEnchere(int idArticle)  throws DalException {
+	public Enchere selectMustEnchereByIdArticle(int idArticle)  throws DalException {
 		Enchere enchere= null;
 
         try (Connection connection = ConnectionProvider.getConnection()) {

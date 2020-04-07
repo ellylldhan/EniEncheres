@@ -3,10 +3,16 @@
  */
 package fr.eni.encheres.bll;
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import fr.eni.encheres.bo.Categorie;
+import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.dal.CategorieDAO;
+import fr.eni.encheres.dal.DAOFactory;
+import fr.eni.encheres.dal.EnchereDAO;
 import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
+import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -18,21 +24,33 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class EnchereManager {
 
-	 private static Logger LOGGER = MonLogger.getLogger("CategorieManager");
-	    private static CategorieManager INSTANCE;
+	 private static Logger LOGGER = MonLogger.getLogger("EnchereManager");
+	    private static EnchereManager INSTANCE;
 	    
-	    private CategorieDAO categorieDAO = new CategorieDAOJdbcImpl();
+	    private EnchereDAO enchereDAO= DAOFactory.getEnchereDAO();
 
-		private CategorieManager() throws DalException {
+		private EnchereManager(){
+			
 		}
 	    
-	    public static CategorieManager getInstance() throws DalException {
+	    public static EnchereManager getInstance() {
 	    	
 	    	if (INSTANCE == null) {
-				INSTANCE = new CategorieManager();
+				INSTANCE = new EnchereManager();
 			}
 	    	
 	    	return INSTANCE;
 	    }
+	    
+	    public List<Enchere> selectAllByIdArticle(int idArticle) {
+	        List<Enchere> encheres= null;
+	        try {
+	        	encheres = enchereDAO.selectAllByIdArticle(idArticle);
+	        } catch (DalException e) {
+	            LOGGER.severe("Erreur dans EnchereManager selectAllByIdArticle() : " + e.getMessage());
+	        }
+	        return encheres;
+	    }
+	    
 	
 }

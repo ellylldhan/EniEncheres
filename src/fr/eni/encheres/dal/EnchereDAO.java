@@ -32,7 +32,7 @@ public interface EnchereDAO {
 	 * @return
 	 * @throws DalException
 	 */
-	public Enchere selectByIdArticleMustEnchere(int idArticle)  throws DalException ;
+	public Enchere selectMustEnchereByIdArticle(int idArticle)  throws DalException ;
 	
 	/**
 	 * Méthode en charge de récupérer toute less instance d'objet d'enchère lié à un article
