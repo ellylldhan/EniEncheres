@@ -11,5 +11,9 @@ package fr.eni.encheres.dal;
  */
 public class DAOFactory {
 
+	public static IEnchere getEnchereDAO()
+	{
+		return new EnchereDAOJdbcImpl();
+	}
 	
 }

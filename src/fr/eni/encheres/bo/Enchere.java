@@ -3,6 +3,7 @@
  */
 package fr.eni.encheres.bo;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
@@ -15,7 +16,7 @@ public class Enchere {
 
 	private Utilisateur utilisateur; 
 	private Article article;
-	private LocalDateTime date_enchere;
+	private Timestamp  date_enchere;
 	private int montant_enchere;
 	/**
 	 * Getter pour utilisateur.
@@ -49,14 +50,14 @@ public class Enchere {
 	 * Getter pour date_enchere.
 	 * @return the date_enchere
 	 */
-	public LocalDateTime getDate_enchere() {
+	public Timestamp getDate_enchere() {
 		return date_enchere;
 	}
 	/**
 	 * Setter pour date_enchere.
 	 * @param date_enchere the date_enchere to set
 	 */
-	public void setDate_enchere(LocalDateTime date_enchere) {
+	public void setDate_enchere(Timestamp date_enchere) {
 		this.date_enchere = date_enchere;
 	}
 	/**
@@ -81,7 +82,7 @@ public class Enchere {
 	 * @param date_enchere
 	 * @param montant_enchere
 	 */
-	public Enchere(Utilisateur utilisateur, Article article, LocalDateTime date_enchere, int montant_enchere) {
+	public Enchere(Utilisateur utilisateur, Article article, Timestamp date_enchere, int montant_enchere) {
 		super();
 		this.utilisateur = utilisateur;
 		this.article = article;
