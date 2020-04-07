@@ -30,11 +30,11 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	
 	private ArticleDAO articleDAO = new ArticleDAOJdbcImpl();
 	
-	private static String RQT_SELECT_BY_ID = "SELECT * FROM RETRAITS WHERE no_article = ?";
-	private static String RQT_SELECT_ALL = "SELECT * FROM RETRAITS";
-	private static String RQT_INSERT = "INSERT INTO RETRAITS VALUES(?,?,?,?)";
-	private static String RQT_UPDATE = "UPDATE RETRAITS SET rue = ?, code_postal = ?, ville = ? WHERE no_article = ?";
-    private static String RQT_DELETE = "DELETE RETRAITS WHERE no_article = ?";
+	private static final String RQT_SELECT_BY_ID = "SELECT * FROM RETRAITS WHERE no_article = ?";
+	private static final String RQT_SELECT_ALL = "SELECT * FROM RETRAITS";
+	private static final String RQT_INSERT = "INSERT INTO RETRAITS VALUES(?,?,?,?)";
+	private static final String RQT_UPDATE = "UPDATE RETRAITS SET rue = ?, code_postal = ?, ville = ? WHERE no_article = ?";
+    private static final String RQT_DELETE = "DELETE RETRAITS WHERE no_article = ?";
     
     /**
      * {@inheritDoc}

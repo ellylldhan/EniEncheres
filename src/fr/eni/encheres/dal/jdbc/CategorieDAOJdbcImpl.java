@@ -27,11 +27,11 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	
 	private static Logger LOGGER = MonLogger.getLogger("CategorieDAOJdbcImpl");
 	
-	private static String RQT_SELECT_BY_ID = "SELECT * FROM CATEGORIES WHERE no_categorie = ?";
-	private static String RQT_SELECT_ALL = "SELECT * FROM CATEGORIES";
-	private static String RQT_INSERT = "INSERT INTO CATEGORIES VALUES(?)";
-	private static String RQT_UPDATE = "UPDATE CATEGORIES SET libelle = ? WHERE no_categorie = ?";
-	private static String RQT_DELETE = "DELETE CATEGORIES WHERE no_categorie = ?";
+	private static final String RQT_SELECT_BY_ID = "SELECT * FROM CATEGORIES WHERE no_categorie = ?";
+	private static final String RQT_SELECT_ALL = "SELECT * FROM CATEGORIES";
+	private static final String RQT_INSERT = "INSERT INTO CATEGORIES VALUES(?)";
+	private static final String RQT_UPDATE = "UPDATE CATEGORIES SET libelle = ? WHERE no_categorie = ?";
+	private static final String RQT_DELETE = "DELETE CATEGORIES WHERE no_categorie = ?";
 	
 	/**
 	 * {@inheritDoc}
