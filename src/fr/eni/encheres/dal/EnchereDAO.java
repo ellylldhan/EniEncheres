@@ -41,6 +41,4 @@ public interface EnchereDAO {
 	 * @throws DalException
 	 */
 	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException ;
-
-	
 }
