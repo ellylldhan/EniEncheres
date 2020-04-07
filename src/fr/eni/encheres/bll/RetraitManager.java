@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import fr.eni.encheres.bo.Retrait;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.RetraitDAO;
+import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -28,7 +29,7 @@ public class RetraitManager {
 	private RetraitManager() throws DalException {
 	}
     
-    public static RetraitManager getInstance() throws DalException {
+    public static RetraitManager getInstance() throws DalException, BllException {
     	
     	if (INSTANCE == null) {
 			INSTANCE = new RetraitManager();
@@ -43,11 +44,12 @@ public class RetraitManager {
         	retraits = retraitDAO.selectAll();
         } catch (DalException e) {
             LOGGER.severe("Erreur dans RetraitManager getRetraits() : " + e.getMessage());
+            e.printStackTrace();
         }
         return retraits;
     }
     
-    public int addRetrait(Retrait retrait) { //TODO throws BLLException
+    public int addRetrait(Retrait retrait) throws BllException {
 
         try {
         	retraitDAO.insert(retrait);
@@ -58,7 +60,7 @@ public class RetraitManager {
 
     }
     
-    public void updateRetrait(Retrait retrait) { //TODO throws BLLException
+    public void updateRetrait(Retrait retrait) throws BllException {
 
         try {
             retraitDAO.update(retrait);
@@ -67,7 +69,7 @@ public class RetraitManager {
         }
     }
     
-    public void removeRetrait(int noArticle) { //TODO throws BLLException
+    public void removeRetrait(int noArticle) throws BllException {
 
         try {
         	retraitDAO.delete(noArticle);
@@ -77,7 +79,7 @@ public class RetraitManager {
 
     }
     
-    public Retrait getRetrait(int noArticle) { //TODO throws BLLException
+    public Retrait getRetrait(int noArticle) throws BllException {
 
     	Retrait retrait = null;
         try {
