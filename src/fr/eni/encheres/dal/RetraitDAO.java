@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Retrait;
+import fr.eni.encheres.exception.DalException;
 
 /**
  * Classe en charge de
@@ -20,16 +22,45 @@ import fr.eni.encheres.bo.Retrait;
  */
 public class RetraitDAO {
 	
+	private ArticleDAO articleDAO = new ArticleDAO();
+	
+	private static String RQT_SELECT_BY_ID = "SELECT * FROM RETRAITS WHERE no_article = ?";
 	private static String RQT_SELECT_ALL = "SELECT * FROM RETRAITS";
 	private static String RQT_INSERT = "INSERT INTO RETRAITS VALUES(?,?,?,?)";
 	private static String RQT_UPDATE = "UPDATE RETRAITS SET rue = ?, code_postal = ?, ville = ? WHERE no_article = ?";
     private static String RQT_DELETE = "DELETE RETRAITS WHERE no_article = ?";
+    
+    /**
+     * Méthode en charge de récupérer une instance d'objet Retrait en fonction du numéro d'article
+     * @param noArticle
+     * @return retrait : Instance d'objet Retrait
+     * @throws DalException
+     */
+    public Retrait selectById(int noArticle) throws DalException{
+
+        Retrait retrait = null;
+
+        try (Connection connection = ConnectionProvider.getConnection()) {
+            PreparedStatement requete = connection.prepareStatement(RQT_SELECT_BY_ID);
+            requete.setInt(1, noArticle);
+            ResultSet rs = requete.executeQuery();
+
+            if (rs.next()) {
+                retrait = itemBuilder(rs);
+            }
+        } catch (Exception e) {
+        	// TODO: handle exception
+        }
+
+        return retrait;
+
+    }
 	
 	/**
 	 * Méthode en charge de récupérer tous les enregistrements de la table RETRAITS
-	 * @return retraits : Liste de RETRAIT
+	 * @return retraits : Liste d'instances d'objet Retrait
 	 */
-	public List<Retrait> selectAll() {
+	public List<Retrait> selectAll() throws DalException {
 		
 		List<Retrait> retraits = new ArrayList<Retrait>();
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -51,7 +82,7 @@ public class RetraitDAO {
 	 * Méthode en charge d'insérer un enregistrement dans la table RETRAITS
 	 * @param retrait
 	 */
-	public void insert(Retrait retrait) {
+	public void insert(Retrait retrait) throws DalException {
 		
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_INSERT);
@@ -72,7 +103,7 @@ public class RetraitDAO {
 	 * Méthode en charge de modifier un enregistrement de RETRAITS
 	 * @param retrait
 	 */
-	public void update(Retrait retrait) {
+	public void update(Retrait retrait) throws DalException {
 		
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_UPDATE);
@@ -93,7 +124,7 @@ public class RetraitDAO {
 	 * Méthode en charge de supprimer un enregistrement de la table RETRAITS
 	 * @param noArticle
 	 */
-	public void delete(int noArticle) {
+	public void delete(int noArticle) throws DalException {
 
         try (Connection connection = ConnectionProvider.getConnection()) {
             PreparedStatement requete = connection.prepareStatement(RQT_DELETE);
@@ -112,8 +143,8 @@ public class RetraitDAO {
 	 * @throws SQLException
 	 */
 	private Retrait itemBuilder(ResultSet rs) throws SQLException {
-		
-		Retrait retrait = new Retrait(rs.getString("rue"), rs.getString("code_postal"), rs.getString("ville"));
+		Article article = articleDAO.selectById(rs.getInt("no_article"));
+		Retrait retrait = new Retrait(article, rs.getString("rue"), rs.getString("code_postal"), rs.getString("ville"));
 		
 		return retrait;
 		
