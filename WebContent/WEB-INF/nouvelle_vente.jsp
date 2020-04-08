@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="fr.eni.encheres.messages.LecteurMessage" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -19,7 +20,20 @@
 				<div class="card-header">
 					<h3 class="font-weight-bold">Nouvelle vente</h3>
 				</div>
-		    	<div class="card-body">		        	
+		    	<div class="card-body">		
+		    		<c:if test="${ !empty listeCodesErreur }">
+		    			<div class="alert alert-danger" role="alert">
+		    				<strong>ERREUR !</strong>
+		    				<ul>
+		    					<c:forEach var="code" items="${ listeCodesErreur }">
+		    						<li>
+		    							${ LecteurMessage.getMessageErreur(code) }
+		    						</li>
+		    					</c:forEach>
+		    				</ul>
+		    			</div>
+		    		</c:if>
+		    	        	
 		        	<form action="${pageContext.request.contextPath}/eni/encheres/ServletNouvelleVente" method="post">
 						<div class="form-group">
 							<label for="nom_article">Article : </label>

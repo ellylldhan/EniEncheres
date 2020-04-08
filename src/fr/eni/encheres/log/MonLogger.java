@@ -37,7 +37,7 @@ public class MonLogger {
         {
             try
             {
-                fh = new FileHandler("c:/log/beDeveloper.log");
+                fh = new FileHandler("C:/log/beDeveloper.log");
             }
             catch (SecurityException e)
             {
