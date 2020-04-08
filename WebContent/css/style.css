@@ -2,16 +2,11 @@ body {
 	margin-top: 15px;
 }
 
-.row_top {
+.row {
 	margin-bottom: 15px;	
 }
 
 .page_title {
 	text-align: center;
 	font-weight: bold;
-}
-
-.form-group .form-control {
-	width: 70%;
-	float: right;
 }
