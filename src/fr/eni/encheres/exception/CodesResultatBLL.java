@@ -36,5 +36,10 @@ public abstract class CodesResultatBLL {
 	/**
 	 * Problème lié à la recherche de donnée
 	 */
-	public static final int Select_OBJET = 1007;
+	public static final int SELECT_OBJET = 1007;
+	
+	/**
+	 * Vérifie si la valeur peut être insérer
+	 */
+	public static final int CHECK_INSERT_OK = 1008;
 }

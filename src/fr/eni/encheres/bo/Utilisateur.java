@@ -3,13 +3,15 @@
  */
 package fr.eni.encheres.bo;
 
+import java.io.Serializable;
+
 /**
  * Classe en charge de
  * @author loan.pirotais
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class Utilisateur {
+public class Utilisateur implements Serializable {
 
 	private int noUtilisateur;
 	private String pseudo;

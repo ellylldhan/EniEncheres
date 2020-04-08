@@ -26,7 +26,7 @@ public class ArticleManager {
 
 	private ArticleDAO articleDAO = DAOFactory.getArticleDAO();
 
-	private ArticleManager() throws DalException {
+	private ArticleManager() {
 
 	}
 
@@ -37,7 +37,7 @@ public class ArticleManager {
 	 * @throws DalException
 	 * @throws BllException
 	 */
-	public static ArticleManager getInstance() throws DalException, BllException {
+	public static ArticleManager getInstance() {
 
 		if (INSTANCE == null) {
 			INSTANCE = new ArticleManager();

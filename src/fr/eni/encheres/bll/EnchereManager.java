@@ -3,11 +3,17 @@
  */
 package fr.eni.encheres.bll;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.jasper.tagplugins.jstl.core.If;
+
+import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.EnchereDAO;
@@ -28,7 +34,8 @@ public class EnchereManager {
 	 private static Logger LOGGER = MonLogger.getLogger("EnchereManager");
 	    private static EnchereManager INSTANCE;
 	    
-	    private EnchereDAO enchereDAO= DAOFactory.getEnchereDAO();
+	    private EnchereDAO enchereDAO = DAOFactory.getEnchereDAO();
+	    private ArticleManager articleManager = ArticleManager.getInstance();
 
 		private EnchereManager(){
 			
@@ -52,7 +59,7 @@ public class EnchereManager {
 				}
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getEnchereByIdArticle(int idArticle) : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.Select_OBJET);
+	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
 	        }
 	        return encheres;
 	    }
@@ -66,13 +73,15 @@ public class EnchereManager {
 				}
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getBestEnchereByIdArticle(int idArticle) : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.Select_OBJET);
+	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
 	        }
 	        return encheres;
 	    }
 	    
-	    public void Create(Enchere enchere) throws BllException {
+	    public void create(Enchere enchere) throws BllException {
+
 	    	this.checkEnchere(enchere);
+	    	
 	        try {
 	        	enchereDAO.create(enchere);
 	        } catch (DalException e) {
@@ -81,7 +90,7 @@ public class EnchereManager {
 	        }
 	    }
 	    
-	    public void Update(Enchere enchere) throws BllException {
+	    public void update(Enchere enchere) throws BllException {
 	    	this.checkEnchere(enchere);
 	        try {
 	        	enchereDAO.create(enchere);
@@ -92,11 +101,12 @@ public class EnchereManager {
 	    }
 	    
 	    private void checkEnchere(Enchere enchere) throws BllException {
-	    	if (enchere.getArticle().getNoArticle() == 0 || enchere.getDate_enchere() == null || enchere.getMontant_enchere() <= 0 || enchere.getUtilisateur().getNoUtilisateur() == 0) {
+	    	if (enchere == null || enchere.getArticle().getNoArticle() == 0  || enchere.getMontant_enchere() <= 0 || enchere.getUtilisateur().getNoUtilisateur() == 0) {
 				throw new BllException(CodesResultatBLL.OBJET_NOTCONFORM);
 			}
-	    	
-	    }
-	    
-	
+	    	Article article =  articleManager.getArticle(enchere.getArticle().getNoArticle());
+	    	if (!article.getDateDebut().isAfter(LocalDate.now()) || !article.getDateFinEncheres().isBefore(LocalDate.now())) {
+				throw new BllException(CodesResultatBLL.CHECK_INSERT_OK);
+			}
+	    }	    
 }

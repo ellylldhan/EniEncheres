@@ -3,8 +3,10 @@
  */
 package fr.eni.encheres.bo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Classe en charge de
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class Enchere {
+public class Enchere implements Serializable{
 
 	private Utilisateur utilisateur; 
 	private Article article;
@@ -86,7 +88,12 @@ public class Enchere {
 		super();
 		this.utilisateur = utilisateur;
 		this.article = article;
-		this.date_enchere = date_enchere;
+		if (date_enchere == null) {
+			this.date_enchere = new Timestamp(System.currentTimeMillis());
+		}else {
+			this.date_enchere = date_enchere;
+		}
+		
 		this.montant_enchere = montant_enchere;
 	}
 	

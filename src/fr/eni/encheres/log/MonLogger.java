@@ -37,7 +37,7 @@ public class MonLogger {
         {
             try
             {
-                fh = new FileHandler("beDeveloper.log");
+                fh = new FileHandler("c:/log/beDeveloper.log");
             }
             catch (SecurityException e)
             {
@@ -45,6 +45,7 @@ public class MonLogger {
             }
             catch (IOException e)
             {
+            	System.out.println(e.getMessage());
                 e.printStackTrace();
             }
             fh.setLevel(Level.ALL);
