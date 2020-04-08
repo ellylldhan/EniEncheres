@@ -9,7 +9,6 @@
 <body class="container">
 	<div class="row">
 		<div class="col-md-4">
-			<h3>ENI-Enchères</h3>
 			<br>
 			
 			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">

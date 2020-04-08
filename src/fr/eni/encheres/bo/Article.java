@@ -1,5 +1,6 @@
 package fr.eni.encheres.bo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -8,7 +9,7 @@ import java.time.LocalDate;
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class Article {
+public class Article implements Serializable {
 
 	private int noArticle;
 	private String nomArticle;

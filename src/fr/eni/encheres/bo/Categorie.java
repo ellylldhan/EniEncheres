@@ -3,13 +3,15 @@
  */
 package fr.eni.encheres.bo;
 
+import java.io.Serializable;
+
 /**
  * Classe en charge de
  * @author loan.pirotais
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
  */
-public class Categorie {
+public class Categorie implements Serializable{
 	
 	private int noCategorie;
 	private String libelle;
