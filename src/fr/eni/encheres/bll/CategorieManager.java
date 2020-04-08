@@ -4,14 +4,12 @@
 package fr.eni.encheres.bll;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.DalException;
-import fr.eni.encheres.log.MonLogger;
 
 /**
  * Classe en charge de contrôler les accès à la table CATEGORIES de la base de données.
@@ -21,12 +19,13 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class CategorieManager {
 
-    private static Logger LOGGER = MonLogger.getLogger("CategorieManager");
-    private static CategorieManager INSTANCE;
+//	private Logger logger = MonLogger.getLogger(getClass().getName());
+    private static CategorieManager instance;
     
     private CategorieDAO categorieDAO = DAOFactory.getCategorieDAO();
 
-	private CategorieManager() throws DalException, BllException {
+	private CategorieManager() throws DalException {
+		
 	}
     
 	/**
@@ -35,13 +34,13 @@ public class CategorieManager {
 	 * @throws DalException
 	 * @throws BllException
 	 */
-    public static CategorieManager getInstance() throws DalException, BllException {
+	public static CategorieManager getInstance() throws DalException, BllException {
     	
-    	if (INSTANCE == null) {
-			INSTANCE = new CategorieManager();
+    	if (instance == null) {
+			return new CategorieManager();
 		}
     	
-    	return INSTANCE;
+    	return instance;
     }
     
     /**
@@ -49,11 +48,17 @@ public class CategorieManager {
      * @return
      */
     public List<Categorie> getCategories() {
+    	
+        StackTraceElement stack = new Throwable().getStackTrace()[0];
+        String nomMethodeCourante = stack.getMethodName();
+        String nomClasseCourante = stack.getClassName();
+        
+    	
         List<Categorie> categories = null;
         try {
         	categories = categorieDAO.selectAll();
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager getCategories() : " + e.getMessage());
+//            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
             e.printStackTrace();
         }
         return categories;
@@ -66,11 +71,12 @@ public class CategorieManager {
      * @throws BllException
      */
     public int addCategorie(Categorie categorie) throws BllException {
-
         try {
         	categorieDAO.insert(categorie);
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager addCategorie(Categorie categorie) : " + e.getMessage());
+//            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+        	e.printStackTrace();
+
         }
         return categorie.getNoCategorie();
 
@@ -82,11 +88,11 @@ public class CategorieManager {
      * @throws BllException
      */
     public void updateCategorie(Categorie categorie) throws BllException {
-
+       
         try {
             categorieDAO.update(categorie);
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager updateCategorie(Categorie categorie) : " + e.getMessage());
+        	e.printStackTrace();
         }
     }
     
@@ -100,7 +106,8 @@ public class CategorieManager {
         try {
             categorieDAO.delete(noCategorie);
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager removeCategorie(int noCategorie) : " + e.getMessage());
+//            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+        	e.printStackTrace();
         }
 
     }
@@ -112,14 +119,14 @@ public class CategorieManager {
      * @throws BllException
      */
     public Categorie getCategorie(int noCategorie) throws BllException {
-
-    	Categorie categorie = null;
+      
         try {
-        	categorie = categorieDAO.selectById(noCategorie);
+        	return categorieDAO.selectById(noCategorie);
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager getCategorie(int noCategorie) : " + e.getMessage());
+//            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+            e.printStackTrace();
         }
-        return categorie;
+        return null;
     }
 
 }

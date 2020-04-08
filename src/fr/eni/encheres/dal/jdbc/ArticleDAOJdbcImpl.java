@@ -142,16 +142,15 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
         
         try (Connection conn = ConnectionProvider.getConnection()) {
             PreparedStatement requete = conn.prepareStatement(RQT_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
-            
-            int index = 1;
-            requete.setString(index++, article.getNomArticle());
-            requete.setString(index++, article.getDescription());
-            requete.setDate(index++, Date.valueOf(article.getDateDebut()));
-            requete.setDate(index++, Date.valueOf(article.getDateFinEncheres()));
-            requete.setInt(index++, article.getPrixInitial());
-            requete.setInt(index++, article.getPrixVente());
-            requete.setInt(index++, article.getUtilisateur().getNoUtilisateur());
-            requete.setInt(index++, article.getCategorie().getNoCategorie());
+       
+            requete.setString(1, article.getNomArticle());
+            requete.setString(2, article.getDescription());
+            requete.setDate(3, Date.valueOf(article.getDateDebut()));
+            requete.setDate(4, Date.valueOf(article.getDateFinEncheres()));
+            requete.setInt(5, article.getPrixInitial());
+            requete.setInt(6, article.getPrixVente());
+            requete.setInt(7, article.getUtilisateur().getNoUtilisateur());
+            requete.setInt(8, article.getCategorie().getNoCategorie());
 
             nbLignesModifiees = requete.executeUpdate();
             ResultSet rs = requete.getGeneratedKeys();
