@@ -225,7 +225,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 		
 		return new Article(
 				rs.getInt("no_article"), 
-				rs.getString("nomArticle"), 
+				rs.getString("nom_article"), 
 				rs.getString("description"),
 				rs.getDate("date_debut_encheres").toLocalDate(), 
 				rs.getDate("date_fin_encheres").toLocalDate(), 

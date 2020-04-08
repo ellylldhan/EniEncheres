@@ -26,7 +26,7 @@ public class RetraitManager {
     
     private RetraitDAO retraitDAO = DAOFactory.getRetraitDAO();
 
-	private RetraitManager() throws DalException {
+	private RetraitManager() {
 	}
     
 	/**
@@ -35,7 +35,7 @@ public class RetraitManager {
 	 * @throws DalException
 	 * @throws BllException
 	 */
-    public static RetraitManager getInstance() throws DalException, BllException {
+    public static RetraitManager getInstance()  {
     	
     	if (INSTANCE == null) {
 			INSTANCE = new RetraitManager();
