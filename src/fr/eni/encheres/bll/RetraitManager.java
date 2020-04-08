@@ -14,7 +14,7 @@ import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
 /**
- * Classe en charge de
+ * Classe en charge de contrôler les accès à la table RETRAITS de la base de données.
  * @author loan.pirotais
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
@@ -29,6 +29,12 @@ public class RetraitManager {
 	private RetraitManager() throws DalException {
 	}
     
+	/**
+	 * Méthode en charge de retourner une instance de la classe
+	 * @return
+	 * @throws DalException
+	 * @throws BllException
+	 */
     public static RetraitManager getInstance() throws DalException, BllException {
     	
     	if (INSTANCE == null) {
@@ -38,6 +44,10 @@ public class RetraitManager {
     	return INSTANCE;
     }
     
+    /**
+     * Méthode en charge de retourner une liste de tous les retraits
+     * @return
+     */
     public List<Retrait> getRetraits() {
         List<Retrait> retraits = null;
         try {
@@ -49,6 +59,12 @@ public class RetraitManager {
         return retraits;
     }
     
+    /**
+     * Méthode en charge d'ajouter un retrait
+     * @param retrait
+     * @return
+     * @throws BllException
+     */
     public int addRetrait(Retrait retrait) throws BllException {
 
         try {
@@ -60,6 +76,11 @@ public class RetraitManager {
 
     }
     
+    /**
+     * Méthode en charge de mettre à jour un retrait
+     * @param retrait
+     * @throws BllException
+     */
     public void updateRetrait(Retrait retrait) throws BllException {
 
         try {
@@ -69,6 +90,11 @@ public class RetraitManager {
         }
     }
     
+    /**
+     * Méthode en charge de supprimer un retrait selon le numéro d'article
+     * @param noArticle
+     * @throws BllException
+     */
     public void removeRetrait(int noArticle) throws BllException {
 
         try {
@@ -79,6 +105,12 @@ public class RetraitManager {
 
     }
     
+    /**
+     * Méthode en charge de récupérer un retrait selon le numéro d'article
+     * @param noArticle
+     * @return
+     * @throws BllException
+     */
     public Retrait getRetrait(int noArticle) throws BllException {
 
     	Retrait retrait = null;
