@@ -14,7 +14,7 @@ import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
 /**
- * Classe en charge de
+ * Classe en charge de contrôler les accès à la table CATEGORIES de la base de données.
  * @author loan.pirotais
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020
@@ -29,6 +29,12 @@ public class CategorieManager {
 	private CategorieManager() throws DalException, BllException {
 	}
     
+	/**
+	 * Méthode en charge de retourner une instance de la classe.
+	 * @return
+	 * @throws DalException
+	 * @throws BllException
+	 */
     public static CategorieManager getInstance() throws DalException, BllException {
     	
     	if (INSTANCE == null) {
@@ -38,6 +44,10 @@ public class CategorieManager {
     	return INSTANCE;
     }
     
+    /**
+     * Méthode en charge de retourner une liste de toutes les catégories.
+     * @return
+     */
     public List<Categorie> getCategories() {
         List<Categorie> categories = null;
         try {
@@ -49,6 +59,12 @@ public class CategorieManager {
         return categories;
     }
     
+    /**
+     * Méthode en charge d'ajouter une catégorie
+     * @param categorie
+     * @return
+     * @throws BllException
+     */
     public int addCategorie(Categorie categorie) throws BllException {
 
         try {
@@ -60,6 +76,11 @@ public class CategorieManager {
 
     }
     
+    /**
+     * Méthode en charge de mettre à jour une catégorie
+     * @param categorie
+     * @throws BllException
+     */
     public void updateCategorie(Categorie categorie) throws BllException {
 
         try {
@@ -69,6 +90,11 @@ public class CategorieManager {
         }
     }
     
+    /**
+     * Méthode en charge de supprimer une catégorie selon son id
+     * @param noCategorie
+     * @throws BllException
+     */
     public void removeCategorie(int noCategorie) throws BllException {
 
         try {
@@ -79,6 +105,12 @@ public class CategorieManager {
 
     }
     
+    /**
+     * Méthode en charge de récupérer une catégorie selon son id
+     * @param noCategorie
+     * @return
+     * @throws BllException
+     */
     public Categorie getCategorie(int noCategorie) throws BllException {
 
     	Categorie categorie = null;
