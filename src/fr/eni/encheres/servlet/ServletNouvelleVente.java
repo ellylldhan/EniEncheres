@@ -1,7 +1,7 @@
 package fr.eni.encheres.servlet;
 
 import java.io.IOException;
-import java.util.List;
+import java.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,8 +47,22 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+		
+		//Lecture des paramètres
+		String nomArticle = null;
+		String description = null;
+		int noCategorie;
+		int prixInitial = 0;
+		LocalDate dateDebutEncheres = null;
+		LocalDate dateFinEncheres = null;
+		
+		String rueRetrait = null;
+		String codePostalRetrait = null;
+		String villeRetrait = null;
+		
+		
+	
 	}
 
 }

@@ -10,3 +10,13 @@ body {
 	text-align: center;
 	font-weight: bold;
 }
+
+.form_buttons {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.form_buttons button {
+	width: 200px;
+	margin: auto;
+}
