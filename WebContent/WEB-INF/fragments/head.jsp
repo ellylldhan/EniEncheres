@@ -12,3 +12,6 @@
     <!-- Custom styles for this template -->
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
+<body>
+<h3>ENI-Enchères</h3>
+</body>
