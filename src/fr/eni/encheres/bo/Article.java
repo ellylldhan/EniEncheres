@@ -167,6 +167,29 @@ public class Article implements Serializable {
 
 	/**
 	 * Constructeur
+	 * @param noArticle
+	 * @param nomArticle
+	 * @param description
+	 * @param dateDebut
+	 * @param dateFinEncheres
+	 * @param prixInitial
+	 * @param utilisateur
+	 * @param categorie
+	 */
+	public Article(String nomArticle, String description, LocalDate dateDebut, LocalDate dateFinEncheres,
+			int prixInitial, Utilisateur utilisateur, Categorie categorie) {
+		super();
+		this.nomArticle = nomArticle;
+		this.description = description;
+		this.dateDebut = dateDebut;
+		this.dateFinEncheres = dateFinEncheres;
+		this.prixInitial = prixInitial;
+		this.utilisateur = utilisateur;
+		this.categorie = categorie;
+	}
+
+	/**
+	 * Constructeur
 	 * @param nomArticle
 	 * @param description
 	 * @param dateDebut
@@ -178,14 +201,8 @@ public class Article implements Serializable {
 	 */
 	public Article(String nomArticle, String description, LocalDate dateDebut, LocalDate dateFinEncheres,
 			int prixInitial, int prixVente, Utilisateur utilisateur, Categorie categorie) {
-		this.nomArticle = nomArticle;
-		this.description = description;
-		this.dateDebut = dateDebut;
-		this.dateFinEncheres = dateFinEncheres;
-		this.prixInitial = prixInitial;
+		this(nomArticle, description, dateDebut, dateFinEncheres, prixInitial, utilisateur, categorie);
 		this.prixVente = prixVente;
-		this.utilisateur = utilisateur;
-		this.categorie = categorie;
 	}
 
 	/**
