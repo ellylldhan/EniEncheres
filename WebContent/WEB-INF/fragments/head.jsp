@@ -13,5 +13,5 @@
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
 <body>
-<h2>ENI-Enchères</h2>
+	<h2 class="web_title">ENI-Enchères</h2>
 </body>
