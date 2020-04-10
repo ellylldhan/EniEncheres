@@ -56,7 +56,7 @@ public class UtilisateurManager {
         try {
             utilisateurDAO.delete(id);
         } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de la suppersion de l'utilisateur [" + id + "] : " + e.getMessage());
+            LOGGER.severe("Erreur dans UtilisateurManager lors de la suppression de l'utilisateur [" + id + "] : " + e.getMessage());
         }
     }
 

@@ -33,3 +33,9 @@ body {
 .btn_style {
 	width: 200px;
 }
+
+.div_detail_profil_style {
+	margin: 15px auto;
+	width: 50%;
+	font-size: large;
+}
