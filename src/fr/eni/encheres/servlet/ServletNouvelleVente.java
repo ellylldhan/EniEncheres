@@ -17,9 +17,11 @@ import org.apache.tomcat.jni.Local;
 import fr.eni.encheres.bll.ArticleManager;
 import fr.eni.encheres.bll.CategorieManager;
 import fr.eni.encheres.bll.RetraitManager;
+import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Retrait;
+import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
 
 /**
@@ -84,7 +86,11 @@ public class ServletNouvelleVente extends HttpServlet {
 			CategorieManager categorieManager = CategorieManager.getInstance();
 			Categorie categorie = categorieManager.getCategorie(noCategorie);
 			
-			Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, null, utilisateur, categorie);
+			//TODO: A modifier lorsque les contexts de session seront implémentés
+			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+			Utilisateur utilisateur = utilisateurManager.getUtilisateur(1);
+			
+			Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, utilisateur, categorie);
 			ArticleManager articleManager = ArticleManager.getInstance();
 			try {
 				int article = articleManager.addArticle(articleToAdd);

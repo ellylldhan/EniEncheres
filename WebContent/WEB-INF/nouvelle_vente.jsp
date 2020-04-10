@@ -10,8 +10,6 @@
 <body class="container">
 	<div class="row">
 		<div class="col-md-4">
-			<br>
-			
 			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">
 			<br>
 		</div>
@@ -61,7 +59,7 @@
 						
 						<div class="form-group">
 							<label for="prix_initial_article">Mise à prix : </label>
-							<input class="form-control" id="prix_initial_article" name="prix_initial_article" type="number">
+							<input class="form-control" id="prix_initial_article" name="prix_initial_article" type="number" value="0">
 						</div>
 						
 						<div class="form-group">
