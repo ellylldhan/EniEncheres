@@ -6,15 +6,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%! private List<Categorie> listeCategories; %>
-<%! private List<Enchere> listeEncheres; %>
+
 
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
 	
-<% listeEncheres = (List<Enchere>) request.getAttribute("listeEncheres"); %>
-<% listeCategories = (List<Categorie>) request.getAttribute("listeCategories"); %>
+<% List<Enchere> listeEncheres = (List<Enchere>) request.getAttribute("listeEncheres"); %>
+<% List<Categorie> listeCategories = (List<Categorie>) request.getAttribute("listeCategories"); %>
 
 <body class="container">
     <h2 class="text-center"> Liste des enchères </h2>
@@ -23,7 +22,7 @@
         <div class="col-sm-6">
             <h3> Filtres </h3>
             <div class="col-sm-8">
-                <label for="categories">Catégories</label>
+                <label for="categories">Catégories :</label>
                 <select class="form-control custom-select" id="categories" name="categories">
                     <option value="" selected>Toutes</option>
                     <c:forEach var="c" items="${ listeCategories }">
@@ -35,8 +34,9 @@
     </div>
     <br>
     <div class="col-sm-4">
-            <input class="form-control" name="txtRechercher" value="" type="search"/>
-        </div>
+    	<label for="recherche">Recherche :</label>
+            <input id="recherche" class="form-control" name="txtRechercher" value="" type="search"/>
+       </div>
     </div>
     <br>
     <div>
