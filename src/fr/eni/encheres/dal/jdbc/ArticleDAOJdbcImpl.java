@@ -235,56 +235,6 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 				rs.getDate("date_debut_encheres").toLocalDate(), rs.getDate("date_fin_encheres").toLocalDate(),
 				rs.getInt("prix_initial"), rs.getInt("prix_vente"), utilisateur, categorie);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see fr.eni.encheres.dal.ArticleDAO#isRetire(fr.eni.encheres.bo.Article)
-	 */
-	@Override
-	public boolean isRetire(Article article) throws DalException, BllException {
-		RetraitManager retraitManager = RetraitManager.getInstance();
-		return (retraitManager.getRetrait(article.getNoArticle()) != null) ? true : false;
-	}
 		
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws BllException
-	 * @see fr.eni.encheres.dal.ArticleDAO#isEncoreEnVente(fr.eni.encheres.bo.Article)
-	 */
-	@Override
-	public boolean isDateFinDepassee(Article article) throws DalException, BllException {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        DateFormatter dtf = 
-        Date date1 = sdf.parse(article.getDateFinEncheres());
-        Date date2 = sdf.parse("2010-01-31");
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    	Date now = dateFormat.format(new Date());
-        
-        System.out.println("date1 : " + sdf.format(date1));
-        System.out.println("date2 : " + sdf.format(date2));
-        
-        if (date1.after(date2)) {
-            System.out.println("Date1 is after Date2");
-        }
-
-        if (date1.before(date2)) {
-            System.out.println("Date1 is before Date2");
-        }
-
-        if (date1.equals(date2)) {
-            System.out.println("Date1 is equal Date2");
-        }
-
-    }
-		
-		article.getDateFinEncheres() < dtf.format(localDate);
-		
-		Enchere ench = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
-		ench.getDate_enchere()		
-	}
 
 }

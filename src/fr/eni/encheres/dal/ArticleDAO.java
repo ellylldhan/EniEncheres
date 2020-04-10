@@ -30,23 +30,7 @@ public interface ArticleDAO extends DAO<Article> {
 	 */
 	public List<Article> findByName(String nom) throws DalException;
 
-	/**
-	 * Retourne TRUE si l'article a été retiré.
-	 * @param article
-	 * @return boolean
-	 * @throws DalException
-	 * @throws BllException
-	 */
-	boolean isRetire(Article article) throws DalException, BllException;
 
-	/**
-	 * Retourne TRUE si l'article est toujours en vente (enchère toujours en cours).
-	 * @param article
-	 * @return boolean
-	 * @throws DalException
-	 * @throws BllException
-	 */
-	boolean isVendu(Article article) throws DalException, BllException; 
 	
 
 

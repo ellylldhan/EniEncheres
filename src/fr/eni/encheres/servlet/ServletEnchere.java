@@ -57,7 +57,6 @@ public class ServletEnchere extends HttpServlet {
 			e.printStackTrace();
 			if (article != null) {				
 				request.setAttribute("MeilleurPrix", article.getPrixInitial());
-
 			}
 		}
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");

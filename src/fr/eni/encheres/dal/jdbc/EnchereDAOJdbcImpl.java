@@ -122,24 +122,6 @@ public class EnchereDAOJdbcImpl implements EnchereDAO {
 		return encheres;
 	}
 
-	public List<Enchere> selectAllEncheresCourantes() throws DalException {
-		List<Enchere> encheres = new ArrayList<Enchere>();
-
-		try (Connection connection = ConnectionProvider.getConnection()) {
-			PreparedStatement requete = connection.prepareStatement(RQT_SELECT_ALL_BY_ARTICLE_ID);
-
-			ResultSet rs = requete.executeQuery();
-
-			while (rs.next()) {
-				encheres.add(itemBuilder(rs));
-			}
-		} catch (Exception e) {
-			LOGGER.severe("Erreur dans Enchere selectAllByIdArticle(int idArticle) : " + e.getMessage());
-			throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
-		}
-
-		return encheres;
-	}
 
 	public void update(Enchere enchere) throws DalException {
 
@@ -159,20 +141,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO {
 
 	}
 
-	/**
-	 * Retourne TRUE si un article est en vente et n'est pas retiré (= enchère en
-	 * cours)
-	 * 
-	 * @param enchere Enchere
-	 * @return boolean
-	 * @throws DalException
-	 * @throws BllException
-	 */
-	private boolean isCourante(Enchere enchere) throws DalException, BllException {
-		boolean isVendu = articleDAO.isVendu(enchere.getArticle());
-		boolean isRetire = articleDAO.isRetire(enchere.getArticle());
-		return (!isVendu && !isRetire);
-	}
+	
 
 	/**
 	 * Méthode en charge de créer une instance d'objet Enchere en fonction des
@@ -192,16 +161,30 @@ public class EnchereDAOJdbcImpl implements EnchereDAO {
 		return enchere;
 
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see fr.eni.encheres.dal.EnchereDAO#isActive(fr.eni.encheres.bo.Enchere)
+	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllEncheresCourantes(int)
 	 */
-	@Override
-	public boolean isActive(Enchere enchere) throws DalException {
-		//
-		return false;
+	public List<Enchere> selectAllEncheresValides() throws DalException {
+		List<Enchere> encheres = new ArrayList<Enchere>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_SELECT_ALL_ENCHERES_ACTIVES);
+
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				encheres.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			LOGGER.severe("Erreur dans Enchere selectAllEncheresCourantes() : " + e.getMessage());
+			throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+		}
+
+		return encheres;
 	}
+
 
 }

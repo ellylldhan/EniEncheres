@@ -14,8 +14,9 @@
 
 <body>
 
-<% listeCategories = (List<Categorie>) request.getAttribute("lesCategories"); %>
-<% listeEncheres = (List<Enchere>) request.getAttribute("lesEncheres"); %>
+<% listeEncheres = (List<Enchere>) request.getAttribute("listeEncheres"); %>
+<% listeCategories = (List<Categorie>) request.getAttribute("listeCategories"); %>
+
 
 <div class="container-fluid">
     <h1 class="text-center"> Liste des enchères </h1>

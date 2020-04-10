@@ -41,5 +41,12 @@ public interface EnchereDAO {
 	 */
 	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException ;
 	
-	public boolean isActive(Enchere enchere) throws DalException;
+	
+	/**
+	 * Retourne une liste de toutes les enchères en cours de validité.
+	 * @return Liste enchères non retirées dont la date de fin n'est pas dépassée.
+	 * @throws DalException
+	 */
+	public List<Enchere> selectAllEncheresValides() throws DalException;
+	
 }
