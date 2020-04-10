@@ -6,7 +6,9 @@
 
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
+
 <body class="container">
+${request.setAttribute("Article", Article) }
 	<div class="row">
 		<div class="col-md-4">
 			
@@ -16,11 +18,11 @@
 		<div class="col-md-8">
 			<div class="card">
 				<div class="card-header">
-					<h3 class="font-weight-bold">Nouvelle vente</h3>
+					<h3 class="font-weight-bold">Nouvelle Enchère</h3>
 				</div>
 		    	<div class="card-body">		        	
 
-		        	<h3>Détail vente</h3>
+		        	<h3>Détail de l'enchère</h3>
 		        	<p>${ Article.nomArticle }</p>
 		        	<div>
 		        		<label>Description : </label>
@@ -51,10 +53,13 @@
 		        		<p>${Article.utilisateur.pseudo} </p>
 		        	</div>
 		        	<form action="${pageContext.request.contextPath}/eni/encheres/ServletEnchere" method="post">
-					
+						<input type="hidden" name="idArticle" value="${idArticle}" />
 		        		<div class="form-group">
 							<label for="prix_initial_article">Ma proposition: </label>
 							<input class="form-control" id="proposition" name="proposition" type="number" value="${MeilleurPrix}">
+						</div>
+						<div class="form_buttons">
+ 							<button type="submit" class="btn btn-outline-success">Envoyer</button>
 						</div>
 		        	</form>
 		      	</div>

@@ -131,6 +131,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      */
     private Utilisateur itemBuilder(ResultSet rs) throws SQLException {
         return new Utilisateur(
+        		rs.getInt("no_utilisateur"),
                 rs.getString("pseudo"),
                 rs.getString("nom"),
                 rs.getString("prenom"),

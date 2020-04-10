@@ -13,9 +13,12 @@ import fr.eni.encheres.bll.ArticleManager;
 import fr.eni.encheres.bll.CategorieManager;
 import fr.eni.encheres.bll.EnchereManager;
 import fr.eni.encheres.bll.RetraitManager;
+import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
+import sun.font.CreatedFontTracker;
 
 /**
  * Servlet implementation class ServletEnchere
@@ -41,10 +44,16 @@ public class ServletEnchere extends HttpServlet {
 			ArticleManager articleManager = ArticleManager.getInstance();
 			EnchereManager enchereManager = EnchereManager.getInstance();
 			RetraitManager retraitManager = RetraitManager.getInstance();
-
-			int idArticle = 1;//Integer.parseInt(request.getParameter("idArticle"));
+			
+			String parameteridArticle = request.getParameter("idArticle");
+			int idArticle = 0;
+			if (parameteridArticle != null) {
+				idArticle = Integer.parseInt(parameteridArticle);
+			}
+			
 			article = articleManager.getArticle(idArticle);
 			
+			request.setAttribute("idArticle", idArticle);
 			request.setAttribute("Article", article );
 			request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
 			request.setAttribute("MeilleurPrix", enchereManager.getBestEnchereByIdArticle(idArticle).getMontant_enchere());
@@ -70,7 +79,47 @@ public class ServletEnchere extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		EnchereManager enchereManager = EnchereManager.getInstance();
+		ArticleManager articleManager = ArticleManager.getInstance();
+		
+		String parameterProposition = request.getParameter("proposition");
+		String parameteridArticle = request.getParameter("idArticle");
+		
+		Article article = null;
+
+		int proposition = 0;
+		if (parameterProposition != null) {
+			proposition = Integer.parseInt(parameterProposition);
+		}
+		
+		int idArticle = 0;
+		if (parameteridArticle != null) {
+			idArticle = Integer.parseInt(parameteridArticle);
+		}
+		
+		try {
+			article = articleManager.getArticle(idArticle);
+		} catch (BllException e1) {
+			
+			e1.printStackTrace();
+		}
+		
+		Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
+		
+		/**
+		 * à enlever après que le contexte utilisateur utilisateur existe 
+		 */
+		////
+		UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
+		utilisateur = utilisateurmanager.getUtilisateur(1);
+		////
+		
+		try {
+			enchereManager.create(new Enchere(utilisateur, article, null, proposition));
+		} catch (BllException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		doGet(request, response);
 	}
 

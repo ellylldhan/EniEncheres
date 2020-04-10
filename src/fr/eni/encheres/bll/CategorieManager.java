@@ -26,7 +26,7 @@ public class CategorieManager {
     
     private CategorieDAO categorieDAO = DAOFactory.getCategorieDAO();
 
-	private CategorieManager() throws DalException, BllException {
+	private CategorieManager()  {
 	}
     
 	/**
@@ -35,7 +35,7 @@ public class CategorieManager {
 	 * @throws DalException
 	 * @throws BllException
 	 */
-    public static CategorieManager getInstance() throws DalException, BllException {
+    public static CategorieManager getInstance() {
     	
     	if (INSTANCE == null) {
 			INSTANCE = new CategorieManager();

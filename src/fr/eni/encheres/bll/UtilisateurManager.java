@@ -17,9 +17,9 @@ public class UtilisateurManager {
 
     private UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
 
-    public UtilisateurManager() throws DalException, BllException { }
+    public UtilisateurManager() { }
 
-    public static UtilisateurManager getInstance() throws  DalException, BllException {
+    public static UtilisateurManager getInstance() {
         if(INSTANCE == null)
             INSTANCE = new UtilisateurManager();
         return INSTANCE;
