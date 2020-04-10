@@ -108,7 +108,7 @@ public class RetraitManager {
     /**
      * Méthode en charge de récupérer un retrait selon le numéro d'article
      * @param noArticle
-     * @return
+     * @return Retrait
      * @throws BllException
      */
     public Retrait getRetrait(int noArticle) throws BllException {

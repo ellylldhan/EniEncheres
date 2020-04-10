@@ -67,7 +67,7 @@ public class EnchereManager {
 	    public Enchere getBestEnchereByIdArticle(int idArticle) throws BllException {
 	        Enchere encheres = null;
 	        try {
-	        	encheres = enchereDAO.selectMustEnchereByIdArticle(idArticle);
+	        	encheres = enchereDAO.selectMaxEnchereByIdArticle(idArticle);
 	        	if (encheres == null ) {
 					throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
 				}

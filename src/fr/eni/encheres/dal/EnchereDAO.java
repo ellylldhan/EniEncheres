@@ -21,24 +21,25 @@ public interface EnchereDAO {
 	/**
 	 * Méthode en charge d'insérer un enregistrement dans la table Encheres
 	 * @param noArticle
-	 * @return
 	 * @throws DalException
 	 */
 	public void create(Enchere enchere)  throws DalException ;
 	
 	/**
-	 * Méthode en charge de récupérer l'instance d'une enchers qui a le montant le plus élevépour l'article donné en paramètre
+	 * Méthode en charge de récupérer l'instance d'une enchère qui a le montant le plus élevé pour l'article donné en paramètre
 	 * @param noArticle
-	 * @return
+	 * @return Enchere
 	 * @throws DalException
 	 */
-	public Enchere selectMustEnchereByIdArticle(int idArticle)  throws DalException ;
+	public Enchere selectMaxEnchereByIdArticle(int idArticle)  throws DalException ;
 	
 	/**
-	 * Méthode en charge de récupérer toute less instance d'objet d'enchère lié à un article
+	 * Méthode en charge de récupérer toutes les instances d'objet d'enchère lié à un article
 	 * @param noArticle
-	 * @return
+	 * @return Liste d'Enchère
 	 * @throws DalException
 	 */
 	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException ;
+	
+	public boolean isActive(Enchere enchere) throws DalException;
 }
