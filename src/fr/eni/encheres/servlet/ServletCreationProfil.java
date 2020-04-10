@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CreationProfil
  */
-@WebServlet("/eni/encheres/CreationProfil")
+@WebServlet("/eni/encheres/ServletCreationProfil")
 public class ServletCreationProfil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
