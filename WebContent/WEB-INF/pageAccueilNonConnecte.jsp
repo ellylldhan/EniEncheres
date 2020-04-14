@@ -1,71 +1,75 @@
-<%@ page import="java.util.List" %>
-<%@ page import="fr.eni.encheres.bo.Categorie" %>
-<%@ page import="fr.eni.encheres.bo.Enchere" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List"%>
+<%@ page import="fr.eni.encheres.bo.Categorie"%>
+<%@ page import="fr.eni.encheres.bo.Enchere"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 
 
 <html>
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
-	
-<% List<Enchere> listeEncheres = (List<Enchere>) request.getAttribute("listeEncheres"); %>
-<% List<Categorie> listeCategories = (List<Categorie>) request.getAttribute("listeCategories"); %>
-
 <body class="container">
-    <h2 class="text-center"> Liste des enchères </h2>
-    <div class="row">
-        
-        <div class="col-sm-6">
-            <h3> Filtres </h3>
-            <div class="col-sm-8">
-                <label for="categories">Catégories :</label>
-                <select class="form-control custom-select" id="categories" name="categories">
-                    <option value="" selected>Toutes</option>
-                    <c:forEach var="c" items="${ listeCategories }">
-                        <option value="${ c.noCategorie }">${ c.libelle }</option>
-                    </c:forEach>
-                </select>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="col-sm-4">
-    	<label for="recherche">Recherche :</label>
-            <input id="recherche" class="form-control" name="txtRechercher" value="" type="search"/>
-       </div>
-    </div>
-    <br>
-    <div>
-        <c:forEach items="${listeEncheres}" var="enchere">
-            <!-- Card Narrower -->
-            <div class="card card-cascade narrower" style="width: 50%;">
 
-                <!-- Card image -->
-		<div class="col-md-4">
-			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">
-		</div>
+	<div class="topnav">
+		<a id="lien-page-connection" href="#pageLogin">S'inscrire - Se connecter</a>
+	</div>
 
-                <!-- Card content -->
-                <div class="card-body card-body-cascade">
 
-                    <!-- Label -->
-                    <h4 class="font-weight-bold card-title">${enchere.getArticle.getNomArticle()}</h4>
-                    <!-- Contenu -->
-                    <p class="card-text">Prix : ${enchere.getMontant_Enchere()}</p>
-                    <p class="card-text">Fin de l'enchère : ${enchere.getArticle.dateFinEncheres()}</p>
-                    <br/>
-                    <p class="card-text">Vendeur : ${enchere.getUtilisateur.getPseudo()}</p>
-                </div>
+	<h3 class="text-center">Liste des enchères</h3>
 
-            </div>
-            <!-- Card Narrower -->
-        </c:forEach>
-    </div>
-</div>
+	<form method="post" action="#recherche">
+		<label for="recherche-article">Filtres :</label> 
+		<input id="recherche-article" type="text" name="recherche" placeholder="Le nom de l'article contient...">
+		<input id="btn-recherche" type="submit" value="Rechercher" />
+	</form>
+
+	<label for="categories">Catégories :</label> 
+	<select class="form-control custom-select" id="categories" name="categories">
+	<option value="" selected>Toutes</option>
+	<c:forEach var="c" items="${ listeCategories }">
+		<option value="${ c.noCategorie }">${ c.libelle }</option>
+	</c:forEach>
+	</select> 
+	
+	<br>
+
+	<div>
+	<!-- if listeEncheres est vide alors on affiche 'ya rien' -->
+	
+		<c:if test="${empty listeEncheres }">
+			<h3>La liste des enchères pour  est vide.</h3>
+		</c:if>
+	
+		<c:forEach items="${listeEncheres}" var="enchere">
+			<!-- Carte Enchere -->
+			<div class="card card-cascade narrower" style="width: 50%;">
+
+				<!-- Card image -->
+				<div class="col-md-4">
+					<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">
+				</div>
+
+				<!-- Card content -->
+				<div class="card-body card-body-cascade">
+
+					<!-- Nom Article -->
+					<p id="carte-article-nom">${enchere.getArticle.getNomArticle}</p>
+					
+					<!-- Contenu -->
+					<p id="carte-article-prix"    class="card-text">            Prix : ${enchere.getBestEnchereByIdArticle(enchere.getArticle.getNoArticle)}</p>
+					<p id="carte-article-dateFin" class="card-text">Fin de l'enchère : ${enchere.getArticle.dateFinEncheres}</p>
+					<br />
+					<p id="carte-article-vendeur" class="card-text">         Vendeur : ${enchere.getUtilisateur.getPseudo}</p>
+					
+				</div>
+
+			</div>
+			<!-- Card Encheres -->
+		</c:forEach>
+	</div>
 
 
 </body>

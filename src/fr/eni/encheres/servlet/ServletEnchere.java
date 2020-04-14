@@ -48,10 +48,8 @@ public class ServletEnchere extends HttpServlet {
 			request.setAttribute("Article", article );
 			request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
 			request.setAttribute("MeilleurPrix", enchereManager.getBestEnchereByIdArticle(idArticle).getMontant_enchere());
-			
 	
 			
-
 		} catch (BllException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
