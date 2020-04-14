@@ -15,7 +15,7 @@ import fr.eni.encheres.bo.Utilisateur;
 /**
  * Servlet implementation class CreationProfil
  */
-@WebServlet("/eni/encheres/ServletCreationProfil")
+@WebServlet("/eni/encheres/creationProfil")
 public class ServletCreationProfil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

@@ -24,7 +24,7 @@ import sun.font.CreatedFontTracker;
 /**
  * Servlet implementation class ServletEnchere
  */
-@WebServlet("/eni/encheres/ServletEnchere")
+@WebServlet("/eni/encheres/encheres")
 public class ServletEnchere extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
