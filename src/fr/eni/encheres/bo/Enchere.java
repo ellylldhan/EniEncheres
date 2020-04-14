@@ -98,6 +98,7 @@ public class Enchere implements Serializable{
 		this.date_enchere = new Timestamp(System.currentTimeMillis());
 		this.montant_enchere = montant_enchere;
 	}
+	public Enchere() {}
 	
 	
 	

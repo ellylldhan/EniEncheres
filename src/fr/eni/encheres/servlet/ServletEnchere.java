@@ -1,6 +1,7 @@
 package fr.eni.encheres.servlet;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,23 +55,44 @@ public class ServletEnchere extends HttpServlet {
 				
 				
 				article = articleManager.getArticle(idArticle);
-				request.setAttribute("idArticle", idArticle);
+				request.setAttribute("IdArticle", idArticle);
 				request.setAttribute("Article", article );
 				request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
 				
+				Enchere enchere = enchereManager.getBestEnchereByIdArticle(idArticle);
 				
-				int MeilleurPrix = enchereManager.getBestEnchereByIdArticle(idArticle).getMontant_enchere();
 				
-				if (MeilleurPrix == 0) {
-					request.setAttribute("MeilleurPrix", article.getPrixInitial());
-				}else {
-					request.setAttribute("MeilleurPrix", MeilleurPrix);
+				if (enchere == null) {
+					enchere = new Enchere();
+					enchere.setMontant_enchere(article.getPrixInitial());
+					
 				}
+				request.setAttribute("Enchere", enchere);
+				
+				boolean fini = false;
+				boolean win = false;
+				if (article != null && article.getDateFinEncheres().isBefore(LocalDate.now())) {
+					fini = true;
+					Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
+					/**
+					 * à enlever après que le contexte utilisateur utilisateur existe 
+					 */
+					////
+					UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
+					utilisateur = utilisateurmanager.getUtilisateur(1);
+					////
+					if (utilisateur.getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur() ) {
+						win = true;
+					}
+				}
+				request.setAttribute("fini", fini);
+				request.setAttribute("win", win);
 				
 			}
 		} catch (BllException e) {
 			// TODO Auto-generated catch block
 		}
+		
 		if(article == null){
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}else {
@@ -90,7 +112,7 @@ public class ServletEnchere extends HttpServlet {
 		ArticleManager articleManager = ArticleManager.getInstance();
 		
 		String parameterProposition = request.getParameter("proposition");
-		String parameteridArticle = request.getParameter("idArticle");
+		String parameteridArticle = request.getParameter("IdArticle");
 		
 		Article article = null;
 
