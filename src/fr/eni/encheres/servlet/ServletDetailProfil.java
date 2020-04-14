@@ -16,7 +16,7 @@ import fr.eni.encheres.exception.BllException;
 /**
  * Servlet implementation class ServletDetailProfil
  */
-@WebServlet("/eni/encheres/ServletDetailProfil")
+@WebServlet("/eni/encheres/detailProfil")
 public class ServletDetailProfil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
