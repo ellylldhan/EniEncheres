@@ -12,10 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import fr.eni.encheres.bll.CategorieManager;
 import fr.eni.encheres.bll.EnchereManager;
+import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
-import fr.eni.encheres.exception.DalException;
 
 /**
  * Servlet implementation class ServletAccueil
@@ -41,16 +42,23 @@ public class ServletAccueil extends HttpServlet {
 		try {
 			EnchereManager enchereManager = EnchereManager.getInstance();
 			CategorieManager categorieManager = CategorieManager.getInstance();
+			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 
-			// Choper les encheres
+			// encheres
 			List<Enchere> encheres = enchereManager.getEncheresActives();
 			
 			// Choper les categories
 			List<Categorie> categories = categorieManager.getCategories();
+			
+			// Utilisateur
+			Utilisateur utilisateur = null;
+			
+			
+			
 
 			request.setAttribute("listeEncheres", encheres);
 			request.setAttribute("listeCategories", categories);
-
+			request.setAttribute("utilisateur", utilisateur);
 		} catch (BllException e) {
 			e.printStackTrace();
 		}
