@@ -30,10 +30,12 @@ import fr.eni.encheres.log.MonLogger;
 public class EnchereDAOJdbcImpl implements EnchereDAO{
 
 	private static final String RQT_SelectAllByIdArticle = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres where no_article = ?";
-	private static final String RQT_SelectByIdArticleMustEnchere = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres where no_article = ? and montant_enchere = ( select TOP 1 Max(montant_enchere) from Encheres where no_article = ?)";
+	private static final String RQT_SelectByIdArticleMustEnchere = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres where no_article = ? and montant_enchere = ( select TOP 1 Max(montant_enchere) from Encheres where no_article = ?)   order by date_enchere asc";
 	private static final String RQT_INSERT = "INSERT INTO Encheres VALUES(?,?,?,?)";
 	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
-	   
+	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
+	
+	
 	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
 	
 	private static UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
@@ -89,7 +91,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
         return enchere;
 
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllByIdArticle(int)
@@ -134,6 +136,31 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
     }
 	
 	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.EnchereDAO#selectById(int, int)
+	 */
+	@Override
+	public Enchere selectById(int idArticle, int idUtilisateur) throws DalException {
+		Enchere enchere= null;
+
+        try (Connection connection = ConnectionProvider.getConnection()) {
+            PreparedStatement requete = connection.prepareStatement(RQT_SelectById);
+            requete.setInt(1, idUtilisateur);
+            requete.setInt(2, idArticle);
+            ResultSet rs = requete.executeQuery();
+
+            if (rs.next()) {
+            	enchere = itemBuilder(rs);
+            }
+        } catch (Exception e) {
+        	LOGGER.severe("Erreur dans Enchere selectById(int idArticle, int idUtilisateur) : " + e.getMessage());
+            throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+        }
+
+        return enchere;
+	}
+	
+	/**
 	 * Méthode en charge de créer une instance d'objet Enchere en fonction des enregistrements récupérés en base de données
 	 * @param rs
 	 * @return categorie : Instance d'objet Categorie
@@ -147,5 +174,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 		return enchere;
 		
 	}
+
+
 	
 }

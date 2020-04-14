@@ -46,31 +46,38 @@ public class ServletEnchere extends HttpServlet {
 			RetraitManager retraitManager = RetraitManager.getInstance();
 			
 			String parameteridArticle = request.getParameter("idArticle");
-			int idArticle = 0;
+			
+			parameteridArticle ="1";
 			if (parameteridArticle != null) {
-				idArticle = Integer.parseInt(parameteridArticle);
-			}
-			
-			article = articleManager.getArticle(idArticle);
-			
-			request.setAttribute("idArticle", idArticle);
-			request.setAttribute("Article", article );
-			request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
-			request.setAttribute("MeilleurPrix", enchereManager.getBestEnchereByIdArticle(idArticle).getMontant_enchere());
-			
 	
-			
-
+				int idArticle = Integer.parseInt(parameteridArticle);
+				
+				
+				article = articleManager.getArticle(idArticle);
+				request.setAttribute("idArticle", idArticle);
+				request.setAttribute("Article", article );
+				request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
+				
+				
+				int MeilleurPrix = enchereManager.getBestEnchereByIdArticle(idArticle).getMontant_enchere();
+				
+				if (MeilleurPrix == 0) {
+					request.setAttribute("MeilleurPrix", article.getPrixInitial());
+				}else {
+					request.setAttribute("MeilleurPrix", MeilleurPrix);
+				}
+				
+			}
 		} catch (BllException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			if (article != null) {				
-				request.setAttribute("MeilleurPrix", article.getPrixInitial());
-
-			}
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
-		rd.forward(request, response);
+		if(article == null){
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}else {
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
+			rd.forward(request, response);
+
+		}
 
 		
 	}
@@ -97,13 +104,6 @@ public class ServletEnchere extends HttpServlet {
 			idArticle = Integer.parseInt(parameteridArticle);
 		}
 		
-		try {
-			article = articleManager.getArticle(idArticle);
-		} catch (BllException e1) {
-			
-			e1.printStackTrace();
-		}
-		
 		Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
 		
 		/**
@@ -115,7 +115,8 @@ public class ServletEnchere extends HttpServlet {
 		////
 		
 		try {
-			enchereManager.create(new Enchere(utilisateur, article, null, proposition));
+			article = articleManager.getArticle(idArticle);
+			enchereManager.create(new Enchere(utilisateur, article, proposition));
 		} catch (BllException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -88,12 +88,14 @@ public class Enchere implements Serializable{
 		super();
 		this.utilisateur = utilisateur;
 		this.article = article;
-		if (date_enchere == null) {
-			this.date_enchere = new Timestamp(System.currentTimeMillis());
-		}else {
-			this.date_enchere = date_enchere;
-		}
-		
+		this.date_enchere = date_enchere;
+		this.montant_enchere = montant_enchere;
+	}
+	public Enchere(Utilisateur utilisateur, Article article, int montant_enchere) {
+		super();
+		this.utilisateur = utilisateur;
+		this.article = article;
+		this.date_enchere = new Timestamp(System.currentTimeMillis());
 		this.montant_enchere = montant_enchere;
 	}
 	

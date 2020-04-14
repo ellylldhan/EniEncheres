@@ -54,9 +54,7 @@ public class EnchereManager {
 	        List<Enchere> encheres= null;
 	        try {
 	        	encheres = enchereDAO.selectAllByIdArticle(idArticle);
-	        	if (encheres == null ) {
-					throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
-				}
+
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getEnchereByIdArticle(int idArticle) : " + e.getMessage());
 	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
@@ -68,9 +66,7 @@ public class EnchereManager {
 	        Enchere encheres = null;
 	        try {
 	        	encheres = enchereDAO.selectMustEnchereByIdArticle(idArticle);
-	        	if (encheres == null ) {
-					throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
-				}
+
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getBestEnchereByIdArticle(int idArticle) : " + e.getMessage());
 	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
@@ -83,7 +79,13 @@ public class EnchereManager {
 	    	this.checkEnchere(enchere);
 	    	
 	        try {
-	        	enchereDAO.create(enchere);
+	        	if (enchereDAO.selectById(enchere.getArticle().getNoArticle(), enchere.getUtilisateur().getNoUtilisateur()) == null) {
+	        		enchereDAO.create(enchere);
+				}
+	        	else {
+					enchereDAO.update(enchere);
+				}
+	        	
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getBestEnchereByIdArticle(int idArticle) : " + e.getMessage());
 	            throw new BllException(CodesResultatBLL.INSERT_OBJET_NOTINSERT);
@@ -101,11 +103,11 @@ public class EnchereManager {
 	    }
 	    
 	    private void checkEnchere(Enchere enchere) throws BllException {
-	    	if (enchere == null || enchere.getArticle().getNoArticle() == 0  || enchere.getMontant_enchere() <= 0 || enchere.getUtilisateur().getNoUtilisateur() == 0) {
+	    	if (enchere == null || enchere.getArticle().getNoArticle() == 0 || enchere.getMontant_enchere() <=  enchere.getArticle().getPrixInitial() || enchere.getUtilisateur().getNoUtilisateur() == 0) {
 				throw new BllException(CodesResultatBLL.OBJET_NOTCONFORM);
 			}
-	    	Article article =  articleManager.getArticle(enchere.getArticle().getNoArticle());
-	    	if (!article.getDateDebut().isAfter(LocalDate.now()) || !article.getDateFinEncheres().isBefore(LocalDate.now())) {
+
+	    	if (!enchere.getArticle().getDateDebut().isBefore(LocalDate.now()) || !enchere.getArticle().getDateFinEncheres().isAfter(LocalDate.now())) {
 				throw new BllException(CodesResultatBLL.CHECK_INSERT_OK);
 			}
 	    }	    
