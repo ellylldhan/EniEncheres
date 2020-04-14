@@ -110,5 +110,25 @@ public class EnchereManager {
 	    	if (!enchere.getArticle().getDateDebut().isBefore(LocalDate.now()) || !enchere.getArticle().getDateFinEncheres().isAfter(LocalDate.now())) {
 				throw new BllException(CodesResultatBLL.CHECK_INSERT_OK);
 			}
-	    }	    
+	    }
+
+	    /**
+	     * Retourne la liste des enchères actives (ni périmée, ni retirée)
+	     * @return Liste d'Enchères
+	     * @throws BllException
+	     */
+	    public List<Enchere> getEncheresActives() throws BllException {
+	        List<Enchere> encheres= null;
+	        try {
+	        	encheres = enchereDAO.selectAllEncheresValides();
+	        	if (encheres == null ) {
+					throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
+				}
+	        } catch (DalException e) {
+	            LOGGER.severe("Erreur dans EnchereManager getEncheresActives() : " + e.getMessage());
+	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
+	        }
+	        return encheres;
+	    }
+  
 }

@@ -52,10 +52,17 @@ public interface EnchereDAO {
 	public Enchere selectById(int idArticle,int idUtilisateur)  throws DalException ;
 	
 	/**
-	 * Méthode en charge de mêttre à jour une enchère 
+	 * Méthode en charge de mettre à jour une enchère 
 	 * @param enchere
 	 * @return
 	 * @throws DalException
 	 */
 	public void update(Enchere enchere) throws DalException;
+
+	/**
+	 * Retourne la liste de toutes les enchères en cours de validité.
+	 * @return Liste enchères non retirées dont la date de fin n'est pas dépassée.
+	 * @throws DalException
+	 */
+	public List<Enchere> selectAllEncheresValides() throws DalException;
 }

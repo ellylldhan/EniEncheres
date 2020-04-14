@@ -34,7 +34,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static final String RQT_INSERT = "INSERT INTO Encheres VALUES(?,?,?,?)";
 	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
 	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
-	
+	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select no_article from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
 	
 	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
 	
@@ -59,6 +59,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 			requete.setInt(4, enchere.getMontant_enchere());
 			
 			int rs = requete.executeUpdate();
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			LOGGER.severe("Erreur dans Enchere create(Enchere enchere) : " + e.getMessage());
@@ -173,6 +174,30 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 		
 		return enchere;
 		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllEncheresCourantes(int)
+	 */
+	public List<Enchere> selectAllEncheresValides() throws DalException {
+		List<Enchere> encheres = new ArrayList<Enchere>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_SELECT_ALL_ENCHERES_ACTIVES);
+
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				encheres.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			LOGGER.severe("Erreur dans Enchere selectAllEncheresValides() : " + e.getMessage());
+			throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+		}
+
+		return encheres;
 	}
 
 
