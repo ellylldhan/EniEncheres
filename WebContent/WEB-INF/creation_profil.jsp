@@ -32,22 +32,22 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="pseudo_utilisateur">Pseudo</label>
-							<input class="form-control" type="text" id="pseudo_utilisateur" name="pseudo_utilisateur">
+							<input class="form-control" type="text" id="pseudo_utilisateur" name="pseudo_utilisateur" <c:if test="${ isConnected }">value="${ utilisateur.pseudo }"</c:if>>
 						</div>
 						
 						<div class="form-group">
 							<label for="prenom_utilisateur">Prénom</label>
-							<input class="form-control" type="text" id="prenom_utilisateur" name="prenom_utilisateur">
+							<input class="form-control" type="text" id="prenom_utilisateur" name="prenom_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.prenom }</c:if>">
 						</div>
 						
 						<div class="form-group">
 							<label for="telephone_utilisateur">Téléphone</label>
-							<input class="form-control" type="text" id="telephone_utilisateur" name="telephone_utilisateur">
+							<input class="form-control" type="text" id="telephone_utilisateur" name="telephone_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.telephone }</c:if>">
 						</div>
 						
 						<div class="form-group">
 							<label for="code_postal_utilisateur">Code postal</label>
-							<input class="form-control" type="text" id="code_postal_utilisateur" name="code_postal_utilisateur">
+							<input class="form-control" type="text" id="code_postal_utilisateur" name="code_postal_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.codePostal }</c:if>">
 						</div>
 						
 						<div class="form-group">
@@ -59,22 +59,22 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="nom_utilisateur">Nom</label>
-							<input class="form-control" type="text" id="nom_utilisateur" name="nom_utilisateur">
+							<input class="form-control" type="text" id="nom_utilisateur" name="nom_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.nom }</c:if>">
 						</div>
 						
 						<div class="form-group">
 							<label for="email_utilisateur">Email</label>
-							<input class="form-control" type="text" id="email_utilisateur" name="email_utilisateur">
+							<input class="form-control" type="text" id="email_utilisateur" name="email_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.email }</c:if>">
 						</div>
 						
 						<div class="form-group">
 							<label for="rue_utilisateur">Rue</label>
-							<input class="form-control" type="text" id="rue_utilisateur" name="rue_utilisateur">
+							<input class="form-control" type="text" id="rue_utilisateur" name="rue_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.rue }</c:if>">
 						</div>
 						
 						<div class="form-group">
 							<label for="ville_utilisateur">Ville</label>
-							<input class="form-control" type="text" id="ville_utilisateur" name="ville_utilisateur">
+							<input class="form-control" type="text" id="ville_utilisateur" name="ville_utilisateur" value="<c:if test="${ isConnected }">${ utilisateur.ville }</c:if>">
 						</div>
 						
 						<div class="form-group">
@@ -84,7 +84,14 @@
 					</div>
 				</div>
 				<div class="form_buttons">
-					<button type="submit" class="btn btn-outline-success">Créer</button>
+					<c:choose>
+						<c:when test="${ isConnected }">
+							<button type="submit" class="btn btn-outline-success">Enregistrer</button>
+						</c:when>
+						<c:otherwise>
+							<button type="submit" class="btn btn-outline-success">Créer</button>
+						</c:otherwise>
+					</c:choose>
 					<button type="button" class="btn btn-outline-danger">Annuler</button>
 				</div>
 			</form>
