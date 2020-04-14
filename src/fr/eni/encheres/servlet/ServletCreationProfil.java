@@ -81,6 +81,9 @@ public class ServletCreationProfil extends HttpServlet {
 		
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
+			rd.forward(request, response);
 		} else {
 			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 			if (isConnected) {
@@ -135,7 +138,7 @@ public class ServletCreationProfil extends HttpServlet {
 		} else {
 			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 			//TODO: Modifier pour le sélectionner via le pseudo et non l'id
-			Utilisateur utilisateur = utilisateurManager.getUtilisateur(4);
+			Utilisateur utilisateur = utilisateurManager.getUtilisateur(0);
 			if (utilisateur != null) {
 				listeCodesErreur.add(CodesResultatServlets.PSEUDO_UTILISATEUR_UNIQUE);
 			}

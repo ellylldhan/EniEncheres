@@ -80,6 +80,9 @@ public class ServletNouvelleVente extends HttpServlet {
 		if(listeCodesErreur.size() > 0)
 		{
 			request.setAttribute("listeCodesErreur",listeCodesErreur);
+
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
+			rd.forward(request, response);
 		}
 		else
 		{
