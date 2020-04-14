@@ -27,7 +27,7 @@
 		   		</div>
 		   	</c:if>
 		
-			<form action="${pageContext.request.contextPath}/eni/encheres/ServletCreationProfil" method="post">
+			<form action="${pageContext.request.contextPath}/eni/encheres/creationProfil" method="post">
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">

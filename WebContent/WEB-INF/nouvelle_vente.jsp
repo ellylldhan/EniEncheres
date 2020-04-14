@@ -32,7 +32,7 @@
 		    			</div>
 		    		</c:if>
 		    	        	
-		        	<form action="${pageContext.request.contextPath}/eni/encheres/ServletNouvelleVente" method="post">
+		        	<form action="${pageContext.request.contextPath}/eni/encheres/nouvelleVente" method="post">
 						<div class="form-group">
 							<label for="nom_article">Article : </label>
 							<input class="form-control" type="text" id="nom_article" name="nom_article">

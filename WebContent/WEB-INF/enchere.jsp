@@ -71,7 +71,7 @@ ${request.setAttribute("Article", Article) }
 			        	</div>
 		        	</c:if>
 		        	<c:if test="${!fini}">
-			        	<form action="${pageContext.request.contextPath}/eni/encheres/ServletEnchere" method="post">
+			        	<form action="${pageContext.request.contextPath}/eni/encheres/encheres" method="post">
 							<input type="hidden" name="IdArticle" value="${IdArticle}" />
 			        		<div class="form-group">
 								<label for="prix_initial_article">Ma proposition: </label>

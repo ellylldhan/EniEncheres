@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.w3c.dom.ls.LSInput;
-
 import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Utilisateur;
 
@@ -37,11 +35,11 @@ public class ServletCreationProfil extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Utilisateur utilisateur = null;
 		//TODO: A modifier avec le token de connexion
-		boolean isConnected = true;
+		boolean isConnected = false;
 		
 		UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
-		
-		//Simulation récupération de l'utilisateur connecté
+
+		//TODO: A modifier lorsque les contexts de session seront implémentés
 		utilisateur = utilisateurManager.getUtilisateur(4);
 		
 		request.setAttribute("utilisateur", utilisateur);
@@ -57,7 +55,7 @@ public class ServletCreationProfil extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		//TODO: A modifier avec le token de connexion
-		boolean isConnected = true;
+		boolean isConnected = false;
 		
 		//Lecture des paramètres
 		String pseudo = null;
@@ -97,12 +95,22 @@ public class ServletCreationProfil extends HttpServlet {
 				utilisateurToUpdate.setCodePostal(codePostal);
 				utilisateurToUpdate.setVille(ville);
 				utilisateurToUpdate.setMotDePasse(motDePasse);
-				utilisateurManager.updateUtilisateur(utilisateurToUpdate);
+				
+				try {
+					utilisateurManager.updateUtilisateur(utilisateurToUpdate);
+				} catch (Exception e) {
+					e.getMessage();
+				}
 			} else {
 				int credit = 100;
 				boolean administrateur = false;
 				Utilisateur utilisateurToAdd = new Utilisateur(pseudo, nom, prenom, email, telephone, rue, codePostal, ville, motDePasse, credit, administrateur);
-				utilisateurManager.addUtilisateur(utilisateurToAdd);
+				
+				try {
+					utilisateurManager.addUtilisateur(utilisateurToAdd);
+				} catch (Exception e) {
+					e.getMessage();
+				}
 			}
 			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");

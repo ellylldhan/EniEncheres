@@ -25,7 +25,7 @@
 				<div class="div_detail_profil_style">Ville : ${ utilisateur.ville }</div>
 				
 				<div class="text-center">
-					<a class="btn btn-outline-dark btn_style" type="button" href="${pageContext.request.contextPath}/eni/encheres/ServletCreationProfil">Modifier</a>
+					<a class="btn btn-outline-dark btn_style" type="button" href="${pageContext.request.contextPath}/eni/encheres/creationProfil">Modifier</a>
 				</div>
 			</c:if>
 		</div>
