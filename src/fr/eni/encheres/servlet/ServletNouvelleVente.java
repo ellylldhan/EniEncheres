@@ -77,9 +77,7 @@ public class ServletNouvelleVente extends HttpServlet {
 		dateDebutEncheres = lireParametreDateDebutEncheresArticle(request, listeCodesErreur);
 		dateFinEncheres = lireParametreDateFinEncheresArticle(request, listeCodesErreur);
 		
-		System.out.println(prixInitial);
-		
-		if(listeCodesErreur.size()>0)
+		if(listeCodesErreur.size() > 0)
 		{
 			request.setAttribute("listeCodesErreur",listeCodesErreur);
 		}
