@@ -25,10 +25,14 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
     private static UtilisateurManager um = UtilisateurManager.getInstance();
     RequestDispatcher rd = null;
 
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        rd = request.getRequestDispatcher(LOGIN_VIEW);
+        rd.forward(request, response);
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
-        List<Integer> listCodesErreurs = new ArrayList<>();
+        List<Integer> listeCodesErreur = new ArrayList<>();
 
         try {
             // Vérification de l'existance d'une session
@@ -42,42 +46,35 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
                 String pw = request.getParameter("motDePasse");
                 boolean isCorrectPw = false;
 
-                if(!login.isEmpty() && !pw.isEmpty()){
+                if(login.isEmpty() && pw.isEmpty()){
+                	listeCodesErreur.add(CodesResultatBLL.WRONG_USER_INPUTS);
+                }
+                else{
 
                     u = um.getUtilisateurByArg(login);
 
                     if(u != null){
-                        isCorrectPw = um.isCorrectPassword(pw, u.getMotDePasse());
-
-                        if(isCorrectPw){
+                        if( um.isCorrectPassword(pw, u.getMotDePasse())){
                             request.getSession().setAttribute("idUtilisateur", u.getNoUtilisateur());
                         } else {
-                            throw new BllException(CodesResultatBLL.WRONG_USER_INPUTS);
+                        	listeCodesErreur.add(CodesResultatBLL.WRONG_USER_INPUTS);
                         }
                     } else {
-                        throw new BllException(CodesResultatBLL.USER_NOT_FOUND);
+                    	listeCodesErreur.add(CodesResultatBLL.USER_NOT_FOUND);
                     }
-                } else {
-                    throw new BllException(CodesResultatBLL.WRONG_USER_INPUTS);
                 }
+                if (listeCodesErreur.size() > 0) {
+                	request.setAttribute("listeCodesErreur", listeCodesErreur);
+                	doGet(request, response);
+				}
             }
-
         } catch (BusinessException e){
             e.printStackTrace();
             request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
             LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + e.getMessage());
             doGet(request, response);
-        } catch (BllException ex) {
-            ex.printStackTrace();
-            LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + ex.getMessage());
-            doGet(request, response);
         }
         response.sendRedirect(request.getContextPath() + "/accueil");
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        rd = request.getRequestDispatcher(LOGIN_VIEW);
-        rd.forward(request, response);
     }
 
     private void doDeconnection(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {

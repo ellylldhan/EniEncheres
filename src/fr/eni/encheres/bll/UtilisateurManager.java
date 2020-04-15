@@ -62,11 +62,14 @@ public class UtilisateurManager {
         return u;
     }
 
-    public boolean isCorrectPassword(String pw, String motDePasse) {
+    public boolean isCorrectPassword(String pw, String motDePasse) throws BusinessException {
         if(pw.equals(motDePasse))
             return true;
-        else
-            return false;
+        else {
+        	BusinessException businessException = new BusinessException();
+        	businessException.ajouterErreur(CodesResultatBLL.MISSING_CREDIT);
+        	throw businessException;
+        }
     }
 
     public Utilisateur getUtilisateurByArg(String login) throws BusinessException{
