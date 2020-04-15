@@ -46,13 +46,15 @@ public class ServletNouvelleVente extends HttpServlet {
 		try {
 			CategorieManager categorieManager = CategorieManager.getInstance();
 			request.setAttribute("listeCategories", categorieManager.getCategories());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (BusinessException e) {
 			e.printStackTrace();
+			request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+		}finally {
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
+			rd.forward(request, response);
 		}
 
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
-		rd.forward(request, response);
+		
 	}
 
 	/**
@@ -72,7 +74,7 @@ public class ServletNouvelleVente extends HttpServlet {
 		
 		nomArticle = lireParametreNomArticle(request, listeCodesErreur);
 		description = lireParametreDescriptionArticle(request, listeCodesErreur);
-		noCategorie = Integer.parseInt(request.getParameter("categorie_article"));
+		noCategorie = lireParametreNoCategorie(request, listeCodesErreur);
 		prixInitial = lireParametrePrixInitialArticle(request, listeCodesErreur);
 		dateDebutEncheres = lireParametreDateDebutEncheresArticle(request, listeCodesErreur);
 		dateFinEncheres = lireParametreDateFinEncheresArticle(request, listeCodesErreur);
@@ -86,16 +88,18 @@ public class ServletNouvelleVente extends HttpServlet {
 		}
 		else
 		{
-			CategorieManager categorieManager = CategorieManager.getInstance();
-			Categorie categorie = categorieManager.getCategorie(noCategorie);
-			
-			//TODO: A modifier lorsque les contexts de session seront implémentés
-			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
-			Utilisateur utilisateur = utilisateurManager.getUtilisateur(1);
-			
-			Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, utilisateur, categorie);
-			ArticleManager articleManager = ArticleManager.getInstance();
 			try {
+				
+			
+				CategorieManager categorieManager = CategorieManager.getInstance();
+				Categorie categorie = categorieManager.getCategorie(noCategorie);
+				
+				//TODO: A modifier lorsque les contexts de session seront implémentés
+				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+				Utilisateur utilisateur = utilisateurManager.getUtilisateur(1);
+				
+				Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, utilisateur, categorie);
+				ArticleManager articleManager = ArticleManager.getInstance();
 				int article = articleManager.addArticle(articleToAdd);
 				
 				//Si les champs du point de retrait sont renseignés, on créer le point de retrait lié à l'article
@@ -110,8 +114,8 @@ public class ServletNouvelleVente extends HttpServlet {
 					
 					int retrait = retraitManager.addRetrait(retraitToAdd);
 					
-					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
-					rd.forward(request, response);
+					request.setAttribute("idArticle", article);
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/encheres");
 				}
 			} catch (BusinessException e) {
 				e.printStackTrace();
@@ -213,6 +217,27 @@ public class ServletNouvelleVente extends HttpServlet {
 		
 		return localDateFinEncheres;
 	}
+	
+	/**
+	 * Méthode en charge de vérifier si le No de catégorie est bien renseignée
+	 * @param request
+	 * @param listeCodesErreur
+	 * @return
+	 */
+	private int  lireParametreNoCategorie(HttpServletRequest request, List<Integer> listeCodesErreur) {
+
+		int noCategorie = 0;
+		String noCategorieParam = request.getParameter("categorie_article");
+				
+		if (noCategorieParam == null || noCategorieParam.trim().equals("")) {
+			listeCodesErreur.add(CodesResultatServlets.DATE_FIN_ENCHERES_ARTICLE_OBLIGATOIRE);
+		} else {
+			noCategorie = Integer.parseUnsignedInt(noCategorieParam);
+		}
+		
+		return noCategorie;
+	}
+	
 	
 	/**
 	 * Méthode en charge de vérifier si un point de retrait est renseigné

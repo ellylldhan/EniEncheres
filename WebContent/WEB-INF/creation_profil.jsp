@@ -88,12 +88,13 @@
 					<c:choose>
 						<c:when test="${ isConnected }">
 							<button type="submit" class="btn btn-outline-success">Enregistrer</button>
+							<a type="button" class="btn btn-outline-danger" href="${pageContext.request.contextPath}/eni/encheres/supprimerCompte?idUtilisateur=${ utilisateur.noUtilisateur }">Supprimer mon compte</a>
 						</c:when>
 						<c:otherwise>
 							<button type="submit" class="btn btn-outline-success">Créer</button>
+							<a type="button" class="btn btn-outline-danger">Annuler</a>
 						</c:otherwise>
 					</c:choose>
-					<button type="button" class="btn btn-outline-danger">Annuler</button>
 				</div>
 			</form>
 		</div>
