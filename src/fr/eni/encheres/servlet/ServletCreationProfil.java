@@ -10,9 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.exception.BusinessException;
 
 /**
  * Servlet implementation class CreationProfil
@@ -33,20 +35,45 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Integer> listeCodesErreur = new ArrayList();
+		
+		int idUtilisateur = -1;
 		Utilisateur utilisateur = null;
-		//TODO: A modifier avec le token de connexion
 		boolean isConnected = false;
 		
-		UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
-
-		//TODO: A modifier lorsque les contexts de session seront implémentés
-		utilisateur = utilisateurManager.getUtilisateur(4);
+		//Vérification de l'existance d'une session, retourne true si oui, sinon null
+		HttpSession session = request.getSession(false);
 		
-		request.setAttribute("utilisateur", utilisateur);
-		request.setAttribute("isConnected", isConnected);
+		if (listeCodesErreur.size() > 0) {
+			request.setAttribute("listeCodesErreur", listeCodesErreur);
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
+			rd.forward(request, response);
+		} else {
+			//Si on a une session
+			if (session != null) {
+				isConnected = true;
+				
+				try {
+					UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+					idUtilisateur = (int) session.getAttribute("idUtilisateur");
+					
+					utilisateur = utilisateurManager.getUtilisateur(idUtilisateur);
+				} catch (BusinessException e) {
+					e.printStackTrace();
+					request.setAttribute("listeCodesErreur", listeCodesErreur);
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
+					rd.forward(request, response);
+				}
+				
+				request.setAttribute("utilisateur", utilisateur);
+			}
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
-		rd.forward(request, response);
+			request.setAttribute("isConnected", isConnected);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
+			rd.forward(request, response);
+		}
+		
 	}
 
 	/**
@@ -54,8 +81,15 @@ public class ServletCreationProfil extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		//TODO: A modifier avec le token de connexion
+		int idUtilisateur = -1;
 		boolean isConnected = false;
+		
+		//Vérification de l'existance d'une session, retourne true si oui, sinon null
+		HttpSession session = request.getSession(false);
+		
+		if (session != null) {
+			isConnected = true;
+		}
 		
 		//Lecture des paramètres
 		String pseudo = null;
@@ -86,23 +120,29 @@ public class ServletCreationProfil extends HttpServlet {
 			rd.forward(request, response);
 		} else {
 			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+			
 			if (isConnected) {
-				//TODO: A modifier lorsque les contexts de session seront implémentés
-				Utilisateur utilisateurToUpdate = utilisateurManager.getUtilisateur(4);
-				utilisateurToUpdate.setPseudo(pseudo);
-				utilisateurToUpdate.setPrenom(prenom);
-				utilisateurToUpdate.setNom(nom);
-				utilisateurToUpdate.setEmail(email);
-				utilisateurToUpdate.setTelephone(telephone);
-				utilisateurToUpdate.setRue(rue);
-				utilisateurToUpdate.setCodePostal(codePostal);
-				utilisateurToUpdate.setVille(ville);
-				utilisateurToUpdate.setMotDePasse(motDePasse);
-				
 				try {
+					
+					idUtilisateur = (int) session.getAttribute("idUtilisateur");
+					
+					Utilisateur utilisateurToUpdate;
+					utilisateurToUpdate = utilisateurManager.getUtilisateur(idUtilisateur);
+				
+					utilisateurToUpdate.setPseudo(pseudo);
+					utilisateurToUpdate.setPrenom(prenom);
+					utilisateurToUpdate.setNom(nom);
+					utilisateurToUpdate.setEmail(email);
+					utilisateurToUpdate.setTelephone(telephone);
+					utilisateurToUpdate.setRue(rue);
+					utilisateurToUpdate.setCodePostal(codePostal);
+					utilisateurToUpdate.setVille(ville);
+					utilisateurToUpdate.setMotDePasse(motDePasse);
+					
 					utilisateurManager.updateUtilisateur(utilisateurToUpdate);
-				} catch (Exception e) {
-					e.getMessage();
+					
+				} catch (BusinessException e1) {
+					e1.printStackTrace();
 				}
 			} else {
 				int credit = 100;
@@ -124,7 +164,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le pseudo utilisateur est bien renseigné et unique
+	 * Méthode en charge de vérifier si le pseudo utilisateur est bien renseigné
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -135,13 +175,6 @@ public class ServletCreationProfil extends HttpServlet {
 		
 		if (pseudo == null || pseudo.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.PSEUDO_UTILISATEUR_OBLIGATOIRE);
-		} else {
-			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
-			//TODO: Modifier pour le sélectionner via le pseudo et non l'id
-			Utilisateur utilisateur = utilisateurManager.getUtilisateur(0);
-			if (utilisateur != null) {
-				listeCodesErreur.add(CodesResultatServlets.PSEUDO_UTILISATEUR_UNIQUE);
-			}
 		}
 		
 		return pseudo;

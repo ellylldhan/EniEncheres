@@ -4,9 +4,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-
-    <title>ENI-Encheres</title>
-
+    <title>ENI-Enchères</title>
 
     <!-- Bootstrap core CSS -->
     <link href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
