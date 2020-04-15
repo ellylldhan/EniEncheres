@@ -3,6 +3,7 @@ package fr.eni.encheres.servlet;
 import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.log.MonLogger;
 
 import javax.servlet.RequestDispatcher;
@@ -21,36 +22,47 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
 
     protected void doPost(HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
-        Utilisateur u = null;
-        String login = request.getParameter("identifiant");
-        String pw = request.getParameter("motDePasse");
-        boolean isCorrectPw = false;
+        try {
+            // Vérification de l'existance d'une session
+            // return true si une session existe, sinon null
+            HttpSession session = request.getSession(false);
 
-        if(login != null && !login.isEmpty() && !pw.isEmpty()){
-            try {
-                u = um.getUtilisateurByArg(login);
+            // Il n'existe pas de session
+            if(session == null){
+                Utilisateur u = null;
+                String login = request.getParameter("identifiant");
+                String pw = request.getParameter("motDePasse");
+                boolean isCorrectPw = false;
 
-                if(u != null){
-                    if(login.equals(u.getPseudo()) || login.equals(u.getEmail())){
+                if(!login.isEmpty() && !pw.isEmpty()){
+
+                    u = um.getUtilisateurByArg(login);
+
+                    if(u != null){
                         isCorrectPw = um.isCorrectPassword(pw, u.getMotDePasse());
 
                         if(isCorrectPw){
-                            HttpSession session = request.getSession();
+                            session = request.getSession();
                             session.setAttribute("id", u.getNoUtilisateur());
                         } else {
-
-                            // TODO : Message erreur
-
-                            doGet(request, response);
+                            throw new BllException(CodesResultatBLL.WRONG_USER_INPUTS);
                         }
+                    } else {
+                        throw new BllException(CodesResultatBLL.USER_NOT_FOUND);
                     }
+                } else {
+                    throw new BllException(CodesResultatBLL.WRONG_USER_INPUTS);
                 }
-            } catch (BllException e) {
-                LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + e.getMessage());
-                doGet(request, response);
+            // Une session existe
+            } else {
+                session.invalidate();
             }
+
+        } catch (BllException e){
+            LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + e.getMessage());
+            doGet(request, response);
         }
-        rd = request.getRequestDispatcher("/WEB-INF/acceuil.jsp");
+        rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
         rd.forward(request, response);
     }
 

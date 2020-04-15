@@ -49,5 +49,9 @@ public abstract class CodesResultatBLL {
 	 * Pas asser de crédit
 	 */
 	public static final int MISSING_CREDIT = 1010;
-	
+
+	/**
+	 * Login ou mot de passe incorrect
+	 */
+	public static final int WRONG_USER_INPUTS = 1011;
 }

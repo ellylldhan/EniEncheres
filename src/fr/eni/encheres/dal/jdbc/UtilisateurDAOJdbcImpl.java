@@ -18,7 +18,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
     private static Logger LOGGER = MonLogger.getLogger("UtilisateurDAOJdbcImpl");
 
     private static final String RQT_SELECT_BY_ID = "SELECT * from UTILISATEURS WHERE no_utilisateur = ?";
-    private static final String RQT_SELECT_BY_PSEUDO = "SELECT * from UTILISATEURS WHERE pseudo = ? OR email = ?";
+    private static final String RQT_SELECT_BY_ARG = "SELECT * from UTILISATEURS WHERE pseudo = ? OR email = ?";
     private static final String RQT_SELECT_ALL = "SELECT * from UTILISATEURS";
     private static final String RQT_INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES(?,?,?,?,?,?,?,?,?,?,?)\n";
     private static final String RQT_UPDATE = "UPDATE UTILISATEURS SET pseudo = ?, nom = ?, prenom = ?, email = ?, telephone = ?, rue = ?, code_postal = ?, ville = ?, mot_de_passe = ?, credit = ?, administrateur = ? WHERE no_utilisateur = ?";
@@ -30,7 +30,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
         Utilisateur u = null;
 
         try(Connection con = ConnectionProvider.getConnection()){
-            PreparedStatement pStmt = con.prepareStatement(RQT_SELECT_BY_PSEUDO);
+            PreparedStatement pStmt = con.prepareStatement(RQT_SELECT_BY_ARG);
             pStmt.setString(1, a);
             pStmt.setString(2, a);
             ResultSet rs = pStmt.executeQuery();

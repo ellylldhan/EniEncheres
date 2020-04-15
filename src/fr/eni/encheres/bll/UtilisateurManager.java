@@ -71,6 +71,21 @@ public class UtilisateurManager {
         }
         return u;
     }
-    
 
+    public boolean isCorrectPassword(String pw, String motDePasse) {
+        if(pw.equals(motDePasse))
+            return true;
+        else
+            return false;
+    }
+
+    public Utilisateur getUtilisateurByArg(String login) throws BllException{
+        Utilisateur u = null;
+        try {
+            u= utilisateurDAO.selectByArg(login);
+        } catch (DalException e) {
+            LOGGER.severe("Erreur dans UtitilisateurManager lors de la récupération de l'utilisateur [" + login + "] : " + e.getMessage());
+        }
+        return u;
+    }
 }
