@@ -1,0 +1,12 @@
+#login-page.form-check{
+    display: flex;
+}
+
+#login-page.form-check-input{
+    align-self: center;
+    margin: 0;
+}
+
+#login-page.form-check-label{
+    align-self: center;
+}
