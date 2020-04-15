@@ -13,10 +13,12 @@ import org.apache.jasper.tagplugins.jstl.core.If;
 import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.EnchereDAO;
+import fr.eni.encheres.dal.UtilisateurDAO;
 import fr.eni.encheres.dal.jdbc.CategorieDAOJdbcImpl;
 import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.CodesResultatBLL;
@@ -36,6 +38,7 @@ public class EnchereManager {
 	    
 	    private EnchereDAO enchereDAO = DAOFactory.getEnchereDAO();
 	    private ArticleManager articleManager = ArticleManager.getInstance();
+	    private UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
 
 		private EnchereManager(){
 			
@@ -75,10 +78,8 @@ public class EnchereManager {
 	    }
 	    
 	    public void create(Enchere enchere) throws BllException {
-
-	    	this.checkEnchere(enchere);
-	    	
 	        try {
+	        	this.checkEnchere(enchere);
 	        	if (enchereDAO.selectById(enchere.getArticle().getNoArticle(), enchere.getUtilisateur().getNoUtilisateur()) == null) {
 	        		enchereDAO.create(enchere);
 				}
@@ -91,25 +92,29 @@ public class EnchereManager {
 	            throw new BllException(CodesResultatBLL.INSERT_OBJET_NOTINSERT);
 	        }
 	    }
-	    
-	    public void update(Enchere enchere) throws BllException {
-	    	this.checkEnchere(enchere);
-	        try {
-	        	enchereDAO.create(enchere);
-	        } catch (DalException e) {
-	            LOGGER.severe("Erreur dans EnchereManager getBestEnchereByIdArticle(int idArticle) : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.UPDATE_OBJET_NOTUPDATE);
-	        }
-	    }
-	    
-	    private void checkEnchere(Enchere enchere) throws BllException {
-	    	if (enchere == null || enchere.getArticle().getNoArticle() == 0 || enchere.getMontant_enchere() <=  enchere.getArticle().getPrixInitial() || enchere.getUtilisateur().getNoUtilisateur() == 0) {
+	    	    
+	    private void checkEnchere(Enchere enchere) throws BllException, DalException {
+	    	
+	    	Enchere meilleurEnchere = enchereDAO.selectMustEnchereByIdArticle(enchere.getArticle().getNoArticle());
+	    	int meilleurOffre = 0;
+	    	if (meilleurEnchere != null) {
+				meilleurOffre = meilleurEnchere.getMontant_enchere();
+		    	if (meilleurEnchere.getUtilisateur().getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur()) {
+					throw new BllException(CodesResultatBLL.OBJET_NOTCONFORM);
+				}
+			}else {
+				meilleurOffre = enchere.getArticle().getPrixInitial();
+			}
+
+	    		
+	    	if (enchere == null || enchere.getArticle().getNoArticle() == 0 || enchere.getMontant_enchere() <= meilleurOffre || enchere.getUtilisateur().getNoUtilisateur() == 0) {
 				throw new BllException(CodesResultatBLL.OBJET_NOTCONFORM);
 			}
 
 	    	if (!enchere.getArticle().getDateDebut().isBefore(LocalDate.now()) || !enchere.getArticle().getDateFinEncheres().isAfter(LocalDate.now())) {
-				throw new BllException(CodesResultatBLL.CHECK_INSERT_OK);
+				throw new BllException(CodesResultatBLL.CHECK_INSERT_NOT_OK);
 			}
+
 	    }
 
 	    /**
@@ -129,6 +134,28 @@ public class EnchereManager {
 	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
 	        }
 	        return encheres;
+	    }
+	    
+	    public void update (Enchere enchere) throws BllException {
+	    	if (enchere.getUtilisateur().checkCredit(enchere.getMontant_enchere())) {
+	    		throw new BllException(CodesResultatBLL.MISSING_CREDIT);
+			}
+	    	try {
+				Enchere meilleurEnchere = enchereDAO.selectMustEnchereByIdArticle(enchere.getArticle().getNoArticle());
+				
+				meilleurEnchere.getUtilisateur().setCredit(meilleurEnchere.getUtilisateur().getCredit() + meilleurEnchere.getMontant_enchere());
+				enchere.getUtilisateur().setCredit(enchere.getUtilisateur().getCredit() - enchere.getMontant_enchere());
+				
+				this.create(enchere);
+				utilisateurDAO.updateCredit(meilleurEnchere.getUtilisateur());
+				utilisateurDAO.updateCredit(enchere.getUtilisateur());
+				
+				
+			} catch (DalException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
 	    }
   
 }

@@ -116,7 +116,7 @@ public class ServletCreationProfil extends HttpServlet {
 				}
 			}
 			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
 			rd.forward(request, response);
 			
 		}

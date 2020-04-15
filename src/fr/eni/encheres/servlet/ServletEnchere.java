@@ -138,7 +138,8 @@ public class ServletEnchere extends HttpServlet {
 		
 		try {
 			article = articleManager.getArticle(idArticle);
-			enchereManager.create(new Enchere(utilisateur, article, proposition));
+			Enchere enchere = new Enchere(utilisateur, article, proposition);
+			enchereManager.update(enchere);
 		} catch (BllException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

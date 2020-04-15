@@ -1,8 +1,10 @@
 package fr.eni.encheres.dal.jdbc;
 
+import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.UtilisateurDAO;
+import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -19,6 +21,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
     private static final String RQT_SELECT_ALL = "SELECT * from UTILISATEURS";
     private static final String RQT_INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES(?,?,?,?,?,?,?,?,?,?,?)\n";
     private static final String RQT_UPDATE = "UPDATE UTILISATEURS SET pseudo = ?, nom = ?, prenom = ?, email = ?, telephone = ?, rue = ?, code_postal = ?, ville = ?, mot_de_passe = ?, credit = ?, administrateur = ? WHERE no_utilisateur = ?";
+    private static final String RQT_UPDATE_CREDIT = "UPDATE UTILISATEURS SET credit = ? WHERE no_utilisateur = ?";
     private static final String RQT_DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = ?";
 
     /**
@@ -186,4 +189,24 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 
         return pStmt;
     }
+
+	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.UtilisateurDAO#updateCredit(fr.eni.encheres.bo.Utilisateur)
+	 */
+	@Override
+	public void updateCredit(Utilisateur u) throws DalException {
+		  try (Connection connection = ConnectionProvider.getConnection()) {
+	            PreparedStatement requete = connection.prepareStatement(RQT_UPDATE_CREDIT);
+
+	            requete.setInt(1, u.getCredit());
+	            requete.setInt(2, u.getNoUtilisateur());
+
+	            requete.executeUpdate();
+
+	        } catch (Exception e) {
+	        	LOGGER.severe("Erreur dans UtilisateurDAOJdbcImpl updateCredit(Utilisateur u) : " + e.getMessage());
+	        	throw new DalException(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+	        }
+	}
 }

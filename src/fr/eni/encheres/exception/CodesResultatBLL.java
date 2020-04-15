@@ -41,5 +41,10 @@ public abstract class CodesResultatBLL {
 	/**
 	 * Vérifie si la valeur peut être insérer
 	 */
-	public static final int CHECK_INSERT_OK = 1008;
+	public static final int CHECK_INSERT_NOT_OK = 1008;
+	
+	/**
+	 * Pas asser de crédit
+	 */
+	public static final int MISSING_CREDIT = 1010;
 }

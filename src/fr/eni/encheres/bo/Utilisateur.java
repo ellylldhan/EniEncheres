@@ -5,6 +5,9 @@ package fr.eni.encheres.bo;
 
 import java.io.Serializable;
 
+import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.CodesResultatBLL;
+
 /**
  * Classe en charge de
  * @author loan.pirotais
@@ -280,4 +283,11 @@ public class Utilisateur implements Serializable {
 				+ ", administrateur=" + administrateur + "]";
 	}
 	
+    public boolean checkCredit(int proposition) {
+    	
+    	if (proposition > this.credit) {
+			return true;
+		}
+    	return false;
+    }
 }

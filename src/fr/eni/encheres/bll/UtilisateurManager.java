@@ -4,9 +4,11 @@ import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.UtilisateurDAO;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -69,4 +71,6 @@ public class UtilisateurManager {
         }
         return u;
     }
+    
+
 }
