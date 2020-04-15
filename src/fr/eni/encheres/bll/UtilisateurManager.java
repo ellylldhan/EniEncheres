@@ -38,26 +38,25 @@ public class UtilisateurManager {
 
     public int addUtilisateur(Utilisateur u)throws BusinessException {
 
+        if(u != null && u instanceof Utilisateur)
             utilisateurDAO.insert(u);
 
         return u.getNoUtilisateur();
     }
 
     public void updateUtilisateur(Utilisateur u)throws BusinessException {
-
+        if(u != null && u instanceof Utilisateur)
             utilisateurDAO.update(u);
-
     }
 
     public void removeUtilisateur(int id)throws BusinessException {
-    
+        if(id != 0)
             utilisateurDAO.delete(id);
-      
     }
 
-    public Utilisateur getUtilisateur(int id)throws BusinessException {
+    public Utilisateur getUtilisateur(int id) throws BusinessException {
         Utilisateur u = null;
-        
+        if(id != 0)
             u = utilisateurDAO.selectById(id);
        
         return u;
@@ -70,11 +69,11 @@ public class UtilisateurManager {
             return false;
     }
 
-    public Utilisateur getUtilisateurByArg(String login) throws BllException{
+    public Utilisateur getUtilisateurByArg(String login) throws BusinessException{
         Utilisateur u = null;
         try {
             u= utilisateurDAO.selectByArg(login);
-        } catch (DalException e) {
+        } catch (BusinessException e) {
             LOGGER.severe("Erreur dans UtitilisateurManager lors de la récupération de l'utilisateur [" + login + "] : " + e.getMessage());
         }
         return u;

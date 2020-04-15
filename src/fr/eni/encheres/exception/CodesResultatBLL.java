@@ -55,10 +55,13 @@ public abstract class CodesResultatBLL {
 	 */
 	public static final int USER_LAST_ENCHERIR = 1011;
 	
-		/**
+	/**
 	 * Login ou mot de passe incorrect
 	 */
 	public static final int WRONG_USER_INPUTS = 1012;
-	
 
+	/**
+	 * Utilisateur non connecté
+	 */
+	public static final int USER_NOT_CONNECTED = 1013;
 }
