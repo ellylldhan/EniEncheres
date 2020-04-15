@@ -50,13 +50,12 @@ public class ServletEnchere extends HttpServlet {
 
 		Article article = null;
 		List<Integer> listeCodesErreur = new ArrayList();
-		String idUtilisateurSession =  (String) request.getSession().getAttribute("idUtilisateur");
 		
-		if (idUtilisateurSession == null) {
+		if (request.getSession().getAttribute("idUtilisateur") == null) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			response.sendRedirect(request.getContextPath() + "/accueil");
 		}else {
-			int idUtilisateur = Integer.parseInt(idUtilisateurSession);
+			int idUtilisateur = (int) request.getSession().getAttribute("idUtilisateur");
 			
 			int idArticle = this.checkIdArticle(request, listeCodesErreur);
 
@@ -148,14 +147,6 @@ public class ServletEnchere extends HttpServlet {
 		}else {
 			try {
 				Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
-
-				/**
-				 * à enlever après que le contexte utilisateur utilisateur existe 
-				 */
-				////
-				UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
-				utilisateur = utilisateurmanager.getUtilisateur(1);
-				////
 
 				article = articleManager.getArticle(idArticle);
 				Enchere enchere = new Enchere(utilisateur, article, proposition);

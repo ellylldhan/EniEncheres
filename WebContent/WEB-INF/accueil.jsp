@@ -15,7 +15,7 @@
 <body class="container">
 
 	<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
-	
+
 	<h3 class="text-center">Liste des enchères</h3>
 
 	<form method="post" action="#recherche">
