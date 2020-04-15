@@ -69,9 +69,7 @@ public class UtilisateurManager {
         if(pw.equals(motDePasse))
             return true;
         else {
-        	BusinessException businessException = new BusinessException();
-        	businessException.ajouterErreur(CodesResultatBLL.MISSING_CREDIT);
-        	throw businessException;
+        	return false;
         }
     }
 

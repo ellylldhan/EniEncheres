@@ -152,7 +152,7 @@ public class ServletNouvelleVente extends HttpServlet {
 	 */
 	private String lireParametreDescriptionArticle(HttpServletRequest request, List<Integer> listeCodesErreur) {
 		String descriptionArticle;
-		descriptionArticle = request.getParameter("description");
+		descriptionArticle = request.getParameter("description_article");
 		
 		if (descriptionArticle == null || descriptionArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.DESCRIPTION_ARTICLE_OBLIGATOIRE);

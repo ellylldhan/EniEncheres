@@ -64,7 +64,7 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
                         	listeCodesErreur.add(CodesResultatBLL.WRONG_USER_INPUTS);
                         }
                     } else {
-                    	listeCodesErreur.add(CodesResultatBLL.USER_NOT_FOUND);
+                    	listeCodesErreur.add(CodesResultatBLL.WRONG_USER_INPUTS);
                     }
                 }
                 if (listeCodesErreur.size() > 0) {

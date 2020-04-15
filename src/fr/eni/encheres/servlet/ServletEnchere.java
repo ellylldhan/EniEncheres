@@ -24,6 +24,7 @@ import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 import sun.font.CreatedFontTracker;
 
 /**
@@ -132,9 +133,11 @@ public class ServletEnchere extends HttpServlet {
 		List<Integer> listeCodesErreur = new ArrayList();
 		int idArticle = this.checkIdArticle(request, listeCodesErreur);
 		int proposition = this.checkPropostion(request, listeCodesErreur);
-
 		Article article = null;
-
+		if (request.getSession().getAttribute("idUtilisateur") == null) {
+			listeCodesErreur.add(CodesResultatBLL.USER_NOT_CONNECTED);
+		}
+			
 		if (listeCodesErreur.size() > 0) {
 			if (idArticle != 0) {
 				request.setAttribute("listeCodesErreur", listeCodesErreur);
@@ -146,8 +149,9 @@ public class ServletEnchere extends HttpServlet {
 
 		}else {
 			try {
-				Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
-
+				int idUtilisateur = (int) request.getSession().getAttribute("idUtilisateur");
+				Utilisateur utilisateur =  UtilisateurManager.getInstance().getUtilisateur(idUtilisateur);
+				
 				article = articleManager.getArticle(idArticle);
 				Enchere enchere = new Enchere(utilisateur, article, proposition);
 				enchereManager.update(enchere);

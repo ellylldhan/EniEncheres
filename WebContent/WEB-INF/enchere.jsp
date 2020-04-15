@@ -41,8 +41,10 @@
 		        	<div>
 		        		<label>Meilleur Offre: </label>
 		        		<p>${Enchere.montant_enchere} 
-		        			<c:if test="${!win}"> 
-		        				par ${Enchere.utilisateur.pseudo}
+		        			<c:if test="${!win}"> par
+			        			<a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Enchere.utilisateur.noUtilisateur}" class="nav-link">
+			        				 ${Enchere.utilisateur.pseudo}
+			        			</a>
 		        			</c:if>
 		        		
 		        		</p>
@@ -63,7 +65,8 @@
 		        	</div>		        			        	
 		        	<div>
 		        		<label>Vendeur : </label>
-		        		<p>${Article.utilisateur.pseudo} </p>
+		        		
+		        		<p><a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Article.utilisateur.noUtilisateur}" class="nav-link">${Article.utilisateur.pseudo}</a></p>
 		        	</div>
 		        	<c:if test="${win}">
 			        	<div>
