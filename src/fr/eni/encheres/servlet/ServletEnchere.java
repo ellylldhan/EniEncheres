@@ -44,6 +44,7 @@ public class ServletEnchere extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		
 		Article article = null;
 		List<Integer> listeCodesErreur = new ArrayList();
 		
