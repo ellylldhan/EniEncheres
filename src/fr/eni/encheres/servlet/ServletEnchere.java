@@ -2,6 +2,8 @@ package fr.eni.encheres.servlet;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 import sun.font.CreatedFontTracker;
 
 /**
@@ -40,65 +43,75 @@ public class ServletEnchere extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		Article article = null;
-		try {
-			ArticleManager articleManager = ArticleManager.getInstance();
-			EnchereManager enchereManager = EnchereManager.getInstance();
-			RetraitManager retraitManager = RetraitManager.getInstance();
-			
-			String parameteridArticle = request.getParameter("idArticle");
-			
-			parameteridArticle ="1";
-			if (parameteridArticle != null) {
-	
-				int idArticle = Integer.parseInt(parameteridArticle);
-				
-				
-				article = articleManager.getArticle(idArticle);
-				request.setAttribute("IdArticle", idArticle);
-				request.setAttribute("Article", article );
-				request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
-				
-				Enchere enchere = enchereManager.getBestEnchereByIdArticle(idArticle);
-				
-				
-				if (enchere == null) {
-					enchere = new Enchere();
-					enchere.setMontant_enchere(article.getPrixInitial());
+		List<Integer> listeCodesErreur = new ArrayList();
+		
+		int idArticle = this.checkIdArticle(request, listeCodesErreur);
+		
+
+		if (listeCodesErreur.size() > 0) {
+			request.setAttribute("listeCodesErreur", listeCodesErreur);
+			response.sendRedirect(request.getContextPath() + "/accueil");
+		}
+		else {
+			try {
+				ArticleManager articleManager = ArticleManager.getInstance();
+				EnchereManager enchereManager = EnchereManager.getInstance();
+				RetraitManager retraitManager = RetraitManager.getInstance();
+		
 					
-				}
-				request.setAttribute("Enchere", enchere);
-				
-				boolean fini = false;
-				boolean win = false;
-				if (article != null && article.getDateFinEncheres().isBefore(LocalDate.now())) {
-					fini = true;
-					Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
-					/**
-					 * à enlever après que le contexte utilisateur utilisateur existe 
-					 */
-					////
-					UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
-					utilisateur = utilisateurmanager.getUtilisateur(1);
-					////
-					if (utilisateur.getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur() ) {
-						win = true;
+					article = articleManager.getArticle(idArticle);
+					request.setAttribute("IdArticle", idArticle);
+					request.setAttribute("Article", article );
+					request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
+					
+					Enchere enchere = enchereManager.getBestEnchereByIdArticle(idArticle);
+					
+					if (enchere == null) {
+						enchere = new Enchere();
+						enchere.setMontant_enchere(article.getPrixInitial());
+						
 					}
-				}
-				request.setAttribute("fini", fini);
-				request.setAttribute("win", win);
+					
+					request.setAttribute("Enchere", enchere);
+					
+					boolean fini = false;
+					boolean win = false;
+					
+					if (article != null && article.getDateFinEncheres().isBefore(LocalDate.now())) {
+						fini = true;
+						Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
+						/**
+						 * à enlever après que le contexte utilisateur utilisateur existe 
+						 */
+						////
+						UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
+						utilisateur = utilisateurmanager.getUtilisateur(1);
+						////
+						if (utilisateur.getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur() ) {
+							win = true;
+						}
+					}
+					request.setAttribute("fini", fini);
+					request.setAttribute("win", win);
+				
 				
 			}
-		} catch (BllException e) {
-			// TODO Auto-generated catch block
-		}
-		
-		if(article == null){
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		}else {
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
-			rd.forward(request, response);
-
+			catch (BusinessException e) {
+				e.printStackTrace();
+				request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/enchere.jsp");
+				rd.forward(request, response);
+			}
+			
+			if(article == null){
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			}else {
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
+				rd.forward(request, response);
+	
+			}
 		}
 
 		
@@ -111,40 +124,82 @@ public class ServletEnchere extends HttpServlet {
 		EnchereManager enchereManager = EnchereManager.getInstance();
 		ArticleManager articleManager = ArticleManager.getInstance();
 		
-		String parameterProposition = request.getParameter("proposition");
-		String parameteridArticle = request.getParameter("IdArticle");
+		List<Integer> listeCodesErreur = new ArrayList();
+		int idArticle = this.checkIdArticle(request, listeCodesErreur);
+		int proposition = this.checkPropostion(request, listeCodesErreur);
 		
 		Article article = null;
 
-		int proposition = 0;
-		if (parameterProposition != null) {
-			proposition = Integer.parseInt(parameterProposition);
+		if (listeCodesErreur.size() > 0) {
+			if (idArticle != 0) {
+				request.setAttribute("listeCodesErreur", listeCodesErreur);
+				doGet(request, response);
+			}else {
+				request.setAttribute("listeCodesErreur", listeCodesErreur);
+				response.sendRedirect(request.getContextPath() + "/accueil");
+			}
+			
+		}else {
+			try {
+				Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
+				
+				/**
+				 * à enlever après que le contexte utilisateur utilisateur existe 
+				 */
+				////
+				UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
+				utilisateur = utilisateurmanager.getUtilisateur(1);
+				////
+				
+				article = articleManager.getArticle(idArticle);
+				Enchere enchere = new Enchere(utilisateur, article, proposition);
+				enchereManager.update(enchere);
+				doGet(request, response);
+			}catch (BusinessException e) {
+				e.printStackTrace();
+				request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+				doGet(request, response);
+			}
 		}
 		
-		int idArticle = 0;
-		if (parameteridArticle != null) {
-			idArticle = Integer.parseInt(parameteridArticle);
+	}
+	
+	
+	/**
+	 * Méthode en charge de vérifier si l'id est bien renseigné
+	 * @param request
+	 * @param listeCodesErreur
+	 * @return
+	 */
+	private int checkIdArticle(HttpServletRequest request, List<Integer> listeCodesErreur) {
+		String parameteIdArticle= request.getParameter("idArticle");
+		//TODO
+		parameteIdArticle = "1";
+		//
+		if (parameteIdArticle == null || parameteIdArticle.trim().equals("")) {
+			listeCodesErreur.add(CodesResultatServlets.IDARTICLE_NOT_FOUND);
+		} else {
+			return Integer.parseInt(parameteIdArticle);
 		}
+		return 0;
+	}
+	
+	/**
+	 * Méthode en charge de vérifier si l'id est bien renseigné
+	 * @param request
+	 * @param listeCodesErreur
+	 * @return
+	 */
+	private int checkPropostion(HttpServletRequest request, List<Integer> listeCodesErreur) {
+		String parameterPropostion = request.getParameter("proposition");
+
 		
-		Utilisateur utilisateur =  (Utilisateur)request.getSession().getAttribute("utilisateur");
-		
-		/**
-		 * à enlever après que le contexte utilisateur utilisateur existe 
-		 */
-		////
-		UtilisateurManager utilisateurmanager = UtilisateurManager.getInstance();
-		utilisateur = utilisateurmanager.getUtilisateur(1);
-		////
-		
-		try {
-			article = articleManager.getArticle(idArticle);
-			Enchere enchere = new Enchere(utilisateur, article, proposition);
-			enchereManager.update(enchere);
-		} catch (BllException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (parameterPropostion == null || parameterPropostion.trim().equals("")) {
+			listeCodesErreur.add(CodesResultatServlets.Proposition_NOT_FOUND);
+		} else {
+			return Integer.parseInt(parameterPropostion);
 		}
-		doGet(request, response);
+		return 0;
 	}
 
 }

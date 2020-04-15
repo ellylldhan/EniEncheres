@@ -52,7 +52,7 @@ private static ResourceBundle rb;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			message="Une erreur inconnue est survenue";
+			message="Une erreur inconnue est survenue veuillez réessayer ultérieurement";
 		}
 		System.out.println("message="+message);
 		return message;

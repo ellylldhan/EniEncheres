@@ -38,7 +38,7 @@ public abstract class CodesResultatBLL {
 	/**
 	 * Vérifie si la valeur peut être insérer
 	 */
-	public static final int CHECK_INSERT_OK = 1008;
+	//public static final int CHECK_INSERT_OK = 1008;
 
 	/*
 	 * Utilisateur non trouvé en BDD
@@ -49,5 +49,10 @@ public abstract class CodesResultatBLL {
 	 * Pas asser de crédit
 	 */
 	public static final int MISSING_CREDIT = 1010;
+	
+	/**
+	 * L'utiliateur à déjà le dernier à  avoir enchéri
+	 */
+	public static final int USER_LAST_ENCHERIR = 1011;
 	
 }

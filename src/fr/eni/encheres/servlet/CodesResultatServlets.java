@@ -29,5 +29,8 @@ public abstract class CodesResultatServlets {
 	public static final Integer VILLE_UTILISATEUR_OBLIGATOIRE = 30014;
 	public static final Integer MDP_UTILISATEUR_OBLIGATOIRE = 30015;
 	public static final Integer MDP_UTILISATEUR_CONFIRMER = 30016;
+	
+	public static final Integer IDARTICLE_NOT_FOUND = 30017;
+	public static final Integer Proposition_NOT_FOUND = 30018;
 
 }

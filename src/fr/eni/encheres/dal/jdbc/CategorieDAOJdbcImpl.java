@@ -9,11 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
+import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -25,20 +28,32 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class CategorieDAOJdbcImpl implements CategorieDAO {
 	
-	private static Logger LOGGER = MonLogger.getLogger("CategorieDAOJdbcImpl");
-	
+	private static Logger logger ;
+    private static StackTraceElement stack;
+    private static String nomMethodeCourante;
+    private static String nomClasseCourante;
+    
 	private static final String RQT_SELECT_BY_ID = "SELECT * FROM CATEGORIES WHERE no_categorie = ?";
 	private static final String RQT_SELECT_ALL = "SELECT * FROM CATEGORIES";
 	private static final String RQT_INSERT = "INSERT INTO CATEGORIES VALUES(?)";
 	private static final String RQT_UPDATE = "UPDATE CATEGORIES SET libelle = ? WHERE no_categorie = ?";
 	private static final String RQT_DELETE = "DELETE CATEGORIES WHERE no_categorie = ?";
 	
+	
+	public CategorieDAOJdbcImpl() {
+        logger = MonLogger.getLogger(getClass().getName());
+
+        stack = new Throwable().getStackTrace()[0];
+        nomClasseCourante = stack.getClassName();
+        nomMethodeCourante = stack.getMethodName();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @see fr.eni.encheres.dal.CategorieDAO#selectById(int)
 	 */
 	@Override
-	public Categorie selectById(int noCategorie) throws DalException {
+	public Categorie selectById(int noCategorie) throws BusinessException {
 
         Categorie categorie = null;
 
@@ -51,7 +66,10 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
                 categorie = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Categorie selectById(int noCategorie) : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return categorie;
@@ -63,7 +81,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	 * @see fr.eni.encheres.dal.CategorieDAO#selectAll()
 	 */
 	@Override
-	public List<Categorie> selectAll() throws DalException {
+	public List<Categorie> selectAll() throws BusinessException {
 
         List<Categorie> categories = new ArrayList<Categorie>();
 
@@ -76,7 +94,10 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
                 categories.add(itemBuilder(rs));
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Categorie selectAll() : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return categories;
@@ -88,7 +109,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	 * @see fr.eni.encheres.dal.CategorieDAO#insert(fr.eni.encheres.bo.Categorie)
 	 */
 	@Override
-	public void insert(Categorie categorie) throws DalException {
+	public void insert(Categorie categorie) throws BusinessException {
 
         int nbLignes = 0;
 
@@ -104,7 +125,10 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
                 categorie.setNoCategorie(rs.getInt(1));
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Categorie insert(Categorie categorie) : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
+			throw businessException;
         }
 
     }
@@ -114,7 +138,7 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	 * @see fr.eni.encheres.dal.CategorieDAO#update(fr.eni.encheres.bo.Categorie)
 	 */
 	@Override
-	public void update(Categorie categorie) throws DalException {
+	public void update(Categorie categorie) throws BusinessException {
 
         try (Connection connection = ConnectionProvider.getConnection()) {
             PreparedStatement requete = connection.prepareStatement(RQT_UPDATE);
@@ -125,7 +149,10 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
             requete.executeUpdate();
 
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Categorie update(Categorie categorie) : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+			throw businessException;
         }
 
     }
@@ -135,14 +162,17 @@ public class CategorieDAOJdbcImpl implements CategorieDAO {
 	 * @see fr.eni.encheres.dal.CategorieDAO#delete(int)
 	 */
 	@Override
-	public void delete(int noCategorie) throws DalException {
+	public void delete(int noCategorie) throws BusinessException {
 
         try (Connection connection = ConnectionProvider.getConnection()) {
             PreparedStatement requete = connection.prepareStatement(RQT_DELETE);
             requete.setInt(1, noCategorie);
             requete.executeUpdate();
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Categorie delete(int noCategorie) : " + e.getMessage());
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
     }

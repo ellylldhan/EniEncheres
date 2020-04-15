@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Enchere;
@@ -17,6 +18,7 @@ import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.EnchereDAO;
 import fr.eni.encheres.dal.UtilisateurDAO;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -36,19 +38,30 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
 	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select no_article from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
 	
-	private static Logger LOGGER = MonLogger.getLogger("EnchereDAOJdbcImpl");
+	private static Logger logger ;
+    private static StackTraceElement stack;
+    private static String nomMethodeCourante;
+    private static String nomClasseCourante;
+	
 	
 	private static UtilisateurDAO utilisateurDAO = DAOFactory.getUtilisateurDAO();
 	private static ArticleDAO articleDAO = DAOFactory.getArticleDAO();
 
+	public EnchereDAOJdbcImpl() {
+		logger = MonLogger.getLogger(getClass().getName());
 
+        stack = new Throwable().getStackTrace()[0];
+        nomClasseCourante = stack.getClassName();
+        nomMethodeCourante = stack.getMethodName();
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @throws DalException 
 	 * @see fr.eni.encheres.dal.EnchereDAO#Create(fr.eni.encheres.bo.Enchere)
 	 */
 	@Override
-	public void create(Enchere enchere) throws DalException {
+	public void create(Enchere enchere) throws BusinessException {
 		DAOFactory.getUtilisateurDAO();
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_INSERT);
@@ -61,9 +74,10 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 			int rs = requete.executeUpdate();
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			LOGGER.severe("Erreur dans Enchere create(Enchere enchere) : " + e.getMessage());
-			throw new DalException(CodesResultatDAL.INSERT_OBJET_ECHEC); 
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
+			throw businessException;
 		}
 	}
 
@@ -72,7 +86,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * @see fr.eni.encheres.dal.EnchereDAO#SelectByIdArticleMustEnchere(int)
 	 */
 	@Override
-	public Enchere selectMustEnchereByIdArticle(int idArticle)  throws DalException {
+	public Enchere selectMustEnchereByIdArticle(int idArticle)  throws BusinessException {
 		Enchere enchere= null;
 
         try (Connection connection = ConnectionProvider.getConnection()) {
@@ -85,8 +99,10 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
             	enchere = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Enchere selectByIdArticleMustEnchere(int idArticle) : " + e.getMessage());
-            throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return enchere;
@@ -98,7 +114,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllByIdArticle(int)
 	 */
 	@Override
-	public List<Enchere> selectAllByIdArticle(int idArticle)  throws DalException {
+	public List<Enchere> selectAllByIdArticle(int idArticle)  throws BusinessException {
 		List<Enchere> encheres = new ArrayList<Enchere>();
 
         try (Connection connection = ConnectionProvider.getConnection()) {
@@ -110,15 +126,21 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
                 encheres.add(itemBuilder(rs));
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Enchere selectAllByIdArticle(int idArticle) : " + e.getMessage());
-        	throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return encheres;
 	}
 
-	
-	public void update(Enchere enchere) throws DalException {
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see fr.eni.encheres.dal.EnchereDAO#update(fr.eni.encheres.bo.Enchere)
+	 */
+	public void update(Enchere enchere) throws BusinessException {
 
         try (Connection connection = ConnectionProvider.getConnection()) {
             PreparedStatement requete = connection.prepareStatement(RQT_UPDATE);
@@ -130,8 +152,10 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
             requete.executeUpdate();
 
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Enchere update(Enchere enchere) : " + e.getMessage());
-        	throw new DalException(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+			throw businessException;
         }
 
     }
@@ -141,7 +165,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * @see fr.eni.encheres.dal.EnchereDAO#selectById(int, int)
 	 */
 	@Override
-	public Enchere selectById(int idArticle, int idUtilisateur) throws DalException {
+	public Enchere selectById(int idArticle, int idUtilisateur) throws BusinessException {
 		Enchere enchere= null;
 
         try (Connection connection = ConnectionProvider.getConnection()) {
@@ -154,26 +178,13 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
             	enchere = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Enchere selectById(int idArticle, int idUtilisateur) : " + e.getMessage());
-            throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return enchere;
-	}
-	
-	/**
-	 * Méthode en charge de créer une instance d'objet Enchere en fonction des enregistrements récupérés en base de données
-	 * @param rs
-	 * @return categorie : Instance d'objet Categorie
-	 * @throws SQLException
-	 * @throws DalException 
-	 */
-	private Enchere itemBuilder(ResultSet rs) throws SQLException, DalException {
-		
-		Enchere  enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
-		
-		return enchere;
-		
 	}
 	
 	/**
@@ -181,7 +192,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 * 
 	 * @see fr.eni.encheres.dal.EnchereDAO#SelectAllEncheresCourantes(int)
 	 */
-	public List<Enchere> selectAllEncheresValides() throws DalException {
+	public List<Enchere> selectAllEncheresValides() throws BusinessException {
 		List<Enchere> encheres = new ArrayList<Enchere>();
 
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -193,12 +204,30 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 				encheres.add(itemBuilder(rs));
 			}
 		} catch (Exception e) {
-			LOGGER.severe("Erreur dans Enchere selectAllEncheresValides() : " + e.getMessage());
-			throw new DalException(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
 		}
 
 		return encheres;
 	}
+	/**
+	 * Méthode en charge de créer une instance d'objet Enchere en fonction des enregistrements récupérés en base de données
+	 * @param rs
+	 * @return categorie : Instance d'objet Categorie
+	 * @throws SQLException
+	 * @throws DalException 
+	 */
+	private Enchere itemBuilder(ResultSet rs) throws SQLException,BusinessException {
+		
+		Enchere  enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
+		
+		return enchere;
+		
+	}
+	
+
 
 
 	

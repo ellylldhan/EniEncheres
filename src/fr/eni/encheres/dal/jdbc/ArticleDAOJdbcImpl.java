@@ -19,6 +19,8 @@ import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.DAOFactory;
+import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -64,7 +66,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#selectById(int)
 	 */
 	@Override
-	public Article selectById(int id) throws DalException {
+	public Article selectById(int id) throws BusinessException {
 		Article item = null;
 
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -78,6 +80,9 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			}
 		} catch (Exception e) {
             logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
 		}
 		return item;
 	}
@@ -88,7 +93,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#selectAll()
 	 */
 	@Override
-	public List<Article> selectAll() throws DalException {
+	public List<Article> selectAll() throws BusinessException {
         List<Article> articles = new ArrayList<Article>();
 
         try (Connection connection = ConnectionProvider.getConnection()) {
@@ -101,6 +106,9 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
             }
 		} catch (Exception e) {
             logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
 		}
 
         return articles;
@@ -111,7 +119,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#findByName(java.lang.String)
 	 */
 	@Override
-	public List<Article> findByName(String nom) throws DalException {
+	public List<Article> findByName(String nom) throws BusinessException {
 	    List<Article> articles = new ArrayList<Article>();
 
         try (Connection connection = ConnectionProvider.getConnection()) {
@@ -124,6 +132,9 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
             }
 		} catch (Exception e) {
             logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
 		}
 
         return articles;
@@ -136,7 +147,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#insert(fr.eni.encheres.bo.Article)
 	 */
 	@Override
-    public void insert(Article article) throws DalException {
+    public void insert(Article article) throws BusinessException {
 		//TODO: nbLignesModifiees : supprimer, ou ajouter return ?
         int nbLignesModifiees = 0;
         
@@ -160,9 +171,12 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
                 article.setNoArticle(rs.getInt(1));
             }
             
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, ex.getMessage()});
-        }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
+			throw businessException;
+		}
         
      }
 		
@@ -173,7 +187,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#update(fr.eni.encheres.bo.Article)
 	 */
 	@Override
-    public void update(Article article) throws DalException {
+    public void update(Article article) throws BusinessException {
         try (Connection conn = ConnectionProvider.getConnection()) {
                 PreparedStatement requete = conn.prepareStatement(RQT_UPDATE_PRIX_VENTE);
 
@@ -182,9 +196,12 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
                 requete.executeUpdate();
 
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, ex.getMessage()});
-            }
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+    			BusinessException businessException = new BusinessException();
+    			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+    			throw businessException;
+    		}
         }
 
 	
@@ -194,7 +211,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#delete(int)
 	 */
 	@Override
-	public void delete(int id) throws DalException {
+	public void delete(int id) throws BusinessException {
 		try (Connection conn = ConnectionProvider.getConnection()) {
             PreparedStatement requete = conn.prepareStatement(RQT_DELETE);
 
@@ -202,9 +219,12 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
             requete.executeUpdate();
 
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, ex.getMessage()});
-        }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.DELETE_OBJET_ECHEC);
+			throw businessException;
+		}
 
 	}
 
@@ -218,7 +238,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @throws SQLException
 	 * @throws DalException
 	 */
-	private Article itemBuilder(ResultSet rs) throws SQLException, DalException {
+	private Article itemBuilder(ResultSet rs) throws SQLException, BusinessException {
 
 		Utilisateur utilisateur = DAOFactory.getUtilisateurDAO().selectById(rs.getInt("no_utilisateur"));
 		Categorie categorie = DAOFactory.getCategorieDAO().selectById(rs.getInt("no_categorie"));

@@ -10,6 +10,7 @@ import fr.eni.encheres.bo.Retrait;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.RetraitDAO;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -48,14 +49,11 @@ public class RetraitManager {
      * Méthode en charge de retourner une liste de tous les retraits
      * @return
      */
-    public List<Retrait> getRetraits() {
+    public List<Retrait> getRetraits()throws BusinessException {
         List<Retrait> retraits = null;
-        try {
+
         	retraits = retraitDAO.selectAll();
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans RetraitManager getRetraits() : " + e.getMessage());
-            e.printStackTrace();
-        }
+       
         return retraits;
     }
     
@@ -65,13 +63,11 @@ public class RetraitManager {
      * @return
      * @throws BllException
      */
-    public int addRetrait(Retrait retrait) throws BllException {
+    public int addRetrait(Retrait retrait) throws BusinessException {
 
-        try {
+
         	retraitDAO.insert(retrait);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans RetraitManager addRetrait(Retrait retrait) : " + e.getMessage());
-        }
+
         return retrait.getArticle().getNoArticle();
 
     }
@@ -81,13 +77,11 @@ public class RetraitManager {
      * @param retrait
      * @throws BllException
      */
-    public void updateRetrait(Retrait retrait) throws BllException {
+    public void updateRetrait(Retrait retrait) throws BusinessException {
 
-        try {
+
             retraitDAO.update(retrait);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans RetraitManager updateRetrait(Retrait retrait) : " + e.getMessage());
-        }
+
     }
     
     /**
@@ -95,13 +89,11 @@ public class RetraitManager {
      * @param noArticle
      * @throws BllException
      */
-    public void removeRetrait(int noArticle) throws BllException {
+    public void removeRetrait(int noArticle) throws BusinessException {
 
-        try {
+
         	retraitDAO.delete(noArticle);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans RetraitManager removeRetrait(int noCategorie) : " + e.getMessage());
-        }
+
 
     }
     
@@ -111,14 +103,12 @@ public class RetraitManager {
      * @return
      * @throws BllException
      */
-    public Retrait getRetrait(int noArticle) throws BllException {
+    public Retrait getRetrait(int noArticle) throws BusinessException {
 
     	Retrait retrait = null;
-        try {
+
         	retrait = retraitDAO.selectById(noArticle);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans RetraitManager getRetrait(int noArticle) : " + e.getMessage());
-        }
+
         return retrait;
     }
 

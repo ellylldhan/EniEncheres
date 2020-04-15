@@ -4,6 +4,7 @@ import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.UtilisateurDAO;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -27,48 +28,38 @@ public class UtilisateurManager {
         return INSTANCE;
     }
 
-    public List<Utilisateur> getUtilisateurs() {
+    public List<Utilisateur> getUtilisateurs() throws BusinessException{
         List<Utilisateur> utilisateurs = null;
-        try {
+
             utilisateurs = utilisateurDAO.selectAll();
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de la récuperation de la liste des utilisateurs : " + e.getMessage());
-        }
+
         return utilisateurs;
     }
 
-    public int addUtilisateur(Utilisateur u) {
-        try {
+    public int addUtilisateur(Utilisateur u)throws BusinessException {
+
             utilisateurDAO.insert(u);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de l'insertion d'un utilisateur [" + u.getNom() + " " + u.getPrenom() + "] : " + e.getMessage());
-        }
+
         return u.getNoUtilisateur();
     }
 
-    public void updateUtilisateur(Utilisateur u) {
-        try {
+    public void updateUtilisateur(Utilisateur u)throws BusinessException {
+
             utilisateurDAO.update(u);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de la mise à jour de l'utilisateur [" + u.getNoUtilisateur() + "] : " + e.getMessage());
-        }
+
     }
 
-    public void removeUtilisateur(int id) {
-        try {
+    public void removeUtilisateur(int id)throws BusinessException {
+    
             utilisateurDAO.delete(id);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de la suppression de l'utilisateur [" + id + "] : " + e.getMessage());
-        }
+      
     }
 
-    public Utilisateur getUtilisateur(int id) {
+    public Utilisateur getUtilisateur(int id)throws BusinessException {
         Utilisateur u = null;
-        try {
+        
             u = utilisateurDAO.selectById(id);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans UtilisateurManager lors de la récupération de l'utilisateur [" + id + "] : " + e.getMessage());
-        }
+       
         return u;
     }
     

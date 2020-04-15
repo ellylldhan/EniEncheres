@@ -10,6 +10,7 @@ import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -48,14 +49,11 @@ public class CategorieManager {
      * Méthode en charge de retourner une liste de toutes les catégories.
      * @return
      */
-    public List<Categorie> getCategories() {
+    public List<Categorie> getCategories()throws BusinessException {
         List<Categorie> categories = null;
-        try {
+
         	categories = categorieDAO.selectAll();
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager getCategories() : " + e.getMessage());
-            e.printStackTrace();
-        }
+      
         return categories;
     }
     
@@ -65,13 +63,11 @@ public class CategorieManager {
      * @return
      * @throws BllException
      */
-    public int addCategorie(Categorie categorie) throws BllException {
+    public int addCategorie(Categorie categorie) throws BusinessException {
 
-        try {
+     
         	categorieDAO.insert(categorie);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager addCategorie(Categorie categorie) : " + e.getMessage());
-        }
+       
         return categorie.getNoCategorie();
 
     }
@@ -81,13 +77,11 @@ public class CategorieManager {
      * @param categorie
      * @throws BllException
      */
-    public void updateCategorie(Categorie categorie) throws BllException {
+    public void updateCategorie(Categorie categorie) throws BusinessException {
 
-        try {
+
             categorieDAO.update(categorie);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager updateCategorie(Categorie categorie) : " + e.getMessage());
-        }
+
     }
     
     /**
@@ -95,13 +89,11 @@ public class CategorieManager {
      * @param noCategorie
      * @throws BllException
      */
-    public void removeCategorie(int noCategorie) throws BllException {
+    public void removeCategorie(int noCategorie) throws BusinessException {
 
-        try {
+
             categorieDAO.delete(noCategorie);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager removeCategorie(int noCategorie) : " + e.getMessage());
-        }
+
 
     }
     
@@ -111,14 +103,12 @@ public class CategorieManager {
      * @return
      * @throws BllException
      */
-    public Categorie getCategorie(int noCategorie) throws BllException {
+    public Categorie getCategorie(int noCategorie) throws BusinessException {
 
     	Categorie categorie = null;
-        try {
+
         	categorie = categorieDAO.selectById(noCategorie);
-        } catch (DalException e) {
-            LOGGER.severe("Erreur dans CategorieManager getCategorie(int noCategorie) : " + e.getMessage());
-        }
+
         return categorie;
     }
 

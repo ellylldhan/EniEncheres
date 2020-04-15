@@ -4,6 +4,7 @@ import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.UtilisateurDAO;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
@@ -11,12 +12,16 @@ import fr.eni.encheres.log.MonLogger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 
-    private static Logger LOGGER = MonLogger.getLogger("UtilisateurDAOJdbcImpl");
-
+	private static Logger logger ;
+    private static StackTraceElement stack;
+    private static String nomMethodeCourante;
+    private static String nomClasseCourante;
+    
     private static final String RQT_SELECT_BY_ID = "SELECT * from UTILISATEURS WHERE no_utilisateur = ?";
     private static final String RQT_SELECT_BY_PSEUDO = "SELECT * from UTILISATEURS WHERE pseudo = ? OR email = ?";
     private static final String RQT_SELECT_ALL = "SELECT * from UTILISATEURS";
@@ -25,8 +30,17 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
     private static final String RQT_UPDATE_CREDIT = "UPDATE UTILISATEURS SET credit = ? WHERE no_utilisateur = ?";
     private static final String RQT_DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = ?";
 
+    
+    public UtilisateurDAOJdbcImpl() {
+		logger = MonLogger.getLogger(getClass().getName());
+
+        stack = new Throwable().getStackTrace()[0];
+        nomClasseCourante = stack.getClassName();
+        nomMethodeCourante = stack.getMethodName();
+	}
+    
     @Override
-    public Utilisateur selectByArg(String a) throws DalException {
+    public Utilisateur selectByArg(String a) throws BusinessException {
         Utilisateur u = null;
 
         try(Connection con = ConnectionProvider.getConnection()){
@@ -40,7 +54,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de la récuperation de l'utilisateur dans la methode selectByArg ! " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
         return u;
     }
@@ -51,7 +68,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      */
 
     @Override
-    public Utilisateur selectById(int id) throws DalException {
+    public Utilisateur selectById(int id) throws BusinessException {
 
         Utilisateur u = null;
 
@@ -65,7 +82,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
             }
 
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de la récuperation de l'utilisateur dans la methode selectById : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return u;
@@ -76,7 +96,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      * @see fr.eni.encheres.dal.UtilisateurDAO#selectAll()
      */
     @Override
-    public List<Utilisateur> selectAll() throws DalException {
+    public List<Utilisateur> selectAll() throws BusinessException {
 
         List<Utilisateur> utilisateurs = new ArrayList<>();
 
@@ -88,7 +108,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
                 utilisateurs.add(itemBuilder(rs));
             }
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de la récupération de la liste des utilisateurs dans la methode selectAll : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return utilisateurs;
@@ -99,7 +122,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      * @see fr.eni.encheres.dal.UtilisateurDAO#insert(fr.eni.encheres.bo.Categorie)
      */
     @Override
-    public void insert(Utilisateur u) throws DalException {
+    public void insert(Utilisateur u) throws BusinessException {
         int nbLignes = 0;
 
         try(Connection con = ConnectionProvider.getConnection()){
@@ -113,7 +136,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
                 u.setNoUtilisateur(rs.getInt(1));
             }
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de l'insertion de l'utilisateur [" + u.getNom() + " " + u.getPrenom() + "] : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
+			throw businessException;
         }
     }
 
@@ -122,13 +148,16 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      * @see fr.eni.encheres.dal.UtilisateurDAO#update(fr.eni.encheres.bo.Categorie)
      */
     @Override
-    public void update(Utilisateur u) throws DalException {
+    public void update(Utilisateur u) throws BusinessException {
 
         try(Connection con = ConnectionProvider.getConnection()) {
             PreparedStatement pStmt = preparedStatementBuilder(u, con, true);
             pStmt.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de la mise à jour de l'utilisateur + " + u.getNoUtilisateur() + "] : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+			throw businessException;
         }
     }
 
@@ -137,14 +166,17 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      * @see fr.eni.encheres.dal.UtilisateurDAO#delete(int)
      */
     @Override
-    public void delete(int id) throws DalException {
+    public void delete(int id) throws BusinessException {
 
         try(Connection con = ConnectionProvider.getConnection()){
             PreparedStatement pStmt = con.prepareStatement(RQT_DELETE);
             pStmt.setInt(1, id);
             pStmt.executeUpdate();
         } catch (SQLException e) {
-            LOGGER.severe("Erreur lors de la suppression de l'utilisateur [" + id + "]");
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.DELETE_OBJET_ECHEC);
+			throw businessException;
         }
     }
 
@@ -217,7 +249,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	 * @see fr.eni.encheres.dal.UtilisateurDAO#updateCredit(fr.eni.encheres.bo.Utilisateur)
 	 */
 	@Override
-	public void updateCredit(Utilisateur u) throws DalException {
+	public void updateCredit(Utilisateur u) throws BusinessException {
 		  try (Connection connection = ConnectionProvider.getConnection()) {
 	            PreparedStatement requete = connection.prepareStatement(RQT_UPDATE_CREDIT);
 
@@ -227,8 +259,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	            requete.executeUpdate();
 
 	        } catch (Exception e) {
-	        	LOGGER.severe("Erreur dans UtilisateurDAOJdbcImpl updateCredit(Utilisateur u) : " + e.getMessage());
-	        	throw new DalException(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+	        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+				BusinessException businessException = new BusinessException();
+				businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+				throw businessException;
 	        }
 	}
 }

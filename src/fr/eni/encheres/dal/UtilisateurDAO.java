@@ -2,7 +2,7 @@ package fr.eni.encheres.dal;
 
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
-import fr.eni.encheres.exception.DalException;
+import fr.eni.encheres.exception.BusinessException;
 
 /**
  * The interface Utilisateur dao.
@@ -15,7 +15,7 @@ public interface UtilisateurDAO extends DAO<Utilisateur> {
      * @return the utilisateur
      * @throws DalException the dal exception
      */
-    public Utilisateur selectByArg(String a) throws DalException;
+    public Utilisateur selectByArg(String a) throws BusinessException;
 
     /**
      * Méthode en charge de modifier le nombre de credit
@@ -23,5 +23,5 @@ public interface UtilisateurDAO extends DAO<Utilisateur> {
      * @return
      * @throws DalException
      */
-    public void updateCredit(Utilisateur u)  throws DalException ;
+    public void updateCredit(Utilisateur u)  throws BusinessException ;
 }

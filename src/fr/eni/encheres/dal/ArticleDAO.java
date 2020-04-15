@@ -3,7 +3,7 @@ package fr.eni.encheres.dal;
 import java.util.List;
 
 import fr.eni.encheres.bo.Article;
-import fr.eni.encheres.exception.DalException;
+import fr.eni.encheres.exception.BusinessException ;
 
 /**
  * Classe en charge de la DAO d'Article
@@ -14,12 +14,12 @@ import fr.eni.encheres.exception.DalException;
  */
 public interface ArticleDAO extends DAO<Article> {
 
-//	public Article selectById(int noArticle) throws DalException;
-//	public List<Article> selectAll() throws DalException;
+//	public Article selectById(int noArticle) throws BusinessException;
+//	public List<Article> selectAll() throws BusinessException;
 //	public void insert(Article article) throws DalException;
-//	public void update(Article article) throws DalException;
-//	public void delete(int noArticle) throws DalException;
+//	public void update(Article article) throws BusinessException;
+//	public void delete(int noArticle) throws BusinessException;
 	
-	public List<Article> findByName(String nom) throws DalException; 
+	public List<Article> findByName(String nom) throws BusinessException; 
 
 }

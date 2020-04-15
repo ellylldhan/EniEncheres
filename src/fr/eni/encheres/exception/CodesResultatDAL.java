@@ -30,4 +30,9 @@ public abstract class CodesResultatDAL {
 	 * Echec général quand la mise à jour de données à recontré un problème 
 	 */
 	public static final int UPDATE_OBJET_ECHEC=1003;
+	
+	/**
+	 * Echec général quand la suppression de données à recontré un problème 
+	 */
+	public static final int DELETE_OBJET_ECHEC = 1004;
 }

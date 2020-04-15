@@ -8,6 +8,7 @@ import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -51,14 +52,11 @@ public class ArticleManager {
 	 * 
 	 * @return La liste de tous les articles
 	 */
-	public List<Article> getArticles() {
+	public List<Article> getArticles() throws BusinessException{
 		List<Article> articles = null;
-		try {
+
 			articles = articleDAO.selectAll();
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager getArticles() : " + e.getMessage());
-			e.printStackTrace();
-		}
+
 		return articles;
 	}
 
@@ -69,13 +67,11 @@ public class ArticleManager {
 	 * @return L'id de l'article ajouté
 	 * @throws BllException
 	 */
-	public int addArticle(Article article) throws BllException {
+	public int addArticle(Article article) throws BusinessException {
 
-		try {
+
 			articleDAO.insert(article);
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager addArticle(Article article) : " + e.getMessage());
-		}
+
 		return article.getNoArticle();
 
 	}
@@ -86,13 +82,10 @@ public class ArticleManager {
 	 * @param article Article à mettre à jour
 	 * @throws BllException
 	 */
-	public void updateArticle(Article article) throws BllException {
+	public void updateArticle(Article article) throws BusinessException {
 
-		try {
-			articleDAO.update(article);
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager updateArticle(Article article) : " + e.getMessage());
-		}
+					articleDAO.update(article);
+
 	}
 
 	/**
@@ -101,13 +94,11 @@ public class ArticleManager {
 	 * @param article Article à supprimer
 	 * @throws BllException
 	 */
-	public void removeArticle(int noArticle) throws BllException {
+	public void removeArticle(int noArticle) throws BusinessException {
 
-		try {
+
 			articleDAO.delete(noArticle);
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager removeArticle(int noCategorie) : " + e.getMessage());
-		}
+
 
 	}
 
@@ -118,14 +109,11 @@ public class ArticleManager {
 	 * @return L'article en question
 	 * @throws BllException
 	 */
-	public Article getArticle(int noArticle) throws BllException {
+	public Article getArticle(int noArticle) throws BusinessException {
 
 		Article article = null;
-		try {
-			article = articleDAO.selectById(noArticle);
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager getArticle(int noArticle) : " + e.getMessage());
-		}
+		article = articleDAO.selectById(noArticle);
+
 		return article;
 	}
 
@@ -137,14 +125,12 @@ public class ArticleManager {
 	 * @return Une liste d'article resultant de la recherche.
 	 * @throws BllException
 	 */
-	public List<Article> findArticle(String nom) throws BllException {
+	public List<Article> findArticle(String nom) throws BusinessException {
 
 		List<Article> articles = new ArrayList<>();
-		try {
+
 			articles = articleDAO.findByName(nom);
-		} catch (DalException e) {
-			LOGGER.severe("Erreur dans ArticleManager getArticle(int noArticle) : " + e.getMessage());
-		}
+
 		return articles;
 	}
 }

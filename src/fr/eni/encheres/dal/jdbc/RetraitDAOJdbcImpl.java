@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Article;
@@ -16,7 +17,8 @@ import fr.eni.encheres.bo.Retrait;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.ConnectionProvider;
 import fr.eni.encheres.dal.RetraitDAO;
-import fr.eni.encheres.exception.DalException;
+import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatDAL;
 import fr.eni.encheres.log.MonLogger;
 
 /**
@@ -27,7 +29,10 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class RetraitDAOJdbcImpl implements RetraitDAO {
 	
-	private static Logger LOGGER = MonLogger.getLogger("RetraitDAOJdbcImpl");
+	private static Logger logger ;
+    private static StackTraceElement stack;
+    private static String nomMethodeCourante;
+    private static String nomClasseCourante;
 	
 	private ArticleDAO articleDAO = new ArticleDAOJdbcImpl();
 	
@@ -37,12 +42,21 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	private static final String RQT_UPDATE = "UPDATE RETRAITS SET rue = ?, code_postal = ?, ville = ? WHERE no_article = ?";
     private static final String RQT_DELETE = "DELETE RETRAITS WHERE no_article = ?";
     
+
+	public RetraitDAOJdbcImpl() {
+		logger = MonLogger.getLogger(getClass().getName());
+
+        stack = new Throwable().getStackTrace()[0];
+        nomClasseCourante = stack.getClassName();
+        nomMethodeCourante = stack.getMethodName();
+	}
+    
     /**
      * {@inheritDoc}
      * @see fr.eni.encheres.dal.RetraitDAO#selectById(int)
      */
     @Override
-    public Retrait selectById(int noArticle) throws DalException{
+    public Retrait selectById(int noArticle) throws BusinessException{
 
         Retrait retrait = null;
 
@@ -55,7 +69,10 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
                 retrait = itemBuilder(rs);
             }
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Retrait selectById(int noArticle) : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
         }
 
         return retrait;
@@ -67,7 +84,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @see fr.eni.encheres.dal.RetraitDAO#selectAll()
 	 */
     @Override
-	public List<Retrait> selectAll() throws DalException {
+	public List<Retrait> selectAll() throws BusinessException {
 		
 		List<Retrait> retraits = new ArrayList<Retrait>();
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -79,7 +96,10 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 				retraits.add(itemBuilder(rs));				
 			}
 		} catch (Exception e) {
-        	LOGGER.severe("Erreur dans Retrait selectAll() : " + e.getMessage());
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
 		}
 		
 		return retraits;
@@ -90,7 +110,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @see fr.eni.encheres.dal.RetraitDAO#insert(fr.eni.encheres.bo.Retrait)
 	 */
     @Override
-	public void insert(Retrait retrait) throws DalException {
+	public void insert(Retrait retrait) throws BusinessException {
 		
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_INSERT);
@@ -102,7 +122,10 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 			
 			int rs = requete.executeUpdate();
 		} catch (Exception e) {
-        	LOGGER.severe("Erreur dans Retrait insert(Retrait retrait) : " + e.getMessage());
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
+			throw businessException;
 		}
 		
 	}
@@ -112,7 +135,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @see fr.eni.encheres.dal.RetraitDAO#update(fr.eni.encheres.bo.Retrait)
 	 */
     @Override
-	public void update(Retrait retrait) throws DalException {
+	public void update(Retrait retrait) throws BusinessException {
 		
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_UPDATE);
@@ -124,7 +147,10 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 
             requete.executeUpdate();
 		} catch (Exception e) {
-        	LOGGER.severe("Erreur dans Retrait update(Retrait retrait) : " + e.getMessage());
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+			throw businessException;
 		}
 		
 	}
@@ -134,14 +160,17 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @see fr.eni.encheres.dal.RetraitDAO#delete(int)
 	 */
     @Override
-	public void delete(int noArticle) throws DalException {
+	public void delete(int noArticle) throws BusinessException {
 
         try (Connection connection = ConnectionProvider.getConnection()) {
             PreparedStatement requete = connection.prepareStatement(RQT_DELETE);
             requete.setInt(1, noArticle);
             requete.executeUpdate();
         } catch (Exception e) {
-        	LOGGER.severe("Erreur dans Retrait delete(int noArticle) : " + e.getMessage());
+        	logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.DELETE_OBJET_ECHEC);
+			throw businessException;
         }
 
     }
@@ -153,7 +182,7 @@ public class RetraitDAOJdbcImpl implements RetraitDAO {
 	 * @throws SQLException
 	 * @throws DalException 
 	 */
-	private Retrait itemBuilder(ResultSet rs) throws SQLException, DalException {
+	private Retrait itemBuilder(ResultSet rs) throws SQLException, BusinessException {
 		Article article = articleDAO.selectById(rs.getInt("no_article"));
 		Retrait retrait = new Retrait(article, rs.getString("rue"), rs.getString("code_postal"), rs.getString("ville"));
 		
