@@ -43,7 +43,7 @@ public class ServletDetailProfil extends HttpServlet {
 		boolean isMyAccount = false;
 		
 		//Vérification de l'existance d'une session, retourne true si oui, sinon null
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
@@ -54,7 +54,7 @@ public class ServletDetailProfil extends HttpServlet {
 			
 			String parametreIdUtilisateur = request.getParameter("idUtilisateur");
 			
-			if (parametreIdUtilisateur != null && session != null) {
+			if (parametreIdUtilisateur != null && session.getAttribute("id") != null) {
 				paramIdUtilisateur = Integer.parseInt(parametreIdUtilisateur);
 				idUtilisateur = (int) session.getAttribute("idUtilisateur");
 				

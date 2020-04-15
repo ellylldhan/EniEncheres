@@ -42,7 +42,7 @@ public class ServletCreationProfil extends HttpServlet {
 		boolean isConnected = false;
 		
 		//Vérification de l'existance d'une session, retourne true si oui, sinon null
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
 		
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
@@ -50,7 +50,7 @@ public class ServletCreationProfil extends HttpServlet {
 			rd.forward(request, response);
 		} else {
 			//Si on a une session
-			if (session != null) {
+			if (session.getAttribute("id") != null) {
 				isConnected = true;
 				
 				try {
