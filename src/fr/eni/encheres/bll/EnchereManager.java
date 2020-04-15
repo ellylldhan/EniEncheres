@@ -60,7 +60,7 @@ public class EnchereManager {
 
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getEnchereByIdArticle(int idArticle) : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
+	            throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
 	        }
 	        return encheres;
 	    }
@@ -72,7 +72,7 @@ public class EnchereManager {
 
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getBestEnchereByIdArticle(int idArticle) : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
+	            throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
 	        }
 	        return encheres;
 	    }
@@ -112,7 +112,7 @@ public class EnchereManager {
 			}
 
 	    	if (!enchere.getArticle().getDateDebut().isBefore(LocalDate.now()) || !enchere.getArticle().getDateFinEncheres().isAfter(LocalDate.now())) {
-				throw new BllException(CodesResultatBLL.CHECK_INSERT_NOT_OK);
+				throw new BllException(CodesResultatBLL.DATE_EXPIRE);
 			}
 
 	    }
@@ -131,7 +131,7 @@ public class EnchereManager {
 				}
 	        } catch (DalException e) {
 	            LOGGER.severe("Erreur dans EnchereManager getEncheresActives() : " + e.getMessage());
-	            throw new BllException(CodesResultatBLL.SELECT_OBJET);
+	            throw new BllException(CodesResultatBLL.Select_OBJET_NOTFOUND);
 	        }
 	        return encheres;
 	    }

@@ -10,8 +10,10 @@ package fr.eni.encheres.exception;
  * @date 8 avr. 2020
  */
 public abstract class CodesResultatBLL {
-
-	
+	/**
+	 * Aucun enregistrement trouvé 
+	 */
+	public static final int DATE_EXPIRE = 1003;
 	/**
 	 * Aucun enregistrement trouvé 
 	 */
@@ -34,11 +36,6 @@ public abstract class CodesResultatBLL {
 	public static final int UPDATE_OBJET_NOTUPDATE= 1007;
 	
 	/**
-	 * Problème lié à la recherche de donnée
-	 */
-	public static final int SELECT_OBJET = 1007;
-	
-	/**
 	 * Vérifie si la valeur peut être insérer
 	 */
 	public static final int CHECK_INSERT_OK = 1008;
@@ -52,4 +49,5 @@ public abstract class CodesResultatBLL {
 	 * Pas asser de crédit
 	 */
 	public static final int MISSING_CREDIT = 1010;
+	
 }
