@@ -59,6 +59,8 @@ public class ServletSupprimerCompte extends HttpServlet {
 					response.sendRedirect(request.getContextPath() + "/creationProfil");
 				}
 			}
+			
+			response.sendRedirect(request.getContextPath() + "/accueil");
 		}
 	}
 
