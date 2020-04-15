@@ -74,7 +74,7 @@
 			        		<p>${Article.utilisateur.telephone} </p>
 			        	</div>
 		        	</c:if>
-		        	<c:if test="${!fini}">
+		        	<c:if test="${!fini && !empty sessionScope.idUtilisateur}">
 			        	<form action="${pageContext.request.contextPath}/eni/encheres/encheres" method="post">
 							<input type="hidden" name="IdArticle" value="${IdArticle}" />
 			        		<div class="form-group">
