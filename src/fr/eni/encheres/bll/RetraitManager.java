@@ -22,7 +22,6 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class RetraitManager {
 	
-	private static Logger LOGGER = MonLogger.getLogger("RetraitManager");
     private static RetraitManager INSTANCE;
     
     private RetraitDAO retraitDAO = DAOFactory.getRetraitDAO();

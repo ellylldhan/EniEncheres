@@ -127,7 +127,7 @@ public class ServletEnchere extends HttpServlet {
 		EnchereManager enchereManager = EnchereManager.getInstance();
 		ArticleManager articleManager = ArticleManager.getInstance();
 
-		List<Integer> listeCodesErreur = new ArrayList();
+		List<Integer> listeCodesErreur = new ArrayList<>();
 		int idArticle = this.checkIdArticle(request, listeCodesErreur);
 		int proposition = this.checkPropostion(request, listeCodesErreur);
 		Article article = null;

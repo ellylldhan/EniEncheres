@@ -65,4 +65,7 @@ public interface EnchereDAO {
 	 * @throws BusinessException
 	 */
 	public List<Enchere> selectAllEncheresValides() throws BusinessException;
+	
+	
+
 }

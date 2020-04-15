@@ -37,7 +37,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
 	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
 	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select no_article from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
-	
+
 	private static Logger logger ;
     private static StackTraceElement stack;
     private static String nomMethodeCourante;
@@ -212,6 +212,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 
 		return encheres;
 	}
+	
 	/**
 	 * Méthode en charge de créer une instance d'objet Enchere en fonction des enregistrements récupérés en base de données
 	 * @param rs
@@ -221,11 +222,13 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 */
 	private Enchere itemBuilder(ResultSet rs) throws SQLException,BusinessException {
 		
-		Enchere  enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
+		Enchere enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
 		
 		return enchere;
 		
 	}
+
+	
 	
 
 

@@ -1,6 +1,7 @@
 package fr.eni.encheres.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,11 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import fr.eni.encheres.bll.CategorieManager;
 import fr.eni.encheres.bll.EnchereManager;
-import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
-import fr.eni.encheres.bo.Utilisateur;
-import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.BusinessException;
 
 /**
@@ -25,6 +23,9 @@ import fr.eni.encheres.exception.BusinessException;
 @WebServlet({ "/eni/encheres/ServletAccueil", "/accueil", "/home", "/eni/encheres/accueil", "/eni/encheres/home" })
 public class ServletAccueil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	private String recherche = null;
+	private String categorie = null;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -40,32 +41,52 @@ public class ServletAccueil extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		List<Integer> listeCodesErreur = new ArrayList<>();
+
 		try {
+			// Instanciations managers
 			EnchereManager enchereManager = EnchereManager.getInstance();
 			CategorieManager categorieManager = CategorieManager.getInstance();
-			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 
-			// encheres
-			List<Enchere> encheres = enchereManager.getEncheresActives();
-			
-			// Choper les categories
+			// Lister les enchere actives selon categorie (le triage des cat. est fait dans
+			// le manager)
+			List<Enchere> listeEncheresActives = enchereManager.getEncheresActives(categorie);
+
+			// Recherche d'une String dans le nom des articles des enchères actives
+			if (recherche != null) {
+				List<Enchere> resultatRecherche = new ArrayList<>();
+
+				for (Enchere enchere : listeEncheresActives) {
+					String nomArticle = enchere.getArticle().getNomArticle().toLowerCase();
+					if (nomArticle.contains(recherche.toLowerCase())) {
+						resultatRecherche.add(enchere);
+					}
+				}
+
+				// Si recherche infructueuse, ajoute code erreur correspondant
+				if (resultatRecherche.size() == 0) {
+					listeCodesErreur.add(CodesResultatServlets.ENCHERE_NOT_FOUND);
+				}
+
+				// Quelque soit le resultat, on le place dans listeEncheresActives (contient
+				// null ou une liste d'enchères)
+				listeEncheresActives = resultatRecherche;
+			}
+
+			request.setAttribute("listeEncheres", listeEncheresActives);
+
+			// Lister les categories pour le dropdown menu
 			List<Categorie> categories = categorieManager.getCategories();
-			
-			// Utilisateur
-			Utilisateur utilisateur = null;
-			
-			
-			
+			request.setAttribute("categories", categories);
 
-			request.setAttribute("listeEncheres", encheres);
-			request.setAttribute("listeCategories", categories);
-			request.setAttribute("utilisateur", utilisateur);
 		} catch (BusinessException e) {
 			e.printStackTrace();
+			request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+			
+		} finally {
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
+			rd.forward(request, response);
 		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
-		rd.forward(request,response);
 	}
 
 	/**
@@ -74,7 +95,10 @@ public class ServletAccueil extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		recherche = request.getParameter("recherche");
+		categorie = request.getParameter("categorie");
+
 		doGet(request, response);
 	}
 

@@ -32,5 +32,8 @@ public abstract class CodesResultatServlets {
 	
 	public static final Integer IDARTICLE_NOT_FOUND = 30017;
 	public static final Integer Proposition_NOT_FOUND = 30018;
+	
+	// Pour résultat de recherche d'enchère par nom d'article
+	public static final Integer ENCHERE_NOT_FOUND = 30019;
 
 }
