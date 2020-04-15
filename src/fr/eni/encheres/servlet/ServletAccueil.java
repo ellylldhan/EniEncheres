@@ -17,6 +17,7 @@ import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BllException;
+import fr.eni.encheres.exception.BusinessException;
 
 /**
  * Servlet implementation class ServletAccueil
@@ -59,7 +60,7 @@ public class ServletAccueil extends HttpServlet {
 			request.setAttribute("listeEncheres", encheres);
 			request.setAttribute("listeCategories", categories);
 			request.setAttribute("utilisateur", utilisateur);
-		} catch (BllException e) {
+		} catch (BusinessException e) {
 			e.printStackTrace();
 		}
 		

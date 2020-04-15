@@ -14,23 +14,8 @@
 
 <body class="container">
 
-	<div class="topnav">
-		<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
-		<c:choose>
-		<c:when test="${empty sessionScope.utilisateur.pseudo}">
-		<!-- si pas de pseudo alors affiche liens vers inscription/connection -->
-		              <a class="nav-link" href="${pageContext.request.contextPath}/ServletInscription">S'inscrire</a>
-		              <a class="nav-link" href="${pageContext.request.contextPath}/ServletConnexion">Se Connecter</a>
-		</c:when>
-		<c:otherwise>
-		<!-- sinon affiche pseudo avec lien vers profil utilisateur -->
-			<a class="nav-link" href="${pageContext.request.contextPath}/ServletDetailProfil">${sessionScope.utilisateur.pseudo}</a>
-		</c:otherwise>
-		</c:choose>
-		</nav>
-	</div>
-
-
+	<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
+	
 	<h3 class="text-center">Liste des enchères</h3>
 
 	<form method="post" action="#recherche">

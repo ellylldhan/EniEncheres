@@ -30,17 +30,20 @@ public class UtilisateurManager {
 
     public List<Utilisateur> getUtilisateurs() throws BusinessException{
         List<Utilisateur> utilisateurs = null;
-
-            utilisateurs = utilisateurDAO.selectAll();
-
+        utilisateurs = utilisateurDAO.selectAll();
         return utilisateurs;
     }
 
-    public int addUtilisateur(Utilisateur u)throws BusinessException {
-
-        if(u != null && u instanceof Utilisateur)
+    public int addUtilisateur(Utilisateur u) throws BusinessException {
+        if(u != null && u instanceof Utilisateur){
+            String tel = u.getTelephone();
+            try {
+                Integer.parseInt(tel);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
             utilisateurDAO.insert(u);
-
         return u.getNoUtilisateur();
     }
 

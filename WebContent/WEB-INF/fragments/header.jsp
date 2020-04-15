@@ -8,15 +8,22 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="container header">
+<div class="container">
     <h1>ENI-Encheres</h1>
-    <div>
-        <c:if test="${!empty sessionScope.idUtilisateur}">
-            <a href="${pageContext.request.contextPath}/eni/encheres/DeconnexionUtilisateur" class="btn btn-primary">Se deconnecter</a>
-        </c:if>
-        <c:if test="${empty sessionScope.idUtilisateur}">
-            <a href="${pageContext.request.contextPath}/eni/encheres/GestionConnexionUtilisateur" class="btn btn-primary">Se connecter</a>
-            <a href="${pageContext.request.contextPath}/eni/encheres/creationProfil" class="btn btn-primary">Inscription</a>
-        </c:if>
+    <div class="topnav">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+            <c:choose>
+                <c:when test="${!empty sessionScope.idUtilisateur}">
+                    <a href="${pageContext.request.contextPath}/eni/encheres/detailProfil" class="nav-link">Mon profil</a>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/nouvelleVente" class="nav-link">Vendre un article</a>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/encheres" class="nav-link">Encheres</a>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/DeconnexionUtilisateur" class="nav-link">Se deconnecter</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/GestionConnexionUtilisateur" class="nav-link">Se connecter</a>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/creationProfil" class="nav-link">Inscription</a>
+                </c:otherwise>
+            </c:choose>
+        </nav>
     </div>
 </div>
