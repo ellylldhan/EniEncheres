@@ -49,7 +49,8 @@ public class ServletDetailProfil extends HttpServlet {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/detail_profil.jsp");
 			rd.forward(request, response);
-		} else {
+		} 
+		else {
 			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 			
 			String parametreIdUtilisateur = request.getParameter("idUtilisateur");
@@ -76,6 +77,8 @@ public class ServletDetailProfil extends HttpServlet {
 				
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/detail_profil.jsp");
 				rd.forward(request, response);
+			}else {
+				response.sendRedirect(request.getContextPath() + "/accueil");
 			}
 			
 		}
