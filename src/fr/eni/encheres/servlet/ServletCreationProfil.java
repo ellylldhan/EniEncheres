@@ -50,7 +50,7 @@ public class ServletCreationProfil extends HttpServlet {
 			rd.forward(request, response);
 		} else {
 			//Si on a une session
-			if (session.getAttribute("id") != null) {
+			if (session.getAttribute("idUtilisateur") != null) {
 				isConnected = true;
 				
 				try {

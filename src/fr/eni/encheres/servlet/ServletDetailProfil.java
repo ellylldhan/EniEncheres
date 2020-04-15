@@ -54,7 +54,7 @@ public class ServletDetailProfil extends HttpServlet {
 			
 			String parametreIdUtilisateur = request.getParameter("idUtilisateur");
 			
-			if (parametreIdUtilisateur != null && session.getAttribute("id") != null) {
+			if (parametreIdUtilisateur != null && session.getAttribute("idUtilisateur") != null) {
 				paramIdUtilisateur = Integer.parseInt(parametreIdUtilisateur);
 				idUtilisateur = (int) session.getAttribute("idUtilisateur");
 				
