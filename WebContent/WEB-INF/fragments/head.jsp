@@ -4,14 +4,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ENI | Enchères</title>
+    <title>ENI | Enchï¿½res</title>
 
     <!-- Bootstrap core CSS -->
     <link href="${pageContext.request.contextPath}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
+    <!-- Custom styles -->
     <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/utilisateur/login.css" rel="stylesheet">
 </head>
-<body>
-	<h2 class="web_title">ENI-Enchères</h2>
-</body>

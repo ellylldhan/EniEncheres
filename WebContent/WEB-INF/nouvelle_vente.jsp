@@ -8,6 +8,7 @@
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
 <body class="container">
+<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
 	<div class="row">
 		<div class="col-md-4">
 			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">

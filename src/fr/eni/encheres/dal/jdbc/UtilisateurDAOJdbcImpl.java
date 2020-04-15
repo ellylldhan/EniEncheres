@@ -18,16 +18,38 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
     private static Logger LOGGER = MonLogger.getLogger("UtilisateurDAOJdbcImpl");
 
     private static final String RQT_SELECT_BY_ID = "SELECT * from UTILISATEURS WHERE no_utilisateur = ?";
+    private static final String RQT_SELECT_BY_PSEUDO = "SELECT * from UTILISATEURS WHERE pseudo = ? OR email = ?";
     private static final String RQT_SELECT_ALL = "SELECT * from UTILISATEURS";
     private static final String RQT_INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES(?,?,?,?,?,?,?,?,?,?,?)\n";
     private static final String RQT_UPDATE = "UPDATE UTILISATEURS SET pseudo = ?, nom = ?, prenom = ?, email = ?, telephone = ?, rue = ?, code_postal = ?, ville = ?, mot_de_passe = ?, credit = ?, administrateur = ? WHERE no_utilisateur = ?";
     private static final String RQT_UPDATE_CREDIT = "UPDATE UTILISATEURS SET credit = ? WHERE no_utilisateur = ?";
     private static final String RQT_DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = ?";
 
+    @Override
+    public Utilisateur selectByArg(String a) throws DalException {
+        Utilisateur u = null;
+
+        try(Connection con = ConnectionProvider.getConnection()){
+            PreparedStatement pStmt = con.prepareStatement(RQT_SELECT_BY_PSEUDO);
+            pStmt.setString(1, a);
+            pStmt.setString(2, a);
+            ResultSet rs = pStmt.executeQuery();
+
+            if(rs.next()){
+                u = itemBuilder(rs);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Erreur lors de la récuperation de l'utilisateur dans la methode selectByArg ! " + e.getMessage());
+        }
+        return u;
+    }
+
     /**
      * {@inheritDoc}
      * @see fr.eni.encheres.dal.UtilisateurDAO#selectById(int)
      */
+
     @Override
     public Utilisateur selectById(int id) throws DalException {
 

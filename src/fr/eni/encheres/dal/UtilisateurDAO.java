@@ -4,14 +4,24 @@ import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.DalException;
 
+/**
+ * The interface Utilisateur dao.
+ */
 public interface UtilisateurDAO extends DAO<Utilisateur> {
-	
-	/**
-	 * Méthode en charge de modifier le nombre de credit
-	 * @param utilisateur
-	 * @return
-	 * @throws DalException
-	 */
-	public void updateCredit(Utilisateur u)  throws DalException ;
-	
+    /**
+     * Select by pseudo utilisateur.
+     *
+     * @param p the p
+     * @return the utilisateur
+     * @throws DalException the dal exception
+     */
+    public Utilisateur selectByArg(String a) throws DalException;
+
+    /**
+     * Méthode en charge de modifier le nombre de credit
+     * @param utilisateur
+     * @return
+     * @throws DalException
+     */
+    public void updateCredit(Utilisateur u)  throws DalException ;
 }

@@ -6,8 +6,8 @@
 
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
-
 <body class="container">
+<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
 ${request.setAttribute("Article", Article) }
 	<div class="row">
 		<div class="col-md-4">

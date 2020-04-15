@@ -7,6 +7,7 @@
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
 <body class="container">
+<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
 	<div class="card card_style">
 		<div class="card-header">
 			<h3 class="my_title">Détail du profil</h3>

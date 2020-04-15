@@ -41,8 +41,13 @@ public abstract class CodesResultatBLL {
 	/**
 	 * Vérifie si la valeur peut être insérer
 	 */
-	public static final int CHECK_INSERT_NOT_OK = 1008;
-	
+	public static final int CHECK_INSERT_OK = 1008;
+
+	/*
+	 * Utilisateur non trouvé en BDD
+	 */
+	public static final int USER_NOT_FOUND = 1009;
+
 	/**
 	 * Pas asser de crédit
 	 */
