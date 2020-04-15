@@ -35,7 +35,7 @@ public class ServletDetailProfil extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Integer> listeCodesErreur = new ArrayList();
+		List<Integer> listeCodesErreur = new ArrayList<>();
 		
 		int idUtilisateur = -1;
 		int paramIdUtilisateur = -1;
