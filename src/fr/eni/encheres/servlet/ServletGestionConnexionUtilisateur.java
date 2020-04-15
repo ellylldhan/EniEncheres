@@ -26,8 +26,12 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
     RequestDispatcher rd = null;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        rd = request.getRequestDispatcher(LOGIN_VIEW);
-        rd.forward(request, response);
+        if(request.getSession().getAttribute("idUtilisateur") == null){
+            rd = request.getRequestDispatcher(LOGIN_VIEW);
+            rd.forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/accueil");
+        }
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
@@ -75,19 +79,5 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
             doGet(request, response);
         }
         response.sendRedirect(request.getContextPath() + "/accueil");
-    }
-
-    private void doDeconnection(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        try {
-            if(request.getSession().getAttribute("idUtilisateur") != null){
-                request.getSession().invalidate();
-            } else {
-                throw new BllException(CodesResultatBLL.USER_NOT_CONNECTED);
-            }
-        } catch (BllException e) {
-            e.printStackTrace();
-            doGet(request, response);
-        }
-        response.sendRedirect(request.getContextPath() + "/detailProfil");
     }
 }

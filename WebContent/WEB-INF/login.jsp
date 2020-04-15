@@ -26,13 +26,6 @@
                             <button type="submit" class="btn btn-primary">Connexion</button>
                             <a href="${pageContext.request.contextPath}" class="btn btn-secondary">Créer un compte</a>
                         </div>
-                        <div class="form-group">
-                            <a href="#" class="btn btn-secondary">Mot de passe oublié</a>
-                        </div>
-                        <%--<div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="memoriser">
-                            <label class="form-check-label" for="memoriser">Se souvenir de moi</label>
-                        </div>--%>
                     </form>
                 </div>
             </div>
