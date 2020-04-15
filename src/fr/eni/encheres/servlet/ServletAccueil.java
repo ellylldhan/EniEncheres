@@ -76,8 +76,8 @@ public class ServletAccueil extends HttpServlet {
 			request.setAttribute("listeEncheres", listeEncheresActives);
 
 			// Lister les categories pour le dropdown menu
-			List<Categorie> categories = categorieManager.getCategories();
-			request.setAttribute("categories", categories);
+			List<Categorie> listeCategories = categorieManager.getCategories();
+			request.setAttribute("listeCategories", listeCategories);
 
 		} catch (BusinessException e) {
 			e.printStackTrace();

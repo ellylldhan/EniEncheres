@@ -18,12 +18,15 @@
 
 	<h3 class="text-center">Liste des enchères</h3>
 
-	<form method="post" action="#recherche">
+	<form method="post" action="/EniEncheres/eni/encheres/ServletAccueil">
 		<label for="recherche-article">Filtres :</label> <input
 			id="recherche-article" type="text" name="recherche"
-			placeholder="Le nom de l'article contient..."> <input
-			id="btn-recherche" type="submit" value="Rechercher" />
+			class="form-control" placeholder="Le nom de l'article contient...">
+		<div class="form_buttons">
+		<button type="submit" class="btn btn-primary">Rechercher</button>
+		</div>
 	</form>
+
 
 	<label for="categories">Catégories :</label>
 	<select class="form-control custom-select" id="categories"
