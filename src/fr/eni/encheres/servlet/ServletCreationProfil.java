@@ -118,8 +118,8 @@ public class ServletCreationProfil extends HttpServlet {
 			motDePasse = lireParametreMdpUtilisateur(request, listeCodesErreur);
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
-			doGet(request, response);
+            request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
+            doGet(request, response);
 		}
 
 		if (listeCodesErreur.size() > 0) {
@@ -339,8 +339,11 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @return
 	 * @throws IOException 
 	 * @throws ServletException 
+	 * @throws BusinessException 
 	 */
-	private String lireParametreMdpUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreMdpUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException, BusinessException {
+		UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+		
 		String mdp;
 		String confirmation;
 		
@@ -355,7 +358,7 @@ public class ServletCreationProfil extends HttpServlet {
 			}
 		}
 		
-		return mdp;
+		return utilisateurManager.getHashFromPassword(mdp);
 	}
 
 }
