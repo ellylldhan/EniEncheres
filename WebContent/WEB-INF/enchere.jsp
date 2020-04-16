@@ -18,11 +18,11 @@
 		<div class="col-md-8">
 			<div class="card">
 				<div class="card-header">
-				<c:if test="${!fini}">
+				<c:if test="${!fini || (empty Enchere.utilisateur && fini && !win)}">
 					<h3 class="font-weight-bold">Nouvelle Enchère</h3>
 				</c:if>
 				<c:if test="${fini && win}"><h3 class="font-weight-bold">Vous avez remporté la vente</h3></c:if>
-				<c:if test="${fini && !win}"><h3 class="font-weight-bold">${Enchere.utilisateur.pseudo} à remporté la vente</h3></c:if>
+				<c:if test="${!empty Enchere.utilisateur &&fini && !win}"><h3 class="font-weight-bold">${Enchere.utilisateur.pseudo} à remporté la vente</h3></c:if>
 				</div>
 		    	<div class="card-body">		        	
 

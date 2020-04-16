@@ -47,30 +47,27 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	private static final String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
 	private static final String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
 	private static final String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
-	private static final String RQT_EN_COURS_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
-			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
-			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+	private static final String RQT_EN_COURS_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description ,"
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
-			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
 			+ "WHERE GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
-			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
-	private static final String RQT_OUVERTE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
-			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
-			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+			+ "ORDER BY A.date_fin_encheres ASC";
+	private static final String RQT_OUVERTE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description, "
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
-			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
-			+ "WHERE GETDATE() < A.date_fin_encheres "
-			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
-	private static final String RQT_TERMINEE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
-			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
-			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+			+ "WHERE GETDATE() < A.date_debut_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC";
+	private static final String RQT_TERMINEE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description ,"
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
-			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
 			+ "WHERE GETDATE() > A.date_fin_encheres "
-			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
+			+ "ORDER BY A.date_fin_encheres ASC";
 
 	/**
 	 * Constructeur

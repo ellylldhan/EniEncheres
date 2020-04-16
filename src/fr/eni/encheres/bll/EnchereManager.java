@@ -110,7 +110,7 @@ public class EnchereManager {
 		}
 	}
 
-	
+
 
 	public void update(Enchere enchere) throws BusinessException {
 		try {
@@ -121,13 +121,16 @@ public class EnchereManager {
 			}
 			Enchere meilleurEnchere = enchereDAO.selectMustEnchereByIdArticle(enchere.getArticle().getNoArticle());
 
-			meilleurEnchere.getUtilisateur()
-					.setCredit(meilleurEnchere.getUtilisateur().getCredit() + meilleurEnchere.getMontant_enchere());
 			enchere.getUtilisateur().setCredit(enchere.getUtilisateur().getCredit() - enchere.getMontant_enchere());
 
 			this.create(enchere);
-			utilisateurDAO.updateCredit(meilleurEnchere.getUtilisateur());
 			utilisateurDAO.updateCredit(enchere.getUtilisateur());
+			if(meilleurEnchere != null) {
+				meilleurEnchere.getUtilisateur().setCredit(meilleurEnchere.getUtilisateur().getCredit() + meilleurEnchere.getMontant_enchere());
+				utilisateurDAO.updateCredit(meilleurEnchere.getUtilisateur());
+			}
+
+
 
 		} catch (BusinessException e) {
 			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
@@ -141,24 +144,31 @@ public class EnchereManager {
 
 		Enchere meilleurEnchere = enchereDAO.selectMustEnchereByIdArticle(enchere.getArticle().getNoArticle());
 
-		int meilleurOffre = 0;
-		if (meilleurEnchere != null) {
-			meilleurOffre = meilleurEnchere.getMontant_enchere();
-			if (meilleurEnchere.getUtilisateur().getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur()) {
+
+		if (meilleurEnchere == null) {
+			meilleurEnchere = new Enchere();
+			meilleurEnchere.setMontant_enchere(enchere.getArticle().getPrixInitial());
+			if (enchere.getArticle().getUtilisateur().getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur()) {
 				businessException.ajouterErreur(CodesResultatBLL.USER_LAST_ENCHERIR);
 			}
-		} else {
-			meilleurOffre = enchere.getArticle().getPrixInitial();
+		}
+		else if (meilleurEnchere.getUtilisateur().getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur()) {
+			businessException.ajouterErreur(CodesResultatBLL.USER_LAST_ENCHERIR);
 		}
 
-		if (enchere == null || enchere.getArticle().getNoArticle() == 0 || enchere.getMontant_enchere() <= meilleurOffre
+
+		if (enchere == null || enchere.getArticle().getNoArticle() == 0 || enchere.getMontant_enchere() <= meilleurEnchere.getMontant_enchere()
 				|| enchere.getUtilisateur().getNoUtilisateur() == 0) {
 			businessException.ajouterErreur(CodesResultatBLL.OBJET_NOTCONFORM);
 		}
 
-		if (!enchere.getArticle().getDateDebut().isBefore(LocalDate.now())
-				|| !enchere.getArticle().getDateFinEncheres().isAfter(LocalDate.now())) {
+
+		if ( !(enchere.getArticle().getDateDebut().equals(LocalDate.now())) ||  !(enchere.getArticle().getDateFinEncheres().equals(LocalDate.now())) ||
+				( enchere.getArticle().getDateDebut().isAfter(LocalDate.now()) || enchere.getArticle().getDateFinEncheres().isBefore(LocalDate.now()) ) ) 
+		{
+
 			businessException.ajouterErreur(CodesResultatBLL.DATE_EXPIRE);
+
 		}
 		if (businessException.hasErreurs()) {
 			throw businessException;

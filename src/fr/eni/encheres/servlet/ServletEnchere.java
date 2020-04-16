@@ -48,74 +48,84 @@ public class ServletEnchere extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
-		Article article = null;
-		List<Integer> listeCodesErreur = new ArrayList();
-
-		int idArticle = this.checkIdArticle(request, listeCodesErreur);
+		if (request.getSession().getAttribute("idUtilisateur") == null) {
+			response.sendRedirect(request.getContextPath() + "/eni/encheres/GestionConnexionUtilisateur");
+		}else {
 
 
-		if (listeCodesErreur.size() > 0) {
-			request.setAttribute("listeCodesErreur", listeCodesErreur);
-			response.sendRedirect(request.getContextPath() + "/accueil");
-		}
-		else {
-			try {
-				ArticleManager articleManager = ArticleManager.getInstance();
-				EnchereManager enchereManager = EnchereManager.getInstance();
-				RetraitManager retraitManager = RetraitManager.getInstance();
+			Article article = null;
+			List<Integer> listeCodesErreur = new ArrayList();
+
+			int idArticle = this.checkIdArticle(request, listeCodesErreur);
+
+
+			if (listeCodesErreur.size() > 0) {
+				request.setAttribute("listeCodesErreur", listeCodesErreur);
+				response.sendRedirect(request.getContextPath() + "/accueil");
+			}
+			else {
+				try {
+					ArticleManager articleManager = ArticleManager.getInstance();
+					EnchereManager enchereManager = EnchereManager.getInstance();
+					RetraitManager retraitManager = RetraitManager.getInstance();
 
 
 
-				article = articleManager.getArticle(idArticle);
-				request.setAttribute("idArticle", idArticle);
-				request.setAttribute("Article", article );
-				request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
+					article = articleManager.getArticle(idArticle);
+					request.setAttribute("idArticle", idArticle);
+					request.setAttribute("Article", article );
+					request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
 
 
-				Enchere enchere = enchereManager.getBestEnchereByIdArticle(idArticle);
+					Enchere enchere = enchereManager.getBestEnchereByIdArticle(idArticle);
 
-				if (enchere == null) {
-					enchere = new Enchere();
-					enchere.setMontant_enchere(article.getPrixInitial());
+					if (enchere == null) {
+						enchere = new Enchere();
+						enchere.setMontant_enchere(article.getPrixInitial());
 
-				}
-
-				request.setAttribute("Enchere", enchere);
-
-				boolean fini = false;
-				boolean win = false;
-
-				if (article != null && article.getDateFinEncheres().isBefore(LocalDate.now())) {
-					fini = true;
-					Utilisateur utilisateur = null;
-					if (request.getSession().getAttribute("idUtilisateur") != null) {
-						int idUtilisateur = (int) request.getSession().getAttribute("idUtilisateur");
-						utilisateur = UtilisateurManager.getInstance().getUtilisateur(idUtilisateur);
 					}
 
-					if (utilisateur.getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur() && utilisateur != null) {
-						win = true;
+					request.setAttribute("Enchere", enchere);
+
+					boolean fini = false;
+					boolean win = false;
+					if (article != null ) {
+						if ( !(article.getDateDebut().equals(LocalDate.now())) ||  !(article.getDateFinEncheres().equals(LocalDate.now())) ||
+								( article.getDateDebut().isAfter(LocalDate.now()) || article.getDateFinEncheres().isBefore(LocalDate.now()) ) ) 
+						{
+
+							fini = true;
+							Utilisateur utilisateur = null;
+							if (request.getSession().getAttribute("idUtilisateur") != null) {
+								int idUtilisateur = (int) request.getSession().getAttribute("idUtilisateur");
+								utilisateur = UtilisateurManager.getInstance().getUtilisateur(idUtilisateur);
+							}
+							if (enchere.getUtilisateur() != null) {
+								if (utilisateur.getNoUtilisateur() == enchere.getUtilisateur().getNoUtilisateur() && utilisateur != null) {
+									win = true;
+								}
+							}
+						}
 					}
+					request.setAttribute("fini", fini);
+					request.setAttribute("win", win);
+
+
 				}
-				request.setAttribute("fini", fini);
-				request.setAttribute("win", win);
+				catch (BusinessException e) {
+					e.printStackTrace();
+					request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/enchere.jsp");
+					rd.forward(request, response);
+				}
 
+				if(article == null){
+					response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				}else {
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
+					rd.forward(request, response);
 
-			}
-			catch (BusinessException e) {
-				e.printStackTrace();
-				request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/enchere.jsp");
-				rd.forward(request, response);
-			}
-
-			if(article == null){
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			}else {
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/enchere.jsp");
-				rd.forward(request, response);
-
+				}
 			}
 		}
 	}
