@@ -129,7 +129,7 @@ public class ServletNouvelleVente extends HttpServlet {
 				} catch (BusinessException e) {
 					e.printStackTrace();
 					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
-					response.sendRedirect(request.getContextPath() + "/eni/encheres/nouvelleVente");
+					doGet(request, response);
 				}
 			}
 		}
