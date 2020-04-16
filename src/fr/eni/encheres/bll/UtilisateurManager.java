@@ -4,8 +4,8 @@ import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.dal.UtilisateurDAO;
 import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.log.MonLogger;
-import fr.eni.encheres.servlet.CodesResultatServlets;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -37,12 +37,15 @@ public class UtilisateurManager {
     }
 
     public int addUtilisateur(Utilisateur u) throws BusinessException {
-
-        if(u != null && u instanceof Utilisateur){
-        	utilisateurDAO.insert(u);
+        if (u != null && u instanceof Utilisateur) {
+            String tel = u.getTelephone();
+            try {
+                Integer.parseInt(tel);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
-            
-
+        utilisateurDAO.insert(u);
         return u.getNoUtilisateur();
     }
 
@@ -79,9 +82,7 @@ public class UtilisateurManager {
     }
 
     public String getHashFromPassword(String pw) throws BusinessException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
+        byte[] salt = {94, 41, 31, -106, -60, 93, -19, -108, 82, 98, 61, -116, 97, -72, 40, 104};
         MessageDigest md = null;
         byte[] hashedPassword = null;
         try {
@@ -90,6 +91,8 @@ public class UtilisateurManager {
             hashedPassword = md.digest(pw.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             logger.severe("Erreur lors de la tentative de hachage du mot de passe : " + e.getMessage());
+            BusinessException be = new BusinessException();
+            be.ajouterErreur(CodesResultatBLL.ERREUR_HACHAGE);
         }
         return bytesToHex(hashedPassword);
     }
