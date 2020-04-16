@@ -44,7 +44,7 @@ public class ServletGestionConnexionUtilisateur extends HttpServlet {
             if (request.getSession().getAttribute("idUtilisateur") == null) {
                 Utilisateur u = null;
                 String login = request.getParameter("identifiant");
-                String pw = request.getParameter("motDePasse");
+                String pw = um.getHashFromPassword(request.getParameter("motDePasse"));
                 HttpSession session = null;
                 boolean isCorrectPw = false;
 
