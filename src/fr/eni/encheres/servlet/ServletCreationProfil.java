@@ -15,13 +15,15 @@ import javax.servlet.http.HttpSession;
 import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
-import fr.eni.encheres.exception.CodesResultatBLL;
 
 /**
  * Servlet implementation class CreationProfil
  */
 @WebServlet("/eni/encheres/creationProfil")
 public class ServletCreationProfil extends HttpServlet {
+
+	UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -112,8 +114,14 @@ public class ServletCreationProfil extends HttpServlet {
 		rue = lireParametreRueUtilisateur(request, listeCodesErreur);
 		codePostal = lireParametreCodePostalUtilisateur(request, listeCodesErreur);
 		ville = lireParametreVilleUtilisateur(request, listeCodesErreur);
-		motDePasse = lireParametreMdpUtilisateur(request, listeCodesErreur);
-		
+		try {
+			motDePasse = lireParametreMdpUtilisateur(request, listeCodesErreur);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
+			doGet(request, response);
+		}
+
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			

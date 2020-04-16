@@ -74,6 +74,9 @@ public abstract class CodesResultatBLL {
 	 * La date de fin de l'enchère est antérieure à la date de début
 	 */
 	public static final int DATE_FIN_ENCHERE_ANTERIEURE_DATE_DU_JOUR = 1015;
-	
 
+	/**
+	 * Problème lors du hachage du mot de passe
+	 */
+	public static final  int ERREUR_HACHAGE = 1016;
 }
