@@ -24,8 +24,7 @@ import fr.eni.encheres.exception.BusinessException;
 public class ServletAccueil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public String recherche = null;
-	public String categorie = null;
+
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -40,8 +39,10 @@ public class ServletAccueil extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		String recherche = request.getParameter("recherche");
+		String categorie = request.getParameter("categories");
 		List<Integer> listeCodesErreur = new ArrayList<>();
+		List<Enchere> listeEncheresActives = new ArrayList<Enchere>();
 
 		try {
 			// Instanciations managers
@@ -50,12 +51,15 @@ public class ServletAccueil extends HttpServlet {
 
 			// Lister les enchere actives selon categorie (le triage des cat. est fait dans
 			// le manager)
-			List<Enchere> listeEncheresActives = enchereManager.getEncheresActives(categorie);
+			
+				listeEncheresActives = enchereManager.getEncheresActives(categorie);
+			
+			
 
 			// Recherche d'une String dans le nom des articles des enchères actives
 			if (recherche != null) {
 				List<Enchere> resultatRecherche = new ArrayList<>();
-
+				
 				for (Enchere enchere : listeEncheresActives) {
 					String nomArticle = enchere.getArticle().getNomArticle().toLowerCase();
 					if (nomArticle.contains(recherche.toLowerCase())) {
@@ -81,9 +85,9 @@ public class ServletAccueil extends HttpServlet {
 
 		} catch (BusinessException e) {
 			e.printStackTrace();
-			
+
 			request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
-			
+
 		} finally {
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
 			rd.forward(request, response);
@@ -97,8 +101,7 @@ public class ServletAccueil extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		recherche = request.getParameter("recherche");
-		categorie = request.getParameter("categorie");
+
 
 		doGet(request, response);
 	}

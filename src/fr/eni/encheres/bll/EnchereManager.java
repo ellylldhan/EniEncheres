@@ -125,11 +125,11 @@ public class EnchereManager {
 			encheres = enchereDAO.selectAllEncheresValides();
 			
 			// Tri par catégorie
-			if (categorie != null) {
+			if (categorie != null && !categorie.trim().isEmpty() ) {
 							
 				// compare categorie donnée et categorie enchere
 				for (Enchere enchere : encheres) {
-					if (categorie.toLowerCase().equals(enchere.getArticle().getCategorie().getLibelle().toLowerCase())) {
+					if (Integer.parseInt(categorie) == enchere.getArticle().getCategorie().getNoCategorie()) {
 						encheresParCategorie.add(enchere);
 					}
 				}
