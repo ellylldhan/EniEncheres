@@ -45,6 +45,7 @@ public class ServletDetailProfil extends HttpServlet {
 		//Vérification de l'existance d'une session, retourne true si oui, sinon null
 		HttpSession session = request.getSession();
 		
+		//Si on a des erreurs, on les envoit à la jsp
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/detail_profil.jsp");
@@ -55,12 +56,15 @@ public class ServletDetailProfil extends HttpServlet {
 			
 			String parametreIdUtilisateur = request.getParameter("idUtilisateur");
 			
-			if (parametreIdUtilisateur != null && session.getAttribute("idUtilisateur") != null) {
+			if (parametreIdUtilisateur != null) {
 				paramIdUtilisateur = Integer.parseInt(parametreIdUtilisateur);
-				idUtilisateur = (int) session.getAttribute("idUtilisateur");
 				
-				if (paramIdUtilisateur == idUtilisateur) {
-					isMyAccount = true;
+				if (session.getAttribute("idUtilisateur") != null) {
+					idUtilisateur = (int) session.getAttribute("idUtilisateur");
+					
+					if (paramIdUtilisateur == idUtilisateur) {
+						isMyAccount = true;
+					}
 				}
 				
 				try {
