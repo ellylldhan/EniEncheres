@@ -82,7 +82,7 @@ public class ServletDetailProfil extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/detail_profil.jsp");
 				rd.forward(request, response);
 			}else {
-				response.sendRedirect(request.getContextPath() + "/accueil");
+				response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
 			}
 			
 		}

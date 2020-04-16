@@ -11,8 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.tomcat.jni.Local;
+import javax.servlet.http.HttpSession;
 
 import fr.eni.encheres.bll.ArticleManager;
 import fr.eni.encheres.bll.CategorieManager;
@@ -43,18 +42,26 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			CategorieManager categorieManager = CategorieManager.getInstance();
-			request.setAttribute("listeCategories", categorieManager.getCategories());
-		} catch (BusinessException e) {
-			e.printStackTrace();
-			request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
-		}finally {
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
-			rd.forward(request, response);
-		}
-
+		HttpSession session = request.getSession();
 		
+		//Si l'utilisateur est bien connecté, il peut accéder à la page
+		if (session.getAttribute("idUtilisateur") != null) {
+			try {
+				CategorieManager categorieManager = CategorieManager.getInstance();
+				request.setAttribute("listeCategories", categorieManager.getCategories());
+				
+				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+				request.setAttribute("utilisateur", utilisateurManager.getUtilisateur((int) session.getAttribute("idUtilisateur")));
+			} catch (BusinessException e) {
+				e.printStackTrace();
+				request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+			}finally {
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
+				rd.forward(request, response);
+			}
+		} else { //Sinon on le renvoit à la page d'accueil
+			response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
+		}
 	}
 
 	/**
@@ -62,6 +69,9 @@ public class ServletNouvelleVente extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		
+		HttpSession session = request.getSession();
+		int idUtilisateur = -1;
 		
 		//Lecture des paramètres
 		String nomArticle = null;
@@ -79,49 +89,51 @@ public class ServletNouvelleVente extends HttpServlet {
 		dateDebutEncheres = lireParametreDateDebutEncheresArticle(request, listeCodesErreur);
 		dateFinEncheres = lireParametreDateFinEncheresArticle(request, listeCodesErreur);
 		
-		if(listeCodesErreur.size() > 0)
-		{
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
+		//Si on est connecté, on peut effectuer une nouvelle vente
+		if (session.getAttribute("idUtilisateur") != null) {
+			//Si on a des erreurs on les fournit à la jsp
+			if(listeCodesErreur.size() > 0)
+			{
+				request.setAttribute("listeCodesErreur",listeCodesErreur);
 
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
-			rd.forward(request, response);
-		}
-		else
-		{
-			try {
-				
-			
-				CategorieManager categorieManager = CategorieManager.getInstance();
-				Categorie categorie = categorieManager.getCategorie(noCategorie);
-				
-				//TODO: A modifier lorsque les contexts de session seront implémentés
-				UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
-				Utilisateur utilisateur = utilisateurManager.getUtilisateur(1);
-				
-				Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, utilisateur, categorie);
-				ArticleManager articleManager = ArticleManager.getInstance();
-				int article = articleManager.addArticle(articleToAdd);
-				
-				//Si les champs du point de retrait sont renseignés, on créer le point de retrait lié à l'article
-				boolean checkerRetrait = verifierChampsRetrait(request, listeCodesErreur);
-				if (checkerRetrait = true) {
-					String rueRetrait = request.getParameter("rue_retrait");
-					String codePostalRetrait = request.getParameter("code_postal_retrait");
-					String villeRetrait = request.getParameter("ville_retrait");
-					
-					RetraitManager retraitManager = RetraitManager.getInstance();
-					Retrait retraitToAdd = new Retrait(articleToAdd, rueRetrait, codePostalRetrait, villeRetrait);
-					
-					int retrait = retraitManager.addRetrait(retraitToAdd);
-					
-					request.setAttribute("idArticle", article);
-					response.sendRedirect(request.getContextPath() + "/eni/encheres/encheres");
-				}
-			} catch (BusinessException e) {
-				e.printStackTrace();
-				request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
 				rd.forward(request, response);
+			}
+			else
+			{
+				try {
+					CategorieManager categorieManager = CategorieManager.getInstance();
+					Categorie categorie = categorieManager.getCategorie(noCategorie);
+					
+					UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
+					idUtilisateur = (int) session.getAttribute("idUtilisateur");
+					Utilisateur utilisateur = utilisateurManager.getUtilisateur(idUtilisateur);
+					
+					Article articleToAdd = new Article(nomArticle, description, dateDebutEncheres, dateFinEncheres, prixInitial, utilisateur, categorie);
+					ArticleManager articleManager = ArticleManager.getInstance();
+					int article = articleManager.addArticle(articleToAdd);
+					
+					//Si les champs du point de retrait sont renseignés, on créer le point de retrait lié à l'article
+					boolean checkerRetrait = verifierChampsRetrait(request, listeCodesErreur);
+					if (checkerRetrait = true) {
+						String rueRetrait = request.getParameter("rue_retrait");
+						String codePostalRetrait = request.getParameter("code_postal_retrait");
+						String villeRetrait = request.getParameter("ville_retrait");
+						
+						RetraitManager retraitManager = RetraitManager.getInstance();
+						Retrait retraitToAdd = new Retrait(articleToAdd, rueRetrait, codePostalRetrait, villeRetrait);
+						
+						int retrait = retraitManager.addRetrait(retraitToAdd);
+						
+						request.setAttribute("idArticle", article);
+						response.sendRedirect(request.getContextPath() + "/eni/encheres/encheres");
+					}
+				} catch (BusinessException e) {
+					e.printStackTrace();
+					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
+					rd.forward(request, response);
+				}
 			}
 		}
 		

@@ -41,7 +41,7 @@ public class ServletSupprimerCompte extends HttpServlet {
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			
-			response.sendRedirect(request.getContextPath() + "/creationProfil");
+			response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
 		} else {
 			if (request.getParameter("idUtilisateur") != null) {
 				idUtilisateur = Integer.parseInt(request.getParameter("idUtilisateur"));
@@ -56,11 +56,11 @@ public class ServletSupprimerCompte extends HttpServlet {
 				} catch (BusinessException e) {
 					e.printStackTrace();
 					request.setAttribute("listeCodesErreur", listeCodesErreur);
-					response.sendRedirect(request.getContextPath() + "/creationProfil");
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
 				}
 			}
 			
-			response.sendRedirect(request.getContextPath() + "/accueil");
+			response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
 		}
 	}
 

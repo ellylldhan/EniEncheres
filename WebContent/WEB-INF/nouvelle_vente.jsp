@@ -80,15 +80,15 @@
 					    	<div class="card-body">	
 								<div class="form-group">
 									<label for="rue_retrait">Rue : </label>
-									<input class="form-control" type="text" id="rue_retrait" name="rue_retrait">
+									<input class="form-control" type="text" id="rue_retrait" name="rue_retrait" value="${ utilisateur.rue }">
 								</div>
 								<div class="form-group">
 									<label for="code_postal_retrait">Code postal : </label>
-									<input class="form-control" type="text" id="code_postal_retrait" name="code_postal_retrait">
+									<input class="form-control" type="text" id="code_postal_retrait" name="code_postal_retrait" value="${ utilisateur.codePostal }">
 								</div>
 								<div class="form-group">
 									<label for="ville_retrait">Ville : </label>
-									<input class="form-control" type="text" id="ville_retrait" name="ville_retrait">
+									<input class="form-control" type="text" id="ville_retrait" name="ville_retrait" value="${ utilisateur.ville }">
 								</div>
 					      	</div>
 						</div>
