@@ -10,11 +10,7 @@
 <body class="container">
 <jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
 	<div class="row">
-		<div class="col-md-4">
-			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">
-			<br>
-		</div>
-		<div class="col-md-8">
+		<div class="col-md-12">
 			<div class="card">
 				<div class="card-header">
 					<h3 class="font-weight-bold">Nouvelle vente</h3>
@@ -34,63 +30,63 @@
 		    		</c:if>
 		    	        	
 		        	<form action="${pageContext.request.contextPath}/eni/encheres/nouvelleVente" method="post">
-						<div class="form-group">
-							<label for="nom_article">Article : </label>
-							<input class="form-control" type="text" id="nom_article" name="nom_article">
-						</div>
-						
-						<div>
-							<textarea class="form-control" id="description_article" name="description_article" placeholder="Description de l'article ..."></textarea>
-						</div>
-						<br>
-						
-						<div class="form-group">
-							<label for="categorie_article">Catégorie : </label>
-							<select class="form-control" id="categorie_article" name="categorie_article">
-								<c:forEach var="c" items="${ listeCategories }">
-									<option value="${ c.noCategorie }">${ c.libelle }</option>
-								</c:forEach>
-							</select>
-						</div>
-						
-						<div class="form-group">
-							<label for="photo_article">Photo de l'article : </label>
-							<button class="form-control btn btn-outline-dark" type="button">Joindre</button>
-						</div>
-						
-						<div class="form-group">
-							<label for="prix_initial_article">Mise à prix : </label>
-							<input class="form-control" id="prix_initial_article" name="prix_initial_article" type="number" value="0">
-						</div>
-						
-						<div class="form-group">
-							<label for="date_debut_enchere_article">Date de début : </label>
-							<input class="form-control" id="date_debut_enchere_article" name="date_debut_enchere_article" type="date">
-						</div>
-						
-						<div class="form-group">
-							<label for="date_fin_enchere_article">Date de fin : </label>
-							<input class="form-control" id="date_fin_enchere_article" name="date_fin_enchere_article" type="date">
-						</div>
-						
-						<div class="card">
-							<div class="card-header">
-								<h5>Retrait</h5>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="nom_article">Article : </label>
+									<input class="form-control" type="text" id="nom_article" name="nom_article">
+								</div>
+								
+								<div>
+									<textarea class="form-control" id="description_article" name="description_article" placeholder="Description de l'article ..."></textarea>
+								</div>
+								<br>
+								
+								<div class="form-group">
+									<label for="categorie_article">Catégorie : </label>
+									<select class="form-control" id="categorie_article" name="categorie_article">
+										<c:forEach var="c" items="${ listeCategories }">
+											<option value="${ c.noCategorie }">${ c.libelle }</option>
+										</c:forEach>
+									</select>
+								</div>
+								
+								<div class="form-group">
+									<label for="prix_initial_article">Mise à prix : </label>
+									<input class="form-control" id="prix_initial_article" name="prix_initial_article" type="number" value="0">
+								</div>
+								
+								<div class="form-group">
+									<label for="date_debut_enchere_article">Date de début : </label>
+									<input class="form-control" id="date_debut_enchere_article" name="date_debut_enchere_article" type="date">
+								</div>
+								
+								<div class="form-group">
+									<label for="date_fin_enchere_article">Date de fin : </label>
+									<input class="form-control" id="date_fin_enchere_article" name="date_fin_enchere_article" type="date">
+								</div>
 							</div>
-					    	<div class="card-body">	
-								<div class="form-group">
-									<label for="rue_retrait">Rue : </label>
-									<input class="form-control" type="text" id="rue_retrait" name="rue_retrait" value="${ utilisateur.rue }">
+							<div class="col-md-6">
+								<div class="card" style="margin-top: 25px;">
+									<div class="card-header">
+										<h5>Retrait</h5>
+									</div>
+							    	<div class="card-body">	
+										<div class="form-group">
+											<label for="rue_retrait">Rue : </label>
+											<input class="form-control" type="text" id="rue_retrait" name="rue_retrait" value="${ utilisateur.rue }">
+										</div>
+										<div class="form-group">
+											<label for="code_postal_retrait">Code postal : </label>
+											<input class="form-control" type="text" id="code_postal_retrait" name="code_postal_retrait" value="${ utilisateur.codePostal }">
+										</div>
+										<div class="form-group">
+											<label for="ville_retrait">Ville : </label>
+											<input class="form-control" type="text" id="ville_retrait" name="ville_retrait" value="${ utilisateur.ville }">
+										</div>
+							      	</div>
 								</div>
-								<div class="form-group">
-									<label for="code_postal_retrait">Code postal : </label>
-									<input class="form-control" type="text" id="code_postal_retrait" name="code_postal_retrait" value="${ utilisateur.codePostal }">
-								</div>
-								<div class="form-group">
-									<label for="ville_retrait">Ville : </label>
-									<input class="form-control" type="text" id="ville_retrait" name="ville_retrait" value="${ utilisateur.ville }">
-								</div>
-					      	</div>
+							</div>
 						</div>
 						
 						<div class="form_buttons">
