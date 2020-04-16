@@ -1,5 +1,5 @@
 <%@ page import="java.util.List"%>
-<%@ page import="fr.eni.encheres.messages.LecteurMessage" %>
+<%@ page import="fr.eni.encheres.messages.LecteurMessage"%>
 <%@ page import="fr.eni.encheres.bo.Categorie"%>
 <%@ page import="fr.eni.encheres.bo.Enchere"%>
 <%@ page import="fr.eni.encheres.bo.Utilisateur"%>
@@ -29,11 +29,11 @@
 	</form>
 
 	<div class="card-body">
-		<c:if test="${ !empty requestScope.listeCodesErreur }">
+		<c:if test="${ !empty listeCodesErreur }">
 			<div class="alert alert-danger" role="alert">
 				<strong>ERREUR !</strong>
 				<ul>
-					<c:forEach var="code" items="${ requestScope.listeCodesErreur }">
+					<c:forEach var="code" items="${ listeCodesErreur }">
 						<li>${ LecteurMessage.getMessageErreur(code) }</li>
 					</c:forEach>
 				</ul>
@@ -66,26 +66,39 @@
 			<!-- Carte Enchere -->
 			<div class="card card-cascade narrower" style="width: 50%;">
 
-				<!-- Card image -->
-				<div class="col-md-4">
-					<img src="${pageContext.request.contextPath}/images/no_image.png"
-						class="img-thumbnail">
-				</div>
-
 				<!-- Card content -->
 				<div class="card-body card-body-cascade">
 
 					<!-- Nom Article -->
-					<p id="carte-article-nom">${enchere.getArticle.nomArticle}</p>
+					<p id="carte-article-nom">
+						<a href="${pageContext.request.contextPath}/eni/encheres/encheres?idArticle=${enchere.article.noArticle}" class="nav-link">
+						${enchere.article.nomArticle}
+						</a>
+					</p>
 
 					<!-- Contenu -->
-					<p id="carte-article-prix" class="card-text">Prix :
-						${ /* prix */}</p>
-					<p id="carte-article-dateFin" class="card-text">Fin de
-						l'enchère : ${enchere.getArticle.dateFinEncheres}</p>
-					<br />
+					<p id="carte-article-prix" class="card-text">
+						Prix :
+						<c:if test="${enchere.article.prixVente == 0}">
+							
+							<c:if test="${enchere.montant_enchere == 0 }">
+								${enchere.article.prixInitial}
+							</c:if>
+							
+							<c:if test="${ enchere.montant_enchere !=0 }">
+								${enchere.montant_enchere}
+							</c:if>
+						</c:if>
+						<c:if test="${ enchere.article.prixVente != 0 }">
+							${enchere.article.prixVente}
+						</c:if>
+					<p id="carte-article-dateFin" class="card-text">
+						Fin de l'enchère : ${enchere.article.dateFinEncheres}<br />
 					<p id="carte-article-vendeur" class="card-text">Vendeur :
-
+					<a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${enchere.article.utilisateur.noUtilisateur}" class="nav-link">
+						${enchere.article.utilisateur.pseudo}
+					</a>
+						
 				</div>
 
 			</div>

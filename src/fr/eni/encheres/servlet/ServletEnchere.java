@@ -68,7 +68,7 @@ public class ServletEnchere extends HttpServlet {
 
 
 				article = articleManager.getArticle(idArticle);
-				request.setAttribute("IdArticle", idArticle);
+				request.setAttribute("idArticle", idArticle);
 				request.setAttribute("Article", article );
 				request.setAttribute("Retrait", retraitManager.getRetrait(idArticle));
 
@@ -171,9 +171,7 @@ public class ServletEnchere extends HttpServlet {
 	 */
 	private int checkIdArticle(HttpServletRequest request, List<Integer> listeCodesErreur) {
 		String parameteIdArticle= request.getParameter("idArticle");
-		//TODO
-		parameteIdArticle = "1";
-		//
+
 		if (parameteIdArticle == null || parameteIdArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.IDARTICLE_NOT_FOUND);
 		} else {

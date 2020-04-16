@@ -9,7 +9,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="container">
-    <h1>ENI-Encheres</h1>
+    <a class="title-link" href="${pageContext.request.contextPath}/eni/encheres/accueil">
+        <h1>ENI-Encheres</h1>
+    </a>
     <div class="topnav">
         <nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
             <c:choose>
