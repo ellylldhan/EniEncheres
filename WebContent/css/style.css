@@ -27,6 +27,15 @@ body {
 	align-self: center;
 }
 
+.title-link {
+	text-decoration: none;
+	color: black;
+}
+
+.title-link:hover {
+	text-decoration: none;
+}
+
 .form_buttons {
 	margin-top: 10px;
 	text-align: center;
