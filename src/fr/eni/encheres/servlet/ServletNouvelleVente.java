@@ -124,15 +124,12 @@ public class ServletNouvelleVente extends HttpServlet {
 						Retrait retraitToAdd = new Retrait(articleToAdd, rueRetrait, codePostalRetrait, villeRetrait);
 						
 						int retrait = retraitManager.addRetrait(retraitToAdd);
-						
-						request.setAttribute("idArticle", article);
-						response.sendRedirect(request.getContextPath() + "/eni/encheres/encheres");
 					}
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
 				} catch (BusinessException e) {
 					e.printStackTrace();
 					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
-					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
-					rd.forward(request, response);
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/nouvelleVente");
 				}
 			}
 		}

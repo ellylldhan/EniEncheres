@@ -143,6 +143,8 @@ public class ServletCreationProfil extends HttpServlet {
 					
 				} catch (BusinessException e1) {
 					e1.printStackTrace();
+					request.setAttribute("listeCodesErreur",e1.getListeCodesErreur());
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
 				}
 			} else {
 				int credit = 100;
@@ -151,12 +153,14 @@ public class ServletCreationProfil extends HttpServlet {
 				
 				try {
 					utilisateurManager.addUtilisateur(utilisateurToAdd);
-				} catch (Exception e) {
+				} catch (BusinessException e) {
 					e.getMessage();
+					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
 				}
 			}
 			
-			response.sendRedirect(request.getContextPath() + "/accueil");
+			response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
 			
 		}
 		
