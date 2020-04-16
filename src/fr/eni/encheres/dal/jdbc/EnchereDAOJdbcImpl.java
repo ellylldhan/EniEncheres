@@ -36,7 +36,9 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static final String RQT_INSERT = "INSERT INTO Encheres VALUES(?,?,?,?)";
 	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
 	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
-	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select * from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
+	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "SELECT e.no_utilisateur, e.no_article, e.date_enchere, e.montant_enchere " + 
+			"FROM ENCHERES e JOIN ARTICLES_VENDUS a ON a.no_article = e.no_article " + 
+			"WHERE a.date_fin_encheres >= getdate()";
 
 	private static Logger logger ;
     private static StackTraceElement stack;
@@ -204,6 +206,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 				encheres.add(itemBuilder(rs));
 			}
 		} catch (SQLException ex) {
+			// Exception provisoire pour mieux comprendre une erreur (@Reno)
 			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, ex.getMessage()});
 			System.out.println(ex.getMessage());
 		} catch (Exception e) {
@@ -225,7 +228,11 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	 */
 	private Enchere itemBuilder(ResultSet rs) throws SQLException,BusinessException {
 		
-		Enchere enchere = new Enchere(utilisateurDAO.selectById(rs.getInt("no_utilisateur")), articleDAO.selectById(rs.getInt("no_article")),rs.getTimestamp("date_enchere"),rs.getInt("montant_enchere"));
+		Enchere enchere = new Enchere(
+				utilisateurDAO.selectById(rs.getInt("no_utilisateur")), 
+				articleDAO.selectById(rs.getInt("no_article")),
+				rs.getTimestamp("date_enchere"),
+				rs.getInt("montant_enchere"));
 		
 		return enchere;
 		

@@ -76,16 +76,16 @@
 				<div class="card-body card-body-cascade">
 
 					<!-- Nom Article -->
-					<p id="carte-article-nom">${enchere.getArticle.getNomArticle}</p>
+					<p id="carte-article-nom">${enchere.getArticle().getNomArticle()}</p>
 
 					<!-- Contenu -->
 					<p id="carte-article-prix" class="card-text">Prix :
-						${enchere.getBestEnchereByIdArticle(enchere.getArticle.getNoArticle)}</p>
+						${enchere.getBestEnchereByIdArticle(enchere.getArticle().getNoArticle())}</p>
 					<p id="carte-article-dateFin" class="card-text">Fin de
-						l'enchère : ${enchere.getArticle.dateFinEncheres}</p>
+						l'enchère : ${enchere.getArticle().dateFinEncheres()}</p>
 					<br />
 					<p id="carte-article-vendeur" class="card-text">Vendeur :
-						${enchere.getUtilisateur.getPseudo}</p>
+						${enchere.getUtilisateur().getPseudo()}</p>
 
 				</div>
 
