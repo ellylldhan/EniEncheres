@@ -39,15 +39,17 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
     private static String nomMethodeCourante;
     private static String nomClasseCourante;
 
-	private static String RQT_SELECT_BY_ID = "SELECT * FROM ARTICLES_VENDUS WHERE no_article = ?";
-	private static String RQT_SELECT_ALL = "SELECT * FROM ARTICLES_VENDUS";
-	private static String RQT_INSERT = "INSERT INTO ARTICLES_VENDUS "
-			+ "(no_article, nom_article, description, date_debut_encheres, date_fin_encheres,"
-			+ " prix_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?,?)";
-	private static String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
-	private static String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
-	private static String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
-	
+	private static final String RQT_SELECT_BY_ID = "SELECT * FROM ARTICLES_VENDUS WHERE no_article = ?";
+	private static final String RQT_SELECT_ALL = "SELECT * FROM ARTICLES_VENDUS";
+	private static final String RQT_INSERT = "INSERT INTO ARTICLES_VENDUS "
+			+ "(nom_article, description, date_debut_encheres, date_fin_encheres,"
+			+ " prix_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?)";
+	private static final String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
+	private static final String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
+	private static final String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
+	private static final String RQT_SELECT_ALL_Article_ACTIVES = "SELECT e.no_utilisateur, e.no_article, e.date_enchere, e.montant_enchere " + 
+			"FROM ENCHERES e JOIN ARTICLES_VENDUS a ON a.no_article = e.no_article " + 
+			"WHERE {0}";	
 	
 	/**
 	 * Constructeur
@@ -149,22 +151,21 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	@Override
     public void insert(Article article) throws BusinessException {
 		//TODO: nbLignesModifiees : supprimer, ou ajouter return ?
-        int nbLignesModifiees = 0;
+     
         
         try (Connection conn = ConnectionProvider.getConnection()) {
             PreparedStatement requete = conn.prepareStatement(RQT_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
             
-            int index = 1;
-            requete.setString(index++, article.getNomArticle());
-            requete.setString(index++, article.getDescription());
-            requete.setDate(index++, Date.valueOf(article.getDateDebut()));
-            requete.setDate(index++, Date.valueOf(article.getDateFinEncheres()));
-            requete.setInt(index++, article.getPrixInitial());
-            requete.setInt(index++, article.getPrixVente());
-            requete.setInt(index++, article.getUtilisateur().getNoUtilisateur());
-            requete.setInt(index++, article.getCategorie().getNoCategorie());
+    
+            requete.setString(1, article.getNomArticle());
+            requete.setString(2, article.getDescription());
+            requete.setDate(3, Date.valueOf(article.getDateDebut()));
+            requete.setDate(4, Date.valueOf(article.getDateFinEncheres()));
+            requete.setInt(5, article.getPrixInitial());
+            requete.setInt(6, article.getUtilisateur().getNoUtilisateur());
+            requete.setInt(7, article.getCategorie().getNoCategorie());
 
-            nbLignesModifiees = requete.executeUpdate();
+            requete.executeUpdate();
             ResultSet rs = requete.getGeneratedKeys();
 
             if (rs.next()) {
