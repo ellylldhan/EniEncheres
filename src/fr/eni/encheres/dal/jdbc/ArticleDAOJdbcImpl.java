@@ -34,32 +34,53 @@ import fr.eni.encheres.log.MonLogger;
 public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 //	private static Logger LOGGER = MonLogger.getLogger("ArticleDAOJdbcImpl");
-    private static Logger logger;
-    private static StackTraceElement stack;
-    private static String nomMethodeCourante;
-    private static String nomClasseCourante;
+	private static Logger logger;
+	private static StackTraceElement stack;
+	private static String nomMethodeCourante;
+	private static String nomClasseCourante;
 
 	private static final String RQT_SELECT_BY_ID = "SELECT * FROM ARTICLES_VENDUS WHERE no_article = ?";
 	private static final String RQT_SELECT_ALL = "SELECT * FROM ARTICLES_VENDUS";
 	private static final String RQT_INSERT = "INSERT INTO ARTICLES_VENDUS "
-			+ "(nom_article, description, date_debut_encheres, date_fin_encheres,"
-			+ " prix_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?)";
+			+ "(no_final article, nom_article, description, date_debut_encheres, date_fin_encheres,"
+			+ " prifinal x_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?,?)";
 	private static final String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
 	private static final String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
 	private static final String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
-	private static final String RQT_SELECT_ALL_Article_ACTIVES = "SELECT e.no_utilisateur, e.no_article, e.date_enchere, e.montant_enchere " + 
-			"FROM ENCHERES e JOIN ARTICLES_VENDUS a ON a.no_article = e.no_article " + 
-			"WHERE {0}";	
-	
+	private static final String RQT_EN_COURS_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
+			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
+			+ "WHERE A.no_article = ? AND GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
+	private static final String RQT_OUVERTE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
+			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
+			+ "WHERE A.no_article = ? AND GETDATE() < A.date_fin_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
+	private static final String RQT_TERMINEE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
+			+ "C.libelle, E.montant_enchere, E.date_enchere " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
+			+ "WHERE A.no_article = ? AND GETDATE() > A.date_fin_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
+
 	/**
 	 * Constructeur
 	 */
 	public ArticleDAOJdbcImpl() {
-        logger = MonLogger.getLogger(getClass().getName());
+		logger = MonLogger.getLogger(getClass().getName());
 
-        stack = new Throwable().getStackTrace()[0];
-        nomClasseCourante = stack.getClassName();
-        nomMethodeCourante = stack.getMethodName();
+		stack = new Throwable().getStackTrace()[0];
+		nomClasseCourante = stack.getClassName();
+		nomMethodeCourante = stack.getMethodName();
 	}
 
 	/**
@@ -73,7 +94,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 		try (Connection connection = ConnectionProvider.getConnection()) {
 			PreparedStatement requete = connection.prepareStatement(RQT_SELECT_BY_ID);
-			
+
 			requete.setInt(1, id);
 			ResultSet rs = requete.executeQuery();
 
@@ -81,7 +102,8 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 				item = itemBuilder(rs);
 			}
 		} catch (Exception e) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
 			throw businessException;
@@ -96,52 +118,54 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public List<Article> selectAll() throws BusinessException {
-        List<Article> articles = new ArrayList<Article>();
+		List<Article> articles = new ArrayList<Article>();
 
-        try (Connection connection = ConnectionProvider.getConnection()) {
-            PreparedStatement requete = connection.prepareStatement(RQT_SELECT_ALL);
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_SELECT_ALL);
 
-            ResultSet rs = requete.executeQuery();
+			ResultSet rs = requete.executeQuery();
 
-            while (rs.next()) {
-                articles.add(itemBuilder(rs));
-            }
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
 		} catch (Exception e) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
 			throw businessException;
 		}
 
-        return articles;
+		return articles;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see fr.eni.encheres.dal.ArticleDAO#findByName(java.lang.String)
 	 */
 	@Override
 	public List<Article> findByName(String nom) throws BusinessException {
-	    List<Article> articles = new ArrayList<Article>();
+		List<Article> articles = new ArrayList<Article>();
 
-        try (Connection connection = ConnectionProvider.getConnection()) {
-            PreparedStatement requete = connection.prepareStatement(RQT_FIND);
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_FIND);
 
-            ResultSet rs = requete.executeQuery();
+			ResultSet rs = requete.executeQuery();
 
-            while (rs.next()) {
-                articles.add(itemBuilder(rs));
-            }
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
 		} catch (Exception e) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
 			throw businessException;
 		}
 
-        return articles;
+		return articles;
 	}
-	
 
 	/**
 	 * {@inheritDoc}
@@ -149,38 +173,38 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#insert(fr.eni.encheres.bo.Article)
 	 */
 	@Override
-    public void insert(Article article) throws BusinessException {
-		//TODO: nbLignesModifiees : supprimer, ou ajouter return ?
-     
-        
-        try (Connection conn = ConnectionProvider.getConnection()) {
-            PreparedStatement requete = conn.prepareStatement(RQT_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
-            
-    
-            requete.setString(1, article.getNomArticle());
-            requete.setString(2, article.getDescription());
-            requete.setDate(3, Date.valueOf(article.getDateDebut()));
-            requete.setDate(4, Date.valueOf(article.getDateFinEncheres()));
-            requete.setInt(5, article.getPrixInitial());
-            requete.setInt(6, article.getUtilisateur().getNoUtilisateur());
-            requete.setInt(7, article.getCategorie().getNoCategorie());
+	public void insert(Article article) throws BusinessException {
+		// TODO: nbLignesModifiees : supprimer, ou ajouter return ?
+		int nbLignesModifiees = 0;
 
-            requete.executeUpdate();
-            ResultSet rs = requete.getGeneratedKeys();
+		try (Connection conn = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = conn.prepareStatement(RQT_INSERT, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            if (rs.next()) {
-                article.setNoArticle(rs.getInt(1));
-            }
-            
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+			requete.setString(1, article.getNomArticle());
+			requete.setString(2, article.getDescription());
+			requete.setDate(3, Date.valueOf(article.getDateDebut()));
+			requete.setDate(4, Date.valueOf(article.getDateFinEncheres()));
+			requete.setInt(5, article.getPrixInitial());
+			requete.setInt(6, article.getPrixVente());
+			requete.setInt(7, article.getUtilisateur().getNoUtilisateur());
+			requete.setInt(8, article.getCategorie().getNoCategorie());
+
+			nbLignesModifiees = requete.executeUpdate();
+			ResultSet rs = requete.getGeneratedKeys();
+
+			if (rs.next()) {
+				article.setNoArticle(rs.getInt(1));
+			}
+
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.INSERT_OBJET_ECHEC);
 			throw businessException;
 		}
-        
-     }
-		
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -188,24 +212,24 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#update(fr.eni.encheres.bo.Article)
 	 */
 	@Override
-    public void update(Article article) throws BusinessException {
-        try (Connection conn = ConnectionProvider.getConnection()) {
-                PreparedStatement requete = conn.prepareStatement(RQT_UPDATE_PRIX_VENTE);
+	public void update(Article article) throws BusinessException {
+		try (Connection conn = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = conn.prepareStatement(RQT_UPDATE_PRIX_VENTE);
 
-                requete.setInt(1, article.getPrixVente());
-                requete.setInt(2, article.getNoArticle());
+			requete.setInt(1, article.getPrixVente());
+			requete.setInt(2, article.getNoArticle());
 
-                requete.executeUpdate();
+			requete.executeUpdate();
 
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
-    			BusinessException businessException = new BusinessException();
-    			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
-    			throw businessException;
-    		}
-        }
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.UPDATE_OBJET_ECHEC);
+			throw businessException;
+		}
+	}
 
-	
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -214,14 +238,15 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	@Override
 	public void delete(int id) throws BusinessException {
 		try (Connection conn = ConnectionProvider.getConnection()) {
-            PreparedStatement requete = conn.prepareStatement(RQT_DELETE);
+			PreparedStatement requete = conn.prepareStatement(RQT_DELETE);
 
-            requete.setInt(1, id);
+			requete.setInt(1, id);
 
-            requete.executeUpdate();
+			requete.executeUpdate();
 
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.DELETE_OBJET_ECHEC);
 			throw businessException;
@@ -229,11 +254,9 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 	}
 
-	
-
-	
 	/**
 	 * Méthode en charge de construire un objet Article avec tous ses attributs.
+	 * 
 	 * @param rs ResultSet
 	 * @return Article
 	 * @throws SQLException
@@ -243,19 +266,95 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 		Utilisateur utilisateur = DAOFactory.getUtilisateurDAO().selectById(rs.getInt("no_utilisateur"));
 		Categorie categorie = DAOFactory.getCategorieDAO().selectById(rs.getInt("no_categorie"));
-		
-		return new Article(
-				rs.getInt("no_article"), 
-				rs.getString("nom_article"), 
-				rs.getString("description"),
-				rs.getDate("date_debut_encheres").toLocalDate(), 
-				rs.getDate("date_fin_encheres").toLocalDate(), 
-				rs.getInt("prix_initial"),
-				rs.getInt("prix_vente"), 
-				utilisateur, 
-				categorie);
+
+		return new Article(rs.getInt("no_article"), rs.getString("nom_article"), rs.getString("description"),
+				rs.getDate("date_debut_encheres").toLocalDate(), rs.getDate("date_fin_encheres").toLocalDate(),
+				rs.getInt("prix_initial"), rs.getInt("prix_vente"), utilisateur, categorie);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see fr.eni.encheres.dal.ArticleDAO#getEnCours(int)
+	 */
+	@Override
+	public List<Article> getEnCours(int id) throws BusinessException {
+		List<Article> articles = new ArrayList<Article>();
 
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_EN_COURS_BY_ID_ARTICLE);
+
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see fr.eni.encheres.dal.ArticleDAO#getOuverte(int)
+	 */
+	@Override
+	public List<Article> getOuverte(int id) throws BusinessException {
+		List<Article> articles = new ArrayList<Article>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_OUVERTE_BY_ID_ARTICLE);
+
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see fr.eni.encheres.dal.ArticleDAO#getTerminee(int)
+	 */
+	@Override
+	public List<Article> getTerminee(int id) throws BusinessException {
+		List<Article> articles = new ArrayList<Article>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_TERMINEE_BY_ID_ARTICLE);
+
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
+	}
+	
 
 }
