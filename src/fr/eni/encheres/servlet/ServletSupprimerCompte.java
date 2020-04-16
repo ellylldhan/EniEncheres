@@ -51,6 +51,7 @@ public class ServletSupprimerCompte extends HttpServlet {
 					utilisateur = utilisateurManager.getUtilisateur(idUtilisateur);
 					
 					if (utilisateur != null) {
+						request.getSession().invalidate();
 						utilisateurManager.removeUtilisateur(idUtilisateur);
 					}
 				} catch (BusinessException e) {

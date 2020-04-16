@@ -92,7 +92,7 @@
 						</c:when>
 						<c:otherwise>
 							<button type="submit" class="btn btn-outline-success">Créer</button>
-							<a href="${pageContext.request.contextPath}/eni/encheres/ServletAccueil" type="button" class="btn btn-outline-danger">Annuler</a>
+							<a type="button" class="btn btn-outline-danger btn_style" href="${pageContext.request.contextPath}/eni/encheres/ServletAccueil">Annuler</a>
 						</c:otherwise>
 					</c:choose>
 				</div>
