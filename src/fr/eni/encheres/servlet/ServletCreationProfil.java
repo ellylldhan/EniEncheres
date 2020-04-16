@@ -144,7 +144,7 @@ public class ServletCreationProfil extends HttpServlet {
 				} catch (BusinessException e1) {
 					e1.printStackTrace();
 					request.setAttribute("listeCodesErreur",e1.getListeCodesErreur());
-					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
+					doGet(request, response);
 				}
 			} else {
 				int credit = 100;
@@ -156,7 +156,7 @@ public class ServletCreationProfil extends HttpServlet {
 				} catch (BusinessException e) {
 					e.getMessage();
 					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());
-					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
+					doGet(request, response);
 				}
 			}
 			
