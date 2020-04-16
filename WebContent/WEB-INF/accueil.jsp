@@ -35,52 +35,54 @@
 			</select>
 		</div>
 		
-		<div class="form-row">
-			<div class="form-group col-md-3" style="margin-left: 50px;">
-				<div class="form-check">
-					<input class="form-check-input" type="radio" id="typeEnchereAchatRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" checked />
-					<label class="form-check-label" for="typeEnchereAchatRadio">Achat</label>
+		<c:if test="${ sessionScope.idUtilisateur != null }">
+			<div class="form-row">
+				<div class="form-group col-md-3" style="margin-left: 50px;">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" id="typeEnchereAchatRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" checked />
+						<label class="form-check-label" for="typeEnchereAchatRadio">Achat</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxOuverte" name="typeEnchereAchatCheckbox" value="getOuverte" />
+						<label class="form-check-label" for="typeEnchereAchatCheckboxOuverte">Enchère Ouverte</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxTerminee" name="typeEnchereAchatCheckbox" value="getTerminee" />
+						<label class="form-check-label" for="typeEnchereAchatCheckboxTerminee">Enchère Terminée</label>
+					</div>
+					
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxEnCours" name="typeEnchereAchatCheckbox" value="getEnCours" />
+						<label class="form-check-label" for="typeEnchereAchatCheckboxEnCours">Enchère en cours</label>
+					</div>
 				</div>
 				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxOuverte" name="typeEnchereAchatCheckbox" value="getOuverte" />
-					<label class="form-check-label" for="typeEnchereAchatCheckboxOuverte">Enchère Ouverte</label>
-				</div>
-				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxTerminee" name="typeEnchereAchatCheckbox" value="getTerminee" />
-					<label class="form-check-label" for="typeEnchereAchatCheckboxTerminee">Enchère Terminée</label>
-				</div>
-				
-				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxEnCours" name="typeEnchereAchatCheckbox" value="getEnCours" />
-					<label class="form-check-label" for="typeEnchereAchatCheckboxEnCours">Enchère en cours</label>
+				<div class="form-group col-md-3">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" id="typeEnchereVenteRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" />
+						<label class="form-check-label" for="typeEnchereAchatRadio">Vendre</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxOuverte" name="typeEnchereVenteCheckbox" value="getOuverte" disabled />
+						<label class="form-check-label" for="typeEnchereVenteCheckboxOuverte">Enchère Ouverte</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxTerminee" name="typeEnchereVenteCheckbox" value="getTerminee" disabled />
+						<label class="form-check-label" for="typeEnchereVenteCheckboxTerminee">Enchère Terminée</label>
+					</div>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxEnCours" name="typeEnchereVenteCheckbox" value="getEnCours" disabled />
+						<label class="form-check-label" for="typeEnchereVenteCheckboxEnCours">Enchère en cours</label>
+					</div>
 				</div>
 			</div>
-			
-			<div class="form-group col-md-3">
-				<div class="form-check">
-					<input class="form-check-input" type="radio" id="typeEnchereVenteRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" />
-					<label class="form-check-label" for="typeEnchereAchatRadio">Vendre</label>
-				</div>
-				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxOuverte" name="typeEnchereVenteCheckbox" value="getOuverte" disabled />
-					<label class="form-check-label" for="typeEnchereVenteCheckboxOuverte">Enchère Ouverte</label>
-				</div>
-				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxTerminee" name="typeEnchereVenteCheckbox" value="getTerminee" disabled />
-					<label class="form-check-label" for="typeEnchereVenteCheckboxTerminee">Enchère Terminée</label>
-				</div>
-				
-				<div class="form-check">
-					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxEnCours" name="typeEnchereVenteCheckbox" value="getEnCours" disabled />
-					<label class="form-check-label" for="typeEnchereVenteCheckboxEnCours">Enchère en cours</label>
-				</div>
-			</div>
-		</div>
+		</c:if>
 		
 		<div class="form_buttons">
 			<button type="submit" class="btn btn-primary">Rechercher</button>
@@ -100,56 +102,57 @@
 		</c:if>
 	</div>
 	<div>
-		<!-- if listeEncheres est vide alors on affiche 'ya rien' -->
+		<!-- if listeEncheres est vide alors on affiche qu'il n'y a pas de résultats pour la recherche -->
 
 		<c:if test="${empty listeEncheres}">
 			<br>
 			<p>La liste des enchères pour est vide.</p>
 		</c:if>
 
-		<c:forEach items="${listeEncheres}" var="enchere">
-			<!-- Carte Enchere -->
-			<div class="card card-cascade narrower" style="width: 50%;">
-
-				<!-- Card content -->
-				<div class="card-body card-body-cascade">
-
-					<!-- Nom Article -->
-					<p id="carte-article-nom">
-						<a
-							href="${pageContext.request.contextPath}/eni/encheres/encheres?idArticle=${enchere.article.noArticle}"
-							class="nav-link"> ${enchere.article.nomArticle} </a>
-					</p>
-
-					<!-- Contenu -->
-					<p id="carte-article-prix" class="card-text">
-						Prix :
-						<c:if test="${enchere.article.prixVente == 0}">
-
-							<c:if test="${enchere.montant_enchere == 0 }">
-								${enchere.article.prixInitial}
+		<div class="row">
+			<c:forEach items="${listeEncheres}" var="enchere">
+				<div class="col-md-4">
+					<div class="card">
+						<!-- Header de la card -->
+						<div class="card-header">
+							<a href="${pageContext.request.contextPath}/eni/encheres?idArticle=${enchere.article.noArticle}">
+								${ enchere.article.nomArticle }
+							</a>
+						</div>
+						
+						<!-- Body de la card -->
+						<div class="card-body">
+							Prix : 
+							<!-- Si l'article n'a pas de prix de vente -->
+							<c:if test="${ enchere.article.prixVente == 0 }">
+								<!-- Si aucune enchère n'a été effectuée, on affiche le prix de vente initial -->
+								<c:if test="${ enchere.montantEnchere == 0 }">
+									${enchere.article.prixInitial}
+								</c:if>
+								<!-- Sinon on affiche le prix de l'enchere -->
+								<c:if test="${ enchere.montantEnchere !=0 }">
+									${enchere.montantEnchere}
+								</c:if>
 							</c:if>
-
-							<c:if test="${ enchere.montant_enchere !=0 }">
-								${enchere.montant_enchere}
+							
+							<!-- Si l'article est vendu, on affiche le prix de vente -->
+							<c:if test="${ enchere.article.prixVente != 0 }">
+								${enchere.article.prixVente}
 							</c:if>
-						</c:if>
-						<c:if test="${ enchere.article.prixVente != 0 }">
-							${enchere.article.prixVente}
-						</c:if>
-					<p id="carte-article-dateFin" class="card-text">
-						Fin de l'enchère : ${enchere.article.dateFinEncheres}<br />
-					<p id="carte-article-vendeur" class="card-text">
-						Vendeur : <a
-							href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${enchere.article.utilisateur.noUtilisateur}"
-							class="nav-link"> ${enchere.article.utilisateur.pseudo}</a>
+							<br>
+							
+							Fin de l'enchère : ${ enchere.article.dateFinEncheres }
+							<br>
+							
+							Vendeur : 
+							<a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${ enchere.article.utilisateur.noUtilisateur }">
+								${ enchere.article.utilisateur.pseudo }
+							</a>
+						</div>
+					</div>
 				</div>
-
-			</div>
-			<!-- Card Encheres -->
-		</c:forEach>
-
-
+			</c:forEach>
+		</div>
 	</div>
 
 
