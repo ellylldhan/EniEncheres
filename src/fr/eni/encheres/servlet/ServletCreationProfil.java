@@ -169,7 +169,6 @@ public class ServletCreationProfil extends HttpServlet {
 			}
 			
 			response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
-			
 		}
 		
 	}
@@ -265,13 +264,6 @@ public class ServletCreationProfil extends HttpServlet {
 		if (telephone == null || telephone.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.TELEPHONE_UTILISATEUR_OBLIGATOIRE);
 		}
-        try {
-            Integer.parseInt(telephone);
-        } catch (NumberFormatException e) {
-    		listeCodesErreur.add(CodesResultatServlets.TEL_NON_VALIDE);
-
-        }
-		
 		return telephone;
 	}
 	

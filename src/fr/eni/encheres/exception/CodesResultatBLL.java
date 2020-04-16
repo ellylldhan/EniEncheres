@@ -78,5 +78,15 @@ public abstract class CodesResultatBLL {
 	/**
 	 * Problème lors du hachage du mot de passe
 	 */
-	public static final  int ERREUR_HACHAGE = 1016;
+	public static final int ERREUR_HACHAGE = 1016;
+
+	/*
+	 * Le pseudo de l'utilisateur contient des caractères non autorisés
+	 */
+	public static final int PSEUDO_HAS_FORBIDDEN_CHAR = 1017;
+
+	/*
+	 * Le format du numéro de téléphone n'est pas bon
+	 */
+	public static final int ERREUR_FORMAT_TELEPHONE = 1018;
 }

@@ -237,11 +237,4 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 		return enchere;
 		
 	}
-
-	
-	
-
-
-
-	
 }

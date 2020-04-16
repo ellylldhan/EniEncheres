@@ -7,10 +7,10 @@ import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.log.MonLogger;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,21 +37,49 @@ public class UtilisateurManager {
     }
 
     public int addUtilisateur(Utilisateur u) throws BusinessException {
-        if (u != null && u instanceof Utilisateur) {
+        BusinessException be = new BusinessException();
+        Integer noUtilisateur = null;
+
+        if (u != null) {
             String tel = u.getTelephone();
             try {
-                Integer.parseInt(tel);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
+                this.checkPseudo(u.getPseudo(), be);
+                this.checkTelephone(u.getTelephone(), be);
+                utilisateurDAO.insert(u);
+                noUtilisateur = u.getNoUtilisateur();
+            } catch (BusinessException | NumberFormatException e) {
+                logger.severe("Erreur lors de l'ajout d'un utilisateur : " + e.getMessage());
+                throw e;
             }
         }
-        utilisateurDAO.insert(u);
-        return u.getNoUtilisateur();
+        return noUtilisateur;
+    }
+
+    private void checkTelephone(String t, BusinessException be) throws BusinessException {
+        try {
+            Integer.parseInt(t);
+            if(t.toCharArray().length != 10){
+                throw be;
+            }
+        } catch (NumberFormatException | BusinessException e) {
+            e.printStackTrace();
+            logger.severe("Erreur dans UtilisateurManager dans la methode checkTelephone : " + e.getMessage());
+            be.ajouterErreur(CodesResultatBLL.ERREUR_FORMAT_TELEPHONE);
+            throw be;
+        }
     }
 
     public void updateUtilisateur(Utilisateur u) throws BusinessException {
-        if (u != null && u instanceof Utilisateur)
-            utilisateurDAO.update(u);
+        BusinessException be = new BusinessException();
+
+        if (u != null)
+            try {
+                this.checkPseudo(u.getPseudo(), be);
+                utilisateurDAO.update(u);
+            } catch (BusinessException e) {
+                logger.severe("Erreur lors de la mise à jour d'un utilisateur : " + e.getMessage());
+                throw e;
+            }
     }
 
     public void removeUtilisateur(int id) throws BusinessException {
@@ -79,6 +107,22 @@ public class UtilisateurManager {
             logger.severe("Erreur dans UtitilisateurManager lors de la récupération de l'utilisateur [" + login + "] : " + e.getMessage());
         }
         return u;
+    }
+
+    private void checkPseudo(String p, BusinessException be) throws BusinessException {
+        byte[] bytes = null;
+        try {
+            bytes = p.getBytes("US-ASCII");
+            for (byte b : bytes) {
+                if (b < 65 || (b >90 && b<97) || b > 122){
+                    be.ajouterErreur(CodesResultatBLL.PSEUDO_HAS_FORBIDDEN_CHAR);
+                    throw be;
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            logger.severe("Erreur dans UtilisateurManager dans la methode checkPseudo : " + e.getMessage());
+        }
     }
 
     public String getHashFromPassword(String pw) throws BusinessException {

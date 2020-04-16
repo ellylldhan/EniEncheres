@@ -27,7 +27,7 @@ public class Utilisateur implements Serializable {
 	private String ville;
 	private String motDePasse;
 	private int credit;
-	private boolean administrateur;
+	private boolean administrateur = false;
 	
 	/**
 	 * Getter pour noUtilisateur.
