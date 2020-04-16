@@ -16,7 +16,7 @@
                 <c:when test="${!empty sessionScope.idUtilisateur}">
                     <a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${sessionScope.idUtilisateur}" class="nav-link">Mon profil</a>
                     <a href="${pageContext.request.contextPath}/eni/encheres/nouvelleVente" class="nav-link">Vendre un article</a>
-                    <a href="${pageContext.request.contextPath}/eni/encheres/encheres" class="nav-link">Encheres</a>
+                    <a href="${pageContext.request.contextPath}/eni/encheres/accueil" class="nav-link">Encheres</a>
                     <a href="${pageContext.request.contextPath}/eni/encheres/DeconnexionUtilisateur" class="nav-link">Se deconnecter</a>
                 </c:when>
                 <c:otherwise>
