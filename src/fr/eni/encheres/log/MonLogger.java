@@ -36,7 +36,7 @@ public class MonLogger {
 
 		if (fh == null) {
 			try {
-				String choixBeurk = "C:/log";
+				String choixBeurk = "C:/log/";
 				String logdir = ((new File(choixBeurk)).isDirectory()) ? choixBeurk : "";
 
 				fh = new FileHandler(logdir + "erreurs.log");
