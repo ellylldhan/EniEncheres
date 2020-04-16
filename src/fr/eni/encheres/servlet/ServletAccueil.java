@@ -24,8 +24,8 @@ import fr.eni.encheres.exception.BusinessException;
 public class ServletAccueil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private String recherche = null;
-	private String categorie = null;
+	public String recherche = null;
+	public String categorie = null;
 
 	/**
 	 * @see HttpServlet#HttpServlet()

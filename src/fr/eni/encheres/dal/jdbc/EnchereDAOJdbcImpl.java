@@ -36,7 +36,7 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 	private static final String RQT_INSERT = "INSERT INTO Encheres VALUES(?,?,?,?)";
 	private static final String RQT_UPDATE = "UPDATE [dbo].[ENCHERES] SET [date_enchere] = ? ,[montant_enchere] = ? WHERE no_utilisateur = ? AND no_article = ?  ";
 	private static final String RQT_SelectById = "SELECT  [no_utilisateur], [no_article], [date_enchere], [montant_enchere] FROM Encheres WHERE no_utilisateur = ? AND no_article = ?";
-	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select no_article from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
+	private static final String RQT_SELECT_ALL_ENCHERES_ACTIVES = "select * from ARTICLES_VENDUS where date_fin_encheres < GETDATE()";
 
 	private static Logger logger ;
     private static StackTraceElement stack;
@@ -203,12 +203,15 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 			while (rs.next()) {
 				encheres.add(itemBuilder(rs));
 			}
+		} catch (SQLException ex) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, ex.getMessage()});
+			System.out.println(ex.getMessage());
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}", new Object[]{nomClasseCourante, nomMethodeCourante, e.getMessage()});
 			BusinessException businessException = new BusinessException();
 			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
 			throw businessException;
-		}
+		} 
 
 		return encheres;
 	}

@@ -1,4 +1,5 @@
 <%@ page import="java.util.List"%>
+<%@ page import="fr.eni.encheres.messages.LecteurMessage" %>
 <%@ page import="fr.eni.encheres.bo.Categorie"%>
 <%@ page import="fr.eni.encheres.bo.Enchere"%>
 <%@ page import="fr.eni.encheres.bo.Utilisateur"%>
@@ -23,17 +24,31 @@
 			id="recherche-article" type="text" name="recherche"
 			class="form-control" placeholder="Le nom de l'article contient...">
 		<div class="form_buttons">
-		<button type="submit" class="btn btn-primary">Rechercher</button>
+			<button type="submit" class="btn btn-primary">Rechercher</button>
 		</div>
 	</form>
+
+	<div class="card-body">
+		<c:if test="${ !empty requestScope.listeCodesErreur }">
+			<div class="alert alert-danger" role="alert">
+				<strong>ERREUR !</strong>
+				<ul>
+					<c:forEach var="code" items="${ requestScope.listeCodesErreur }">
+						<li>${ LecteurMessage.getMessageErreur(code) }</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:if>
+	</div>
+
 
 
 	<label for="categories">Catégories :</label>
 	<select class="form-control custom-select" id="categories"
 		name="categories">
 		<option value="" selected>Toutes</option>
-		<c:forEach var="c" items="${ listeCategories }">
-			<option value="${ c.noCategorie }">${ c.libelle }</option>
+		<c:forEach var="cat" items="${ requestScope.listeCategories }">
+			<option value="${ cat.noCategorie }">${ cat.libelle }</option>
 		</c:forEach>
 	</select>
 
@@ -42,12 +57,12 @@
 	<div>
 		<!-- if listeEncheres est vide alors on affiche 'ya rien' -->
 
-		<c:if test="${empty listeEncheres }">
+		<c:if test="${empty requestScope.listeEncheres}">
 			<br>
-			<h3>La liste des enchères pour est vide.</h3>
+			<p>La liste des enchères pour est vide.</p>
 		</c:if>
 
-		<c:forEach items="${listeEncheres}" var="enchere">
+		<c:forEach items="${requestScope.listeEncheres}" var="enchere">
 			<!-- Carte Enchere -->
 			<div class="card card-cascade narrower" style="width: 50%;">
 
