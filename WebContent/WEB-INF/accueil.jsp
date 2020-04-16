@@ -47,7 +47,7 @@
 	<select class="form-control custom-select" id="categories"
 		name="categories">
 		<option value="" selected>Toutes</option>
-		<c:forEach var="cat" items="${ requestScope.listeCategories }">
+		<c:forEach var="cat" items="${ listeCategories }">
 			<option value="${ cat.noCategorie }">${ cat.libelle }</option>
 		</c:forEach>
 	</select>
@@ -57,12 +57,12 @@
 	<div>
 		<!-- if listeEncheres est vide alors on affiche 'ya rien' -->
 
-		<c:if test="${empty requestScope.listeEncheres}">
+		<c:if test="${empty listeEncheres}">
 			<br>
 			<p>La liste des enchères pour est vide.</p>
 		</c:if>
 
-		<c:forEach items="${requestScope.listeEncheres}" var="enchere">
+		<c:forEach items="${listeEncheres}" var="enchere">
 			<!-- Carte Enchere -->
 			<div class="card card-cascade narrower" style="width: 50%;">
 
@@ -80,7 +80,7 @@
 
 					<!-- Contenu -->
 					<p id="carte-article-prix" class="card-text">Prix :
-						${enchere.getBestEnchereByIdArticle.enchere.getArticle.noArticle}</p>
+						${ /* prix */}</p>
 					<p id="carte-article-dateFin" class="card-text">Fin de
 						l'enchère : ${enchere.getArticle.dateFinEncheres}</p>
 					<br />

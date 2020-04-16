@@ -13,13 +13,31 @@ import fr.eni.encheres.exception.BusinessException ;
  * @date 7 Apr 2020
  */
 public interface ArticleDAO extends DAO<Article> {
-
-//	public Article selectById(int noArticle) throws BusinessException;
-//	public List<Article> selectAll() throws BusinessException;
-//	public void insert(Article article) throws DalException;
-//	public void update(Article article) throws BusinessException;
-//	public void delete(int noArticle) throws BusinessException;
 	
 	public List<Article> findByName(String nom) throws BusinessException; 
+	
+	/**
+	 * Retourne une liste d'articles dont l'enchère est EN COURS.
+	 * @param id No de l'article
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getEnCours(int id) throws BusinessException;
+	
+	/**
+	 * Retourne une liste d'articles dont l'enchère est OUVERTE.
+	 * @param id No de l'article
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getOuverte(int id) throws BusinessException;
+	
+	/**
+	 * Retourne une liste d'articles dont l'enchère est TERMINEE.
+	 * @param id No de l'article
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getTerminee(int id) throws BusinessException;
 
 }
