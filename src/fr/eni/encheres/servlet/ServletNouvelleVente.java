@@ -82,12 +82,12 @@ public class ServletNouvelleVente extends HttpServlet {
 		LocalDate dateFinEncheres = null;
 		List<Integer> listeCodesErreur = new ArrayList<>();
 		
-		nomArticle = lireParametreNomArticle(request, response, listeCodesErreur);
-		description = lireParametreDescriptionArticle(request, response, listeCodesErreur);
-		noCategorie = lireParametreNoCategorie(request, response, listeCodesErreur);
-		prixInitial = lireParametrePrixInitialArticle(request, response, listeCodesErreur);
-		dateDebutEncheres = lireParametreDateDebutEncheresArticle(request, response, listeCodesErreur);
-		dateFinEncheres = lireParametreDateFinEncheresArticle(request, response, listeCodesErreur);
+		nomArticle = lireParametreNomArticle(request, listeCodesErreur);
+		description = lireParametreDescriptionArticle(request, listeCodesErreur);
+		noCategorie = lireParametreNoCategorie(request, listeCodesErreur);
+		prixInitial = lireParametrePrixInitialArticle(request, listeCodesErreur);
+		dateDebutEncheres = lireParametreDateDebutEncheresArticle(request, listeCodesErreur);
+		dateFinEncheres = lireParametreDateFinEncheresArticle(request, listeCodesErreur);
 		
 		//Si on est connecté, on peut effectuer une nouvelle vente
 		if (session.getAttribute("idUtilisateur") != null) {
@@ -114,7 +114,7 @@ public class ServletNouvelleVente extends HttpServlet {
 					int article = articleManager.addArticle(articleToAdd);
 					
 					//Si les champs du point de retrait sont renseignés, on créer le point de retrait lié à l'article
-					boolean checkerRetrait = verifierChampsRetrait(request, response, listeCodesErreur);
+					boolean checkerRetrait = verifierChampsRetrait(request, listeCodesErreur);
 					if (checkerRetrait = true) {
 						String rueRetrait = request.getParameter("rue_retrait");
 						String codePostalRetrait = request.getParameter("code_postal_retrait");
@@ -144,14 +144,12 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreNomArticle(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreNomArticle(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String nomArticle;
 		nomArticle = request.getParameter("nom_article");
 		
 		if (nomArticle == null || nomArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.NOM_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return nomArticle;
@@ -165,14 +163,12 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreDescriptionArticle(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreDescriptionArticle(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String descriptionArticle;
 		descriptionArticle = request.getParameter("description_article");
 		
 		if (descriptionArticle == null || descriptionArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.DESCRIPTION_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return descriptionArticle;
@@ -186,14 +182,12 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private int lireParametrePrixInitialArticle(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private int lireParametrePrixInitialArticle(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String prixInitial = request.getParameter("prix_initial_article");
 		int parsedPrixInitial = -1;
 		
 		if (prixInitial == null || prixInitial.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.PRIX_INITIAL_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else {
 			parsedPrixInitial = Integer.parseInt(prixInitial);
 		}
@@ -209,14 +203,12 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private LocalDate lireParametreDateDebutEncheresArticle(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private LocalDate lireParametreDateDebutEncheresArticle(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String dateEnchereDebutEncheresArticle = request.getParameter("date_debut_enchere_article");
 		LocalDate localDateDebutEncheres = null;
 		
 		if (dateEnchereDebutEncheresArticle == null || dateEnchereDebutEncheresArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.DATE_DEBUT_ENCHERES_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else {
 			localDateDebutEncheres = LocalDate.parse(dateEnchereDebutEncheresArticle);
 		}
@@ -232,14 +224,12 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private LocalDate lireParametreDateFinEncheresArticle(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private LocalDate lireParametreDateFinEncheresArticle(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String dateEnchereFinEncheresArticle = request.getParameter("date_fin_enchere_article");
 		LocalDate localDateFinEncheres = null;
 		
 		if (dateEnchereFinEncheresArticle == null || dateEnchereFinEncheresArticle.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.DATE_FIN_ENCHERES_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else {
 			localDateFinEncheres = LocalDate.parse(dateEnchereFinEncheresArticle);
 		}
@@ -255,15 +245,13 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private int  lireParametreNoCategorie(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private int  lireParametreNoCategorie(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 
 		int noCategorie = 0;
 		String noCategorieParam = request.getParameter("categorie_article");
 				
 		if (noCategorieParam == null || noCategorieParam.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.DATE_FIN_ENCHERES_ARTICLE_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else {
 			noCategorie = Integer.parseUnsignedInt(noCategorieParam);
 		}
@@ -279,7 +267,7 @@ public class ServletNouvelleVente extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private boolean verifierChampsRetrait(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private boolean verifierChampsRetrait(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String rueRetrait = request.getParameter("rue_retrait");
 		String codePostalRetrait = request.getParameter("code_postal_retrait");
 		String villeRetrait = request.getParameter("ville_retrait");
@@ -291,8 +279,6 @@ public class ServletNouvelleVente extends HttpServlet {
 			|| (codePostalRetrait != null && (rueRetrait == null || villeRetrait == null))
 			|| (villeRetrait != null && (rueRetrait == null || codePostalRetrait == null))) {
 			listeCodesErreur.add(CodesResultatServlets.ERREURS_CHAMPS_RETRAIT);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else if (rueRetrait != null && codePostalRetrait != null && villeRetrait != null) {
 			checker = true;
 		}

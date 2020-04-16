@@ -88,7 +88,7 @@ public class ServletCreationProfil extends HttpServlet {
 		//Vérification de l'existance d'une session, retourne true si oui, sinon null
 		HttpSession session = request.getSession(false);
 		
-		if (session != null) {
+		if (session.getAttribute("idUtilisateur") != null) {
 			isConnected = true;
 		}
 		
@@ -104,21 +104,20 @@ public class ServletCreationProfil extends HttpServlet {
 		String motDePasse = null;
 		List<Integer> listeCodesErreur = new ArrayList<>();
 		
-		pseudo = lireParametrePseudoUtilisateur(request, response, listeCodesErreur);
-		prenom = lireParametrePrenomUtilisateur(request, response, listeCodesErreur);
-		nom = lireParametreNomUtilisateur(request, response, listeCodesErreur);
-		email = lireParametreEmailUtilisateur(request, response, listeCodesErreur);
-		telephone = lireParametreTelephoneUtilisateur(request, response, listeCodesErreur);
-		rue = lireParametreRueUtilisateur(request, response, listeCodesErreur);
-		codePostal = lireParametreCodePostalUtilisateur(request, response, listeCodesErreur);
-		ville = lireParametreVilleUtilisateur(request, response, listeCodesErreur);
-		motDePasse = lireParametreMdpUtilisateur(request, response, listeCodesErreur);
+		pseudo = lireParametrePseudoUtilisateur(request, listeCodesErreur);
+		prenom = lireParametrePrenomUtilisateur(request, listeCodesErreur);
+		nom = lireParametreNomUtilisateur(request, listeCodesErreur);
+		email = lireParametreEmailUtilisateur(request, listeCodesErreur);
+		telephone = lireParametreTelephoneUtilisateur(request, listeCodesErreur);
+		rue = lireParametreRueUtilisateur(request, listeCodesErreur);
+		codePostal = lireParametreCodePostalUtilisateur(request, listeCodesErreur);
+		ville = lireParametreVilleUtilisateur(request, listeCodesErreur);
+		motDePasse = lireParametreMdpUtilisateur(request, listeCodesErreur);
 		
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
 		} else {
 			UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 			
@@ -175,14 +174,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametrePseudoUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametrePseudoUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String pseudo;
 		pseudo = request.getParameter("pseudo_utilisateur");
 		
 		if (pseudo == null || pseudo.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.PSEUDO_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return pseudo;
@@ -196,14 +193,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametrePrenomUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametrePrenomUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String prenom;
 		prenom = request.getParameter("prenom_utilisateur");
 		
 		if (prenom == null || prenom.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.PRENOM_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return prenom;
@@ -217,14 +212,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreNomUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreNomUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String nom;
 		nom = request.getParameter("nom_utilisateur");
 		
 		if (nom == null || nom.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.NOM_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return nom;
@@ -238,14 +231,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreEmailUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreEmailUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String email;
 		email = request.getParameter("email_utilisateur");
 		
 		if (email == null || email.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.EMAIL_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return email;
@@ -259,14 +250,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreTelephoneUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreTelephoneUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String telephone;
 		telephone = request.getParameter("telephone_utilisateur");
 		
 		if (telephone == null || telephone.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.TELEPHONE_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
         try {
             Integer.parseInt(telephone);
@@ -286,14 +275,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreRueUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreRueUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String rue;
 		rue = request.getParameter("rue_utilisateur");
 		
 		if (rue == null || rue.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.RUE_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return rue;
@@ -307,14 +294,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreCodePostalUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreCodePostalUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String codePostal;
 		codePostal = request.getParameter("code_postal_utilisateur");
 		
 		if (codePostal == null || codePostal.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.CODE_POSTAL_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return codePostal;
@@ -328,14 +313,12 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreVilleUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreVilleUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String ville;
 		ville = request.getParameter("ville_utilisateur");
 		
 		if (ville == null || ville.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.VILLE_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		}
 		
 		return ville;
@@ -349,7 +332,7 @@ public class ServletCreationProfil extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
-	private String lireParametreMdpUtilisateur(HttpServletRequest request, HttpServletResponse response, List<Integer> listeCodesErreur) throws ServletException, IOException {
+	private String lireParametreMdpUtilisateur(HttpServletRequest request, List<Integer> listeCodesErreur) throws ServletException, IOException {
 		String mdp;
 		String confirmation;
 		
@@ -358,13 +341,9 @@ public class ServletCreationProfil extends HttpServlet {
 		
 		if (mdp == null || mdp.trim().equals("") || confirmation == null || confirmation.trim().equals("")) {
 			listeCodesErreur.add(CodesResultatServlets.MDP_UTILISATEUR_OBLIGATOIRE);
-			request.setAttribute("listeCodesErreur",listeCodesErreur);
-			doGet(request, response);
 		} else {
 			if (!mdp.equals(confirmation)) {
 				listeCodesErreur.add(CodesResultatServlets.MDP_UTILISATEUR_CONFIRMER);
-				request.setAttribute("listeCodesErreur",listeCodesErreur);
-				doGet(request, response);
 			}
 		}
 		
