@@ -96,8 +96,7 @@ public class ServletNouvelleVente extends HttpServlet {
 			{
 				request.setAttribute("listeCodesErreur",listeCodesErreur);
 
-				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/nouvelle_vente.jsp");
-				rd.forward(request, response);
+				doGet(request, response);
 			}
 			else
 			{
