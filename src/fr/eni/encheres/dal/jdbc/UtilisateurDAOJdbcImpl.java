@@ -25,7 +25,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
     private static final String RQT_SELECT_BY_ID = "SELECT * from UTILISATEURS WHERE no_utilisateur = ?";
     private static final String RQT_SELECT_BY_ARG = "SELECT * from UTILISATEURS WHERE pseudo = ? OR email = ?";
     private static final String RQT_SELECT_ALL = "SELECT * from UTILISATEURS";
-    private static final String RQT_INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES(?,?,?,?,?,?,?,?,?,?,?)\n";
+    private static final String RQT_INSERT = "INSERT INTO UTILISATEURS (pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, credit, administrateur) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String RQT_UPDATE = "UPDATE UTILISATEURS SET pseudo = ?, nom = ?, prenom = ?, email = ?, telephone = ?, rue = ?, code_postal = ?, ville = ?, mot_de_passe = ?, credit = ?, administrateur = ? WHERE no_utilisateur = ?";
     private static final String RQT_UPDATE_CREDIT = "UPDATE UTILISATEURS SET credit = ? WHERE no_utilisateur = ?";
     private static final String RQT_DELETE = "DELETE FROM UTILISATEURS WHERE no_utilisateur = ?";
@@ -123,13 +123,12 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      */
     @Override
     public void insert(Utilisateur u) throws BusinessException {
-        int nbLignes = 0;
 
         try(Connection con = ConnectionProvider.getConnection()){
 
             PreparedStatement pStmt = preparedStatementBuilder(u, con, false);
 
-            nbLignes = pStmt.executeUpdate();
+            pStmt.executeUpdate();
             ResultSet rs = pStmt.getGeneratedKeys();
 
             if(rs.next()){
@@ -218,7 +217,7 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
         if(isAlreadyInDb)
             pStmt = con.prepareStatement(RQT_UPDATE);
         else
-            pStmt = con.prepareStatement(RQT_INSERT);
+            pStmt = con.prepareStatement(RQT_INSERT, Statement.RETURN_GENERATED_KEYS);
 
         pStmt.setString(1, u.getPseudo());
         pStmt.setString(2, u.getNom());
