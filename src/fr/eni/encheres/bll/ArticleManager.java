@@ -1,14 +1,18 @@
 package fr.eni.encheres.bll;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.eni.encheres.bo.Article;
+import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.DAOFactory;
 import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
@@ -21,7 +25,7 @@ import fr.eni.encheres.log.MonLogger;
  */
 public class ArticleManager {
 
-	private static Logger LOGGER = MonLogger.getLogger("ArticleManager");
+	private static Logger logger = MonLogger.getLogger("ArticleManager");
 
 	private static ArticleManager INSTANCE;
 
@@ -39,7 +43,6 @@ public class ArticleManager {
 	 * @throws BllException
 	 */
 	public static ArticleManager getInstance() {
-
 		if (INSTANCE == null) {
 			INSTANCE = new ArticleManager();
 		}
@@ -55,7 +58,7 @@ public class ArticleManager {
 	public List<Article> getArticles() throws BusinessException{
 		List<Article> articles = null;
 
-			articles = articleDAO.selectAll();
+		articles = articleDAO.selectAll();
 
 		return articles;
 	}
@@ -68,12 +71,17 @@ public class ArticleManager {
 	 * @throws BllException
 	 */
 	public int addArticle(Article article) throws BusinessException {
-
-
+		BusinessException businessException = new BusinessException();
+		
+		try {
+			this.checkArticle(article, businessException);
 			articleDAO.insert(article);
+			return article.getNoArticle();
 
-		return article.getNoArticle();
-
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans ArticleManager / addArticle(Article article) : " + e.getMessage());
+			throw e;
+		}
 	}
 
 	/**
@@ -83,9 +91,7 @@ public class ArticleManager {
 	 * @throws BllException
 	 */
 	public void updateArticle(Article article) throws BusinessException {
-
-					articleDAO.update(article);
-
+		articleDAO.update(article);
 	}
 
 	/**
@@ -95,11 +101,7 @@ public class ArticleManager {
 	 * @throws BllException
 	 */
 	public void removeArticle(int noArticle) throws BusinessException {
-
-
-			articleDAO.delete(noArticle);
-
-
+		articleDAO.delete(noArticle);
 	}
 
 	/**
@@ -132,5 +134,29 @@ public class ArticleManager {
 			articles = articleDAO.findByName(nom);
 
 		return articles;
+	}
+	
+	/**
+	 * Méthode en charge de vérifier les informations de l'article
+	 * @param article
+	 * @param businessException
+	 * @throws BusinessException
+	 */
+	private void checkArticle(Article article, BusinessException businessException) throws BusinessException {
+
+		LocalDate dateDebut = article.getDateDebut();
+		LocalDate dateFin = article.getDateFinEncheres();
+
+		//Si la date de début de l'enchère est postérieure à la date de fin
+		if (dateDebut.isAfter(dateFin)) {
+			businessException.ajouterErreur(CodesResultatBLL.DATE_FIN_ENCHERE_ANTERIEURE_DATE_DEBUT);
+		} else if (dateFin.isBefore(LocalDate.now())) { //Si la date de fin de l'enchère est antérieure à la date du jour
+			businessException.ajouterErreur(CodesResultatBLL.DATE_FIN_ENCHERE_ANTERIEURE_DATE_DU_JOUR);
+		}
+		
+		if (businessException.hasErreurs()) {
+			throw businessException;
+		}
+
 	}
 }

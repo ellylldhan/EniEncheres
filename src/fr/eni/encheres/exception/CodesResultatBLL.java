@@ -64,4 +64,14 @@ public abstract class CodesResultatBLL {
 	 * Utilisateur non connecté
 	 */
 	public static final int USER_NOT_CONNECTED = 1013;
+	
+	/**
+	 * La date de fin de l'enchère est antérieure à la date de début
+	 */
+	public static final int DATE_FIN_ENCHERE_ANTERIEURE_DATE_DEBUT = 1014;
+	
+	/**
+	 * La date de fin de l'enchère est antérieure à la date de début
+	 */
+	public static final int DATE_FIN_ENCHERE_ANTERIEURE_DATE_DU_JOUR = 1015;
 }
