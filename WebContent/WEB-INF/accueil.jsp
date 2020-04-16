@@ -19,29 +19,68 @@
 
 	<h3 class="text-center">Liste des enchères</h3>
 
-	<form method="post" action="/EniEncheres/eni/encheres/ServletAccueil">
-		<label for="recherche-article">Filtres :</label> <input
-			id="recherche-article" type="text" name="recherche"
-			class="form-control" placeholder="Le nom de l'article contient...">
-		<label for="categories">Catégories :</label> <select
-			class="form-control custom-select" id="categories" name="categories">
-			<option value="" selected>Toutes</option>
-			<c:forEach var="cat" items="${ listeCategories }">
-				<option value="${ cat.noCategorie }">${ cat.libelle }</option>
-			</c:forEach>
-		</select>
-		<input type="radio" id="Achat" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" checked />
-		 Achat 
-		 <input type="checkbox"  name="typeEnchereAchat" value="getOuverte" />enchere Ouverte 
-		 <input type="checkbox"  name="typeEnchereAchat" value="getTerminee" />enchere Terminé
-		 <input type="checkbox"  name="typeEnchereAchat" value="getEnCours" />enchere en cours
+	<form method="post" action="/EniEncheres/eni/encheres/ServletAccueil">		
+		<div class="form-group">
+			<label for="recherche-article">Filtres :</label>
+			<input id="recherche-article" type="text" name="recherche" class="form-control" placeholder="Le nom de l'article contient...">
+		</div>
 		
-		<input type="radio"  id="Vente" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" />
+		<div class="form-group">
+			<label for="categories">Catégories :</label> 
+			<select class="form-control custom-select" id="categories" name="categories">
+				<option value="" selected>Toutes</option>
+				<c:forEach var="cat" items="${ listeCategories }">
+					<option value="${ cat.noCategorie }">${ cat.libelle }</option>
+				</c:forEach>
+			</select>
+		</div>
 		
-				 Vendre 
-		 <input type="checkbox" name="typeEnchereVente" value="getOuverte" disabled />enchere Ouverte 
-		 <input type="checkbox" name="typeEnchereVente" value="getTerminee" disabled/>enchere Terminé
-		 <input type="checkbox" name="typeEnchereVente" value="getEnCours"  disabled/>enchere en cours
+		<div class="form-row">
+			<div class="form-group col-md-3" style="margin-left: 50px;">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" id="typeEnchereAchatRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" checked />
+					<label class="form-check-label" for="typeEnchereAchatRadio">Achat</label>
+				</div>
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxOuverte" name="typeEnchereAchatCheckbox" value="getOuverte" />
+					<label class="form-check-label" for="typeEnchereAchatCheckboxOuverte">Enchère Ouverte</label>
+				</div>
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxTerminee" name="typeEnchereAchatCheckbox" value="getTerminee" />
+					<label class="form-check-label" for="typeEnchereAchatCheckboxTerminee">Enchère Terminée</label>
+				</div>
+				
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereAchatCheckboxEnCours" name="typeEnchereAchatCheckbox" value="getEnCours" />
+					<label class="form-check-label" for="typeEnchereAchatCheckboxEnCours">Enchère en cours</label>
+				</div>
+			</div>
+			
+			<div class="form-group col-md-3">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" id="typeEnchereVenteRadio" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" />
+					<label class="form-check-label" for="typeEnchereAchatRadio">Vendre</label>
+				</div>
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxOuverte" name="typeEnchereVenteCheckbox" value="getOuverte" disabled />
+					<label class="form-check-label" for="typeEnchereVenteCheckboxOuverte">Enchère Ouverte</label>
+				</div>
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxTerminee" name="typeEnchereVenteCheckbox" value="getTerminee" disabled />
+					<label class="form-check-label" for="typeEnchereVenteCheckboxTerminee">Enchère Terminée</label>
+				</div>
+				
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="typeEnchereVenteCheckboxEnCours" name="typeEnchereVenteCheckbox" value="getEnCours" disabled />
+					<label class="form-check-label" for="typeEnchereVenteCheckboxEnCours">Enchère en cours</label>
+				</div>
+			</div>
+		</div>
 		
 		<div class="form_buttons">
 			<button type="submit" class="btn btn-primary">Rechercher</button>
@@ -120,19 +159,19 @@
 	function actualiserFormulaire(element){
 		
 
-		if(element.id == "Achat"){
-			for (let i = 0; i < document.getElementsByName("typeEnchereVente").length; i++) {
-				document.getElementsByName("typeEnchereVente")[i].checked = false;
-				document.getElementsByName("typeEnchereAchat")[i].disabled = false;
-				document.getElementsByName("typeEnchereVente")[i].disabled = true;
+		if(element.id == "typeEnchereAchatRadio"){
+			for (let i = 0; i < document.getElementsByName("typeEnchereVenteCheckbox").length; i++) {
+				document.getElementsByName("typeEnchereVenteCheckbox")[i].checked = false;
+				document.getElementsByName("typeEnchereVenteCheckbox")[i].disabled = true;
+				document.getElementsByName("typeEnchereAchatCheckbox")[i].disabled = false;
 			}
 			
 		}
 		else{
-			for (let i = 0; i < document.getElementsByName("typeEnchereAchat").length; i++) {
-				document.getElementsByName("typeEnchereAchat")[i].checked = false;
-				document.getElementsByName("typeEnchereAchat")[i].disabled = true;
-				document.getElementsByName("typeEnchereVente")[i].disabled = false;
+			for (let i = 0; i < document.getElementsByName("typeEnchereAchatCheckbox").length; i++) {
+				document.getElementsByName("typeEnchereAchatCheckbox")[i].checked = false;
+				document.getElementsByName("typeEnchereAchatCheckbox")[i].disabled = true;
+				document.getElementsByName("typeEnchereVenteCheckbox")[i].disabled = false;
 			}
 		}
 				
