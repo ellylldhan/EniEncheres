@@ -21,7 +21,7 @@ public class ServletGestionDeconnexionUtilisateur extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            if(request.getSession().getAttribute("idUtilisateur") != null){
+            if (request.getSession().getAttribute("idUtilisateur") != null) {
                 request.getSession().invalidate();
             } else {
                 throw new BllException(CodesResultatBLL.USER_NOT_CONNECTED);
