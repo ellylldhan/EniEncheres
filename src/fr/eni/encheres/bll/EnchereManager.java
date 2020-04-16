@@ -110,39 +110,7 @@ public class EnchereManager {
 		}
 	}
 
-	/**
-	 * Retourne la liste des enchères actives (ni périmée, ni retirée)
-	 * 
-	 * @return Liste d'Enchères
-	 * @throws BllException
-	 */
-	public List<Enchere> getEncheresActives(String categorie) throws BusinessException {
-		List<Enchere> encheres = new ArrayList<>();
-		List<Enchere> encheresParCategorie = new ArrayList<>();
-		
-		try {
-			// Recuperation liste encheres
-			encheres = enchereDAO.selectAllEncheresValides();
-			
-			// Tri par catégorie
-			if (categorie != null && !categorie.trim().isEmpty() ) {
-							
-				// compare categorie donnée et categorie enchere
-				for (Enchere enchere : encheres) {
-					if (Integer.parseInt(categorie) == enchere.getArticle().getCategorie().getNoCategorie()) {
-						encheresParCategorie.add(enchere);
-					}
-				}
-				return encheresParCategorie;
-			}
-		} catch (BusinessException e) {
-			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
-					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
-			throw e;
-		}
-
-		return encheres;
-	}
+	
 
 	public void update(Enchere enchere) throws BusinessException {
 		try {

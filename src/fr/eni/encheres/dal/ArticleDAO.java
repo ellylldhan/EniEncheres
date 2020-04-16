@@ -18,26 +18,26 @@ public interface ArticleDAO extends DAO<Article> {
 	
 	/**
 	 * Retourne une liste d'articles dont l'enchère est EN COURS.
-	 * @param id No de l'article
+	 * @param 
 	 * @return Une liste d'articles
 	 * @throws BusinessException
 	 */
-	public List<Article> getEnCours(int id) throws BusinessException;
+	public List<Article> getEnCours() throws BusinessException;
 	
 	/**
 	 * Retourne une liste d'articles dont l'enchère est OUVERTE.
-	 * @param id No de l'article
+	 * @param 
 	 * @return Une liste d'articles
 	 * @throws BusinessException
 	 */
-	public List<Article> getOuverte(int id) throws BusinessException;
+	public List<Article> getOuverte() throws BusinessException;
 	
 	/**
 	 * Retourne une liste d'articles dont l'enchère est TERMINEE.
-	 * @param id No de l'article
+	 * @param 
 	 * @return Une liste d'articles
 	 * @throws BusinessException
 	 */
-	public List<Article> getTerminee(int id) throws BusinessException;
+	public List<Article> getTerminee() throws BusinessException;
 
 }

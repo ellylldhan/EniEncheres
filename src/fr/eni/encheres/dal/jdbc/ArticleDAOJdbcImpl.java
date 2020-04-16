@@ -53,7 +53,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
 			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
-			+ "WHERE A.no_article = ? AND GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
+			+ "WHERE GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
 			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
 	private static final String RQT_OUVERTE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
 			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
@@ -61,7 +61,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
 			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
-			+ "WHERE A.no_article = ? AND GETDATE() < A.date_fin_encheres "
+			+ "WHERE GETDATE() < A.date_fin_encheres "
 			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
 	private static final String RQT_TERMINEE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, U.nom, U.prenom, "
 			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres, "
@@ -69,7 +69,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
 			+ "LEFT JOIN ENCHERES as E on E.no_article = A.no_article "
-			+ "WHERE A.no_article = ? AND GETDATE() > A.date_fin_encheres "
+			+ "WHERE GETDATE() > A.date_fin_encheres "
 			+ "ORDER BY A.date_fin_encheres ASC, montant_enchere DESC";
 
 	/**
@@ -278,7 +278,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#getEnCours(int)
 	 */
 	@Override
-	public List<Article> getEnCours(int id) throws BusinessException {
+	public List<Article> getEnCours() throws BusinessException {
 		List<Article> articles = new ArrayList<Article>();
 
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -306,7 +306,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#getOuverte(int)
 	 */
 	@Override
-	public List<Article> getOuverte(int id) throws BusinessException {
+	public List<Article> getOuverte() throws BusinessException {
 		List<Article> articles = new ArrayList<Article>();
 
 		try (Connection connection = ConnectionProvider.getConnection()) {
@@ -334,7 +334,7 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 * @see fr.eni.encheres.dal.ArticleDAO#getTerminee(int)
 	 */
 	@Override
-	public List<Article> getTerminee(int id) throws BusinessException {
+	public List<Article> getTerminee() throws BusinessException {
 		List<Article> articles = new ArrayList<Article>();
 
 		try (Connection connection = ConnectionProvider.getConnection()) {

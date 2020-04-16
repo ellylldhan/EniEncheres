@@ -20,16 +20,28 @@
 	<h3 class="text-center">Liste des enchères</h3>
 
 	<form method="post" action="/EniEncheres/eni/encheres/ServletAccueil">
-		<label for="recherche-article">Filtres :</label> 
-		<input id="recherche-article" type="text" name="recherche" class="form-control" placeholder="Le nom de l'article contient...">
-		<label for="categories">Catégories :</label> 
-		
-		<select class="form-control custom-select" id="categories" name="categories">
+		<label for="recherche-article">Filtres :</label> <input
+			id="recherche-article" type="text" name="recherche"
+			class="form-control" placeholder="Le nom de l'article contient...">
+		<label for="categories">Catégories :</label> <select
+			class="form-control custom-select" id="categories" name="categories">
 			<option value="" selected>Toutes</option>
 			<c:forEach var="cat" items="${ listeCategories }">
 				<option value="${ cat.noCategorie }">${ cat.libelle }</option>
 			</c:forEach>
 		</select>
+		<input type="radio" id="Achat" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" checked />
+		 Achat 
+		 <input type="checkbox"  name="typeEnchereAchat" value="getOuverte" />enchere Ouverte 
+		 <input type="checkbox"  name="typeEnchereAchat" value="getTerminee" />enchere Terminé
+		 <input type="checkbox"  name="typeEnchereAchat" value="getEnCours" />enchere en cours
+		
+		<input type="radio"  id="Vente" name="typeEnchereRadio" onchange="actualiserFormulaire(this)" />
+		
+				 Vendre 
+		 <input type="checkbox" name="typeEnchereVente" value="getOuverte" disabled />enchere Ouverte 
+		 <input type="checkbox" name="typeEnchereVente" value="getTerminee" disabled/>enchere Terminé
+		 <input type="checkbox" name="typeEnchereVente" value="getEnCours"  disabled/>enchere en cours
 		
 		<div class="form_buttons">
 			<button type="submit" class="btn btn-primary">Rechercher</button>
@@ -87,12 +99,11 @@
 							${enchere.article.prixVente}
 						</c:if>
 					<p id="carte-article-dateFin" class="card-text">
-						Fin de l'enchère : ${enchere.article.dateFinEncheres}<br /> <p id="carte-article-vendeur" class="card-text">
+						Fin de l'enchère : ${enchere.article.dateFinEncheres}<br />
+					<p id="carte-article-vendeur" class="card-text">
 						Vendeur : <a
 							href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${enchere.article.utilisateur.noUtilisateur}"
-							class="nav-link">
-						${enchere.article.utilisateur.pseudo}</a>
-					
+							class="nav-link"> ${enchere.article.utilisateur.pseudo}</a>
 				</div>
 
 			</div>
@@ -104,4 +115,30 @@
 
 
 </body>
+
+<script type="text/javascript">
+	function actualiserFormulaire(element){
+		
+
+		if(element.id == "Achat"){
+			for (let i = 0; i < document.getElementsByName("typeEnchereVente").length; i++) {
+				document.getElementsByName("typeEnchereVente")[i].checked = false;
+				document.getElementsByName("typeEnchereAchat")[i].disabled = false;
+				document.getElementsByName("typeEnchereVente")[i].disabled = true;
+			}
+			
+		}
+		else{
+			for (let i = 0; i < document.getElementsByName("typeEnchereAchat").length; i++) {
+				document.getElementsByName("typeEnchereAchat")[i].checked = false;
+				document.getElementsByName("typeEnchereAchat")[i].disabled = true;
+				document.getElementsByName("typeEnchereVente")[i].disabled = false;
+			}
+		}
+				
+	}
+</script>
+
+
 </html>
+
