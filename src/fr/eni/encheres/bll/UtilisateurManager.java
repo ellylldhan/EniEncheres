@@ -8,6 +8,7 @@ import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatBLL;
 import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
+import fr.eni.encheres.servlet.CodesResultatServlets;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,14 +37,9 @@ public class UtilisateurManager {
 
     public int addUtilisateur(Utilisateur u) throws BusinessException {
         if(u != null && u instanceof Utilisateur){
-            String tel = u.getTelephone();
-            try {
-                Integer.parseInt(tel);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+        	utilisateurDAO.insert(u);
         }
-            utilisateurDAO.insert(u);
+            
         return u.getNoUtilisateur();
     }
 

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import fr.eni.encheres.bll.UtilisateurManager;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
+import fr.eni.encheres.exception.CodesResultatBLL;
 
 /**
  * Servlet implementation class CreationProfil
@@ -267,6 +268,12 @@ public class ServletCreationProfil extends HttpServlet {
 			request.setAttribute("listeCodesErreur",listeCodesErreur);
 			doGet(request, response);
 		}
+        try {
+            Integer.parseInt(telephone);
+        } catch (NumberFormatException e) {
+    		listeCodesErreur.add(CodesResultatServlets.TEL_NON_VALIDE);
+
+        }
 		
 		return telephone;
 	}

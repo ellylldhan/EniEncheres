@@ -35,5 +35,9 @@ public abstract class CodesResultatServlets {
 	
 	// Pour résultat de recherche d'enchère par nom d'article
 	public static final Integer ENCHERE_NOT_FOUND = 30019;
+	/**
+	 * Format du téléphone non valide
+	 */
+	public static final int TEL_NON_VALIDE = 30020;
 
 }
