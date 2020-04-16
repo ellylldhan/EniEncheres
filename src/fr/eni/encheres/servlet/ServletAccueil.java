@@ -52,7 +52,7 @@ public class ServletAccueil extends HttpServlet {
 			// Lister les enchere actives selon categorie (le triage des cat. est fait dans
 			// le manager)
 			
-				listeEncheresActives = enchereManager.getEncheresActives(categorie);
+				//listeEncheresActives = enchereManager.getEncheresActives(categorie);
 			
 			
 

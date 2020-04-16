@@ -76,7 +76,7 @@
 		        	</c:if>
 		        	<c:if test="${!fini && !empty sessionScope.idUtilisateur}">
 			        	<form action="${pageContext.request.contextPath}/eni/encheres/encheres" method="post">
-							<input type="hidden" name="IdArticle" value="${IdArticle}" />
+							<input type="hidden" name="idArticle" value="${idArticle}" />
 			        		<div class="form-group">
 								<label for="prix_initial_article">Ma proposition: </label>
 								<input class="form-control" id="proposition" name="proposition" type="number" value="${Enchere.montant_enchere}">

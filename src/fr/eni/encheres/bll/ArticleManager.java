@@ -31,8 +31,15 @@ public class ArticleManager {
 
 	private ArticleDAO articleDAO = DAOFactory.getArticleDAO();
 
+	private static StackTraceElement stack;
+	private static String nomMethodeCourante;
+	private static String nomClasseCourante;
+	
 	private ArticleManager() {
 
+		stack = new Throwable().getStackTrace()[0];
+		nomClasseCourante = stack.getClassName();
+		nomMethodeCourante = stack.getMethodName();
 	}
 
 	/**
@@ -158,5 +165,101 @@ public class ArticleManager {
 			throw businessException;
 		}
 
+	}
+	
+
+	/**
+	 * Retourne une liste d'articles dont l'enchère est OUVERTE.
+	 * @param 
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getOuverte(String categorie) throws BusinessException
+	{
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getOuverte();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+	}
+	
+	
+	/**
+	 * Retourne une liste d'articles dont l'enchère est TERMINEE.
+	 * @param 
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getTerminee(String categorie) throws BusinessException{
+		
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getTerminee();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+		
+	}
+	/**
+	 * Retourne la liste des enchères actives (ni périmée, ni retirée)
+	 * 
+	 * @return Liste d'Enchères
+	 * @throws BllException
+	 */
+	public List<Article> getEnCours(String categorie) throws BusinessException {
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getEnCours();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+	}
+	private List<Article> FiltreCategorie(String categorie, List<Article> articles){
+
+		List<Article> articleParCategorie = new ArrayList<>();
+
+			// compare categorie donnée et categorie enchere
+			for (Article article : articles) {
+				if (Integer.parseInt(categorie) == article.getCategorie().getNoCategorie()) {
+					articleParCategorie.add(article);
+				}
+			}
+			return articleParCategorie;
+		
+		
 	}
 }
