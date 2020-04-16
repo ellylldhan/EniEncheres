@@ -355,5 +355,6 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 		return articles;
 	}
+	
 
 }
