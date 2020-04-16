@@ -9,6 +9,7 @@ import fr.eni.encheres.log.MonLogger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @WebServlet("/eni/encheres/GestionConnexionUtilisateur")
-public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpServlet {
+public class ServletGestionConnexionUtilisateur extends HttpServlet {
 
     private static final String LOGIN_VIEW = "/WEB-INF/login.jsp";
     private static Logger LOGGER = MonLogger.getLogger("ServletGestionConnexionUtilisateur");
@@ -39,15 +40,13 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
         List<Integer> listeCodesErreur = new ArrayList<>();
 
         try {
-            // Vérification de l'existance d'une session
-            // return true si une session existe, sinon null
-            // HttpSession session = request.getSession(false);
 
             // Il n'existe pas de session
             if(request.getSession().getAttribute("idUtilisateur") == null){
                 Utilisateur u = null;
                 String login = request.getParameter("identifiant");
                 String pw = request.getParameter("motDePasse");
+                HttpSession session = null;
                 boolean isCorrectPw = false;
 
                 if(login.isEmpty() && pw.isEmpty()){
@@ -59,7 +58,9 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
 
                     if(u != null){
                         if( um.isCorrectPassword(pw, u.getMotDePasse())){
-                            request.getSession().setAttribute("idUtilisateur", u.getNoUtilisateur());
+                            session = request.getSession();
+                            session.setAttribute("idUtilisateur", u.getNoUtilisateur());
+                            session.setMaxInactiveInterval(5*60);
                         } else {
                         	listeCodesErreur.add(CodesResultatBLL.WRONG_USER_INPUTS);
                         }
@@ -80,4 +81,5 @@ public class ServletGestionConnexionUtilisateur extends javax.servlet.http.HttpS
         }
         response.sendRedirect(request.getContextPath() + "/accueil");
     }
+
 }
