@@ -15,6 +15,7 @@
     <servlet-mapping>
         <servlet-name>accueil</servlet-name>
         <url-pattern>/accueil</url-pattern>
+        <url-pattern>/eni/encheres</url-pattern>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
