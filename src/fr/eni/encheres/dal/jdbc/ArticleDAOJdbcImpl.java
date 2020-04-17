@@ -352,6 +352,36 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 
 		return articles;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.ArticleDAO#getEnCoursVendeur(int)
+	 */
+	@Override
+	public List<Article> getEnCoursVendeur(int id) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.ArticleDAO#getOuverteVendeur(int)
+	 */
+	@Override
+	public List<Article> getOuverteVendeur(int id) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see fr.eni.encheres.dal.ArticleDAO#getTermineeVendeur(int)
+	 */
+	@Override
+	public List<Article> getTermineeVendeur(int id) throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

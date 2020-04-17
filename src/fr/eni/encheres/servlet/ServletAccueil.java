@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import fr.eni.encheres.bll.ArticleManager;
 import fr.eni.encheres.bll.CategorieManager;
@@ -46,10 +47,15 @@ public class ServletAccueil extends HttpServlet {
 		String[] typeEnchereAchat =  request.getParameterValues("typeEnchereAchatCheckbox");
 		String[] typeEnchereVente =  request.getParameterValues("typeEnchereVenteCheckbox");
 		String[] typeEncheres = typeEnchereAchat != null? typeEnchereAchat : typeEnchereVente ;
+		HttpSession session = request.getSession();
+		int idUtilisateur=0;
+		
 		try {
 			if (typeEncheres != null) {
 
-
+				if (session.getAttribute("idUtilisateur") != null) {
+					idUtilisateur = (int) session.getAttribute("idUtilisateur");
+				}
 				// Instanciations managers
 				EnchereManager enchereManager = EnchereManager.getInstance();
 				CategorieManager categorieManager = CategorieManager.getInstance();
@@ -81,7 +87,7 @@ public class ServletAccueil extends HttpServlet {
 						}
 					}
 					if (typeEnchere.equals("getTerminee")) {
-						for (Article article:  articleManager.getTerminee(categorie)) {
+						for (Article article:  articleManager.getTerminee(idUtilisateur,categorie)) {
 							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
 							if (enchere == null) {
 								enchere = new Enchere();

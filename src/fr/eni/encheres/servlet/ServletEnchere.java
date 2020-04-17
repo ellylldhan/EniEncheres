@@ -90,7 +90,7 @@ public class ServletEnchere extends HttpServlet {
 					boolean fini = false;
 					boolean win = false;
 					if (article != null ) {
-						if ( !(article.getDateDebut().equals(LocalDate.now())) ||  !(article.getDateFinEncheres().equals(LocalDate.now())) ||
+						if ( ( !article.getDateDebut().equals(LocalDate.now())) &&  !(article.getDateFinEncheres().equals(LocalDate.now())) &&
 								( article.getDateDebut().isAfter(LocalDate.now()) || article.getDateFinEncheres().isBefore(LocalDate.now()) ) ) 
 						{
 

@@ -163,7 +163,7 @@ public class EnchereManager {
 		}
 
 
-		if ( !(enchere.getArticle().getDateDebut().equals(LocalDate.now())) ||  !(enchere.getArticle().getDateFinEncheres().equals(LocalDate.now())) ||
+		if ( ( !(enchere.getArticle().getDateDebut().equals(LocalDate.now())) &&  !(enchere.getArticle().getDateFinEncheres().equals(LocalDate.now()))) &&
 				( enchere.getArticle().getDateDebut().isAfter(LocalDate.now()) || enchere.getArticle().getDateFinEncheres().isBefore(LocalDate.now()) ) ) 
 		{
 

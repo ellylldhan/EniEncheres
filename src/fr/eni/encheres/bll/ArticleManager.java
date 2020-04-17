@@ -10,6 +10,8 @@ import fr.eni.encheres.bo.Article;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.dal.ArticleDAO;
 import fr.eni.encheres.dal.DAOFactory;
+import fr.eni.encheres.dal.EnchereDAO;
+import fr.eni.encheres.dal.jdbc.EnchereDAOJdbcImpl;
 import fr.eni.encheres.exception.BllException;
 import fr.eni.encheres.exception.BusinessException;
 import fr.eni.encheres.exception.CodesResultatBLL;
@@ -30,6 +32,7 @@ public class ArticleManager {
 	private static ArticleManager INSTANCE;
 
 	private ArticleDAO articleDAO = DAOFactory.getArticleDAO();
+	private EnchereDAO enchereDAO = DAOFactory.getEnchereDAO();
 
 	private static StackTraceElement stack;
 	private static String nomMethodeCourante;
@@ -202,13 +205,19 @@ public class ArticleManager {
 	 * @return Une liste d'articles
 	 * @throws BusinessException
 	 */
-	public List<Article> getTerminee(String categorie) throws BusinessException{
+	public List<Article> getTerminee(int id,String categorie) throws BusinessException{
 		
 		List<Article> articles = new ArrayList<>();
 		
 		try {
-			// Recuperation liste encheres
-			articles = articleDAO.getTerminee();
+			
+			for (Article article : articleDAO.getTerminee()) {
+				
+				Enchere enchere = enchereDAO.selectMustEnchereByIdArticle(article.getNoArticle());
+				if (enchere != null && id == enchere.getUtilisateur().getNoUtilisateur()) {
+					articles.add(article);
+				}
+			}
 			
 			// Tri par catégorie
 			if (categorie != null && !categorie.trim().isEmpty() ) {
@@ -230,6 +239,88 @@ public class ArticleManager {
 	 * @throws BllException
 	 */
 	public List<Article> getEnCours(String categorie) throws BusinessException {
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getEnCours();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Retourne la liste des enchères actives (ni périmée, ni retirée)
+	 * 
+	 * @return Liste d'Enchères
+	 * @throws BllException
+	 */
+	public List<Article> getEnCoursVendeur(int id,String categorie) throws BusinessException {
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getEnCours();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+	}
+	
+	/**
+	 * Retourne la liste des enchères actives (ni périmée, ni retirée)
+	 * 
+	 * @return Liste d'Enchères
+	 * @throws BllException
+	 */
+	public List<Article> getTermineeVendeur(int id,String categorie) throws BusinessException {
+		List<Article> articles = new ArrayList<>();
+		
+		try {
+			// Recuperation liste encheres
+			articles = articleDAO.getEnCours();
+			
+			// Tri par catégorie
+			if (categorie != null && !categorie.trim().isEmpty() ) {
+				return FiltreCategorie(categorie,articles);
+				}
+		} catch (BusinessException e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			throw e;
+		}
+
+		return articles;
+	}
+	
+	/**
+	 * Retourne la liste des enchères actives (ni périmée, ni retirée)
+	 * 
+	 * @return Liste d'Enchères
+	 * @throws BllException
+	 */
+	public List<Article> getOuverteVendeur(int id,String categorie) throws BusinessException {
 		List<Article> articles = new ArrayList<>();
 		
 		try {

@@ -1,93 +1,112 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 
 <jsp:include page="/WEB-INF/fragments/head.jsp"></jsp:include>
 
 <body class="container">
-<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
-<jsp:include page="/WEB-INF/fragments/error.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/fragments/header.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/fragments/error.jsp"></jsp:include>
 
 	<div class="row">
 		<div class="col-md-4">
-			<img src="${pageContext.request.contextPath}/images/no_image.png" class="img-thumbnail">
-			<br>
+			<img src="${pageContext.request.contextPath}/images/no_image.png"
+				class="img-thumbnail"> <br>
 		</div>
 		<div class="col-md-8">
 			<div class="card">
 				<div class="card-header">
-				<c:if test="${!fini || (empty Enchere.utilisateur && fini && !win)}">
-					<h3 class="font-weight-bold">Nouvelle Enchère</h3>
-				</c:if>
-				<c:if test="${fini && win}"><h3 class="font-weight-bold">Vous avez remporté la vente</h3></c:if>
-				<c:if test="${!empty Enchere.utilisateur &&fini && !win}"><h3 class="font-weight-bold">${Enchere.utilisateur.pseudo} à remporté la vente</h3></c:if>
+					<c:if
+						test="${!fini || (empty Enchere.utilisateur && fini && !win)}">
+						<h3 class="font-weight-bold">Nouvelle Enchère</h3>
+					</c:if>
+					<c:if test="${fini && win}">
+						<h3 class="font-weight-bold">Vous avez remporté la vente</h3>
+					</c:if>
+					<c:if test="${!empty Enchere.utilisateur &&fini && !win}">
+						<h3 class="font-weight-bold">${Enchere.utilisateur.pseudo}à
+							remporté la vente</h3>
+					</c:if>
 				</div>
-		    	<div class="card-body">		        	
+				<div class="card-body">
 
-		        	<h3>Détail de l'enchère</h3>
-		        	<p>${ Article.nomArticle }</p>
-		        	<div>
-		        		<label>Description : </label>
-		        		<p>${ Article.description }</p>
-		        	</div>
-		        	<c:if test="${!fini}">
-			        	<div>
-			        		<label>Catégorie : </label>
-			        		<p>${ Article.categorie.libelle }</p>
-			        	</div>
-		        	</c:if>
-		        	<div>
-		        		<label>Meilleur Offre: </label>
-		        		<p>${Enchere.montant_enchere} 
-		        			<c:if test="${!win}"> par
-			        			<a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Enchere.utilisateur.noUtilisateur}" class="nav-link">
-			        				 ${Enchere.utilisateur.pseudo}
-			        			</a>
-		        			</c:if>
-		        		
-		        		</p>
-		        	</div>
+					<h3>Détail de l'enchère</h3>
+					<p>${ Article.nomArticle }</p>
 					<div>
-		        		<label>Mise à prix : </label>
-		        		<p>${Article.prixInitial}</p>
-		        	</div>
-		        	<c:if test="${!win}">					
-			        	<div>
-			        		<label>Fin de l'enchère : </label>
-			        		<p>${Article.dateFinEncheres}</p>
-			        	</div>			        	
-		        	</c:if>
-		        	<div>
-		        		<label>Retrait : </label>
-		        		<p>${Retrait.rue} ${Retrait.codePostal} ${Retrait.ville}</p>
-		        	</div>		        			        	
-		        	<div>
-		        		<label>Vendeur : </label>
-		        		
-		        		<p><a href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Article.utilisateur.noUtilisateur}" class="nav-link">${Article.utilisateur.pseudo}</a></p>
-		        	</div>
-		        	<c:if test="${win}">
-			        	<div>
-			        		<label>tel : </label>
-			        		<p>${Article.utilisateur.telephone} </p>
-			        	</div>
-		        	</c:if>
-		        	<c:if test="${!fini && !empty sessionScope.idUtilisateur}">
-			        	<form action="${pageContext.request.contextPath}/eni/encheres/encheres" method="post">
+						<label>Description : </label>
+						<p>${ Article.description }</p>
+					</div>
+					<c:if test="${!fini}">
+						<div>
+							<label>Catégorie : </label>
+							<p>${ Article.categorie.libelle }</p>
+						</div>
+					</c:if>
+					<div>
+						<label>Meilleur Offre: </label>
+
+						<c:if
+							test="${!empty Enchere.montant_enchere && Enchere.montant_enchere != 0}">
+							<p>${Enchere.montant_enchere}
+								par <a
+									href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Enchere.utilisateur.noUtilisateur}"
+									class="nav-link"> ${Enchere.utilisateur.pseudo} </a>
+								<c:if test="${Article.prixInitial  == Enchere.montant_enchere }">
+									${Article.utilisateur.pseudo}
+								</c:if>
+						</c:if>
+
+
+						</p>
+					</div>
+					<div>
+						<label>Mise à prix : </label>
+						<p>${Article.prixInitial}</p>
+					</div>
+					<c:if test="${!win}">
+						<div>
+							<label>Fin de l'enchère : </label>
+							<p>${Article.dateFinEncheres}</p>
+						</div>
+					</c:if>
+					<div>
+						<label>Retrait : </label>
+						<p>${Retrait.rue}${Retrait.codePostal}${Retrait.ville}</p>
+					</div>
+					<div>
+						<label>Vendeur : </label>
+
+						<p>
+							<a
+								href="${pageContext.request.contextPath}/eni/encheres/detailProfil?idUtilisateur=${Article.utilisateur.noUtilisateur}"
+								class="nav-link">${Article.utilisateur.pseudo}</a>
+						</p>
+					</div>
+					<c:if test="${win}">
+						<div>
+							<label>tel : </label>
+							<p>${Article.utilisateur.telephone}</p>
+						</div>
+					</c:if>
+					<c:if test="${!fini && !empty sessionScope.idUtilisateur}">
+						<form
+							action="${pageContext.request.contextPath}/eni/encheres/encheres"
+							method="post">
 							<input type="hidden" name="idArticle" value="${idArticle}" />
-			        		<div class="form-group">
-								<label for="prix_initial_article">Ma proposition: </label>
-								<input class="form-control" id="proposition" name="proposition" type="number" value="${Enchere.montant_enchere}">
+							<div class="form-group">
+								<label for="prix_initial_article">Ma proposition: </label> <input
+									class="form-control" id="proposition" name="proposition"
+									type="number" value="${Enchere.montant_enchere}">
 							</div>
 							<div class="form_buttons">
-	 							<button type="submit" class="btn btn-outline-success">Envoyer</button>
+								<button type="submit" class="btn btn-outline-success">Envoyer</button>
 							</div>
-			        	</form>
-		        	</c:if>
-		      	</div>
-		    </div>
+						</form>
+					</c:if>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>
