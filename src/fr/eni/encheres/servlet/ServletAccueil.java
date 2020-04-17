@@ -22,11 +22,8 @@ import fr.eni.encheres.exception.BusinessException;
 /**
  * Servlet implementation class ServletAccueil
  */
-@WebServlet({ "/eni/encheres/ServletAccueil", "/accueil", "/home", "/eni/encheres/accueil", "/eni/encheres/home" })
 public class ServletAccueil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-
 
 	/**
 	 * @see HttpServlet#HttpServlet()
