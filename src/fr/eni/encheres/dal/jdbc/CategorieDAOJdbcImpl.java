@@ -21,7 +21,7 @@ import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
 /**
- * Classe en charge de
+ * Implémentation JDBC de la DAO Categorie.
  * @author loan.pirotais
  * @version EniEncheres - v1.0
  * @date 7 avr. 2020

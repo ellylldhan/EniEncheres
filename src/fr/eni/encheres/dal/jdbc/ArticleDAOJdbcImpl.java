@@ -25,7 +25,7 @@ import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
 /**
- * Classe en charge de
+ * Implémentation JDBC de la DAO Article.
  * 
  * @author Reno
  * @version EniEncheres - v1.0

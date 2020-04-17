@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implémentation JDBC de la DAO Utilisateur.
+ */
 public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 
 	private static Logger logger ;
@@ -39,7 +42,10 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
         nomMethodeCourante = stack.getMethodName();
 	}
     
-    @Override
+    /**
+     * {@inheritDoc}
+     * @see fr.eni.encheres.dal.UtilisateurDAO#selectByArg(String)
+     */
     public Utilisateur selectByArg(String a) throws BusinessException {
         Utilisateur u = null;
 
@@ -66,7 +72,6 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
      * {@inheritDoc}
      * @see fr.eni.encheres.dal.UtilisateurDAO#selectById(int)
      */
-
     @Override
     public Utilisateur selectById(int id) throws BusinessException {
 
