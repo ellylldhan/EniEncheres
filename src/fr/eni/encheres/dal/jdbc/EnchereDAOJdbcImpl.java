@@ -215,7 +215,6 @@ public class EnchereDAOJdbcImpl implements EnchereDAO{
 			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
 			throw businessException;
 		} 
-
 		return encheres;
 	}
 	

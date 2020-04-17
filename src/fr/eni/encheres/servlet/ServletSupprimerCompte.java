@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,6 @@ public class ServletSupprimerCompte extends HttpServlet {
 		List<Integer> listeCodesErreur = new ArrayList<>();
 		int idUtilisateur = -1;
 		Utilisateur utilisateur = null;
-				
 		if (listeCodesErreur.size() > 0) {
 			request.setAttribute("listeCodesErreur", listeCodesErreur);
 			
@@ -51,17 +51,21 @@ public class ServletSupprimerCompte extends HttpServlet {
 					utilisateur = utilisateurManager.getUtilisateur(idUtilisateur);
 					
 					if (utilisateur != null) {
-						request.getSession().invalidate();
 						utilisateurManager.removeUtilisateur(idUtilisateur);
+						request.getSession().invalidate();
+						response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
+					}else {
+						response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
 					}
 				} catch (BusinessException e) {
 					e.printStackTrace();
-					request.setAttribute("listeCodesErreur", listeCodesErreur);
-					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil");
+					request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
+					response.sendRedirect(request.getContextPath() + "/eni/encheres/creationProfil?CodeErreur=" + e.getListeCodesErreur().get(0));
+					
 				}
 			}
 			
-			response.sendRedirect(request.getContextPath() + "/eni/encheres/accueil");
+			
 		}
 	}
 

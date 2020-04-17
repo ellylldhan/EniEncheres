@@ -47,36 +47,46 @@ public class ServletCreationProfil extends HttpServlet {
 		//Vérification de l'existance d'une session, retourne true si oui, sinon null
 		HttpSession session = request.getSession();
 		
-		if (listeCodesErreur.size() > 0) {
-			request.setAttribute("listeCodesErreur", listeCodesErreur);
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
-			rd.forward(request, response);
-		} else {
+		try {
+			String CodeErreur = request.getParameter("CodeErreur");
+			if (CodeErreur!=null) {
+				listeCodesErreur.add(Integer.parseInt(CodeErreur));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
 			//Si on a une session
 			if (session.getAttribute("idUtilisateur") != null) {
 				isConnected = true;
 				
 				try {
+					if (listeCodesErreur.size() > 0) {
+						request.setAttribute("listeCodesErreur", listeCodesErreur);
+					} 
 					UtilisateurManager utilisateurManager = UtilisateurManager.getInstance();
 					idUtilisateur = (int) session.getAttribute("idUtilisateur");
 					
 					utilisateur = utilisateurManager.getUtilisateur(idUtilisateur);
+
 				} catch (BusinessException e) {
 					e.printStackTrace();
-					request.setAttribute("listeCodesErreur", listeCodesErreur);
-					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
-					rd.forward(request, response);
+					request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
 				}
 				
-				request.setAttribute("utilisateur", utilisateur);
+				
 			}
 		
-			request.setAttribute("isConnected", isConnected);
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
-			rd.forward(request, response);
-		}
 		
+		request.setAttribute("utilisateur", utilisateur);
+		request.setAttribute("isConnected", isConnected);
+		
+
+		
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/creation_profil.jsp");
+		rd.forward(request, response);
 	}
 
 	/**
@@ -160,7 +170,9 @@ public class ServletCreationProfil extends HttpServlet {
 				Utilisateur utilisateurToAdd = new Utilisateur(pseudo, nom, prenom, email, telephone, rue, codePostal, ville, motDePasse, credit, administrateur);
 				
 				try {
-					utilisateurManager.addUtilisateur(utilisateurToAdd);
+					int idUtilsateur = utilisateurManager.addUtilisateur(utilisateurToAdd);
+					session = request.getSession();
+                    session.setAttribute("idUtilisateur", idUtilsateur);
 				} catch (BusinessException e) {
 					e.getMessage();
 					request.setAttribute("listeCodesErreur",e.getListeCodesErreur());

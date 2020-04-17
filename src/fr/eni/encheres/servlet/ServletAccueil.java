@@ -57,24 +57,14 @@ public class ServletAccueil extends HttpServlet {
 				EnchereManager enchereManager = EnchereManager.getInstance();
 				CategorieManager categorieManager = CategorieManager.getInstance();
 				ArticleManager articleManager = ArticleManager.getInstance();
-				
+
 				// Lister les enchere actives selon categorie (le triage des cat. est fait dans
 				// le manager)
-				
+
 				for (String typeEnchere  : typeEncheres) {
-					
+
 					if (typeEnchere.equals("getOuverte")) {
 						for (Article article:  articleManager.getOuverte(categorie)) {
-							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
-							if (enchere == null) {
-								enchere = new Enchere();
-								enchere.setArticle(article);
-							}
-							listeEncheresActives.add(enchere);
-						}
-					}
-					if (typeEnchere.equals("getTerminee")) {
-						for (Article article:  articleManager.getTerminee(categorie)) {
 							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
 							if (enchere == null) {
 								enchere = new Enchere();
@@ -93,18 +83,28 @@ public class ServletAccueil extends HttpServlet {
 							listeEncheresActives.add(enchere);
 						}
 					}
-					if (true) {
-						
+					if (typeEnchere.equals("getTerminee")) {
+						for (Article article:  articleManager.getTerminee(categorie)) {
+							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
+							if (enchere == null) {
+								enchere = new Enchere();
+								enchere.setArticle(article);
+							}
+							listeEncheresActives.add(enchere);
+						}
 					}
-					if (true) {
-						
+					if (typeEnchere.equals("getOuverteVendre")) {
+
 					}
-					if (true) {
-						
+					if (typeEnchere.equals("getEnCoursVendre")) {
+
 					}
-					
-					
-					
+					if (typeEnchere.equals("getTermineeVendre")) {
+
+					}
+
+
+
 				}
 				//listeEncheresActives = enchereManager.getEncheresActives(categorie);
 
@@ -133,16 +133,37 @@ public class ServletAccueil extends HttpServlet {
 
 				request.setAttribute("listeEncheres", listeEncheresActives);
 
-				// Lister les categories pour le dropdown menu
-				List<Categorie> listeCategories = categorieManager.getCategories();
-				request.setAttribute("listeCategories", listeCategories);
+
 			}
+			else {
+
+				EnchereManager enchereManager = EnchereManager.getInstance();
+				List<Article> articles =  ArticleManager.getInstance().getArticles();
+				if (categorie != null && !categorie.trim().isEmpty() ) {
+					articles = ArticleManager.getInstance().FiltreCategorie(categorie,articles);
+				}
+				
+				for (Article article: articles ) {
+					Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
+					if (enchere == null) {
+						enchere = new Enchere();
+						enchere.setArticle(article);
+					}
+					listeEncheresActives.add(enchere);
+				}
+				request.setAttribute("listeEncheres", listeEncheresActives);
+
+			}
+			// Lister les categories pour le dropdown menu
+			List<Categorie> listeCategories = CategorieManager.getInstance().getCategories();
+			request.setAttribute("listeCategories", listeCategories);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 
 			request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
 
 		} finally {
+			
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
 			rd.forward(request, response);
 		}

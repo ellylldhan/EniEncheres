@@ -28,7 +28,7 @@
 					</div>
 					<div class="from-group justify-content-center">
 						<button type="submit" class="btn btn-primary">Connexion</button>
-						<a href="${pageContext.request.contextPath}"
+						<a href="${pageContext.request.contextPath}/eni/encheres/creationProfil"
 							class="btn btn-secondary">Créer un compte</a>
 					</div>
 				</form>

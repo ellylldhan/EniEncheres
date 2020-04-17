@@ -248,7 +248,7 @@ public class ArticleManager {
 
 		return articles;
 	}
-	private List<Article> FiltreCategorie(String categorie, List<Article> articles){
+	public List<Article> FiltreCategorie(String categorie, List<Article> articles){
 
 		List<Article> articleParCategorie = new ArrayList<>();
 
@@ -262,4 +262,5 @@ public class ArticleManager {
 		
 		
 	}
+	
 }
