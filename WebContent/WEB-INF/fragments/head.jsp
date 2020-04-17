@@ -4,7 +4,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ENI-Enchï¿½res</title>
+    <title>ENI-Enchères</title>
 
     <!-- Bootstrap core CSS -->
     <style><%@ include file="../../vendor/bootstrap/css/bootstrap.min.css"%></style>

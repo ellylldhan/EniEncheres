@@ -337,7 +337,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le mot de passe est bien renseigné et s'il est bien confirmé
+	 * Méthode en charge de vérifier si le mot de passe est bien renseigné et s'il est bien confirmé.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return

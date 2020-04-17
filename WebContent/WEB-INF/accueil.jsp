@@ -127,7 +127,7 @@
 
 		<c:if test="${empty listeEncheres}">
 			<br>
-			<p>La liste des enchères pour est vide.</p>
+			<p>La liste des enchères est vide.</p>
 		</c:if>
 
 		<div class="row">
