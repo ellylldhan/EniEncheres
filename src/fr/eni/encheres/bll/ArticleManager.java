@@ -273,7 +273,7 @@ public class ArticleManager {
 		
 		try {
 			// Recuperation liste encheres
-			articles = articleDAO.getEnCours();
+			articles = articleDAO.getEnCoursVendeur(id);
 			
 			// Tri par catégorie
 			if (categorie != null && !categorie.trim().isEmpty() ) {
@@ -299,7 +299,7 @@ public class ArticleManager {
 		
 		try {
 			// Recuperation liste encheres
-			articles = articleDAO.getEnCours();
+			articles = articleDAO.getTermineeVendeur(id);
 			
 			// Tri par catégorie
 			if (categorie != null && !categorie.trim().isEmpty() ) {
@@ -325,7 +325,7 @@ public class ArticleManager {
 		
 		try {
 			// Recuperation liste encheres
-			articles = articleDAO.getEnCours();
+			articles = articleDAO.getOuverteVendeur(id);
 			
 			// Tri par catégorie
 			if (categorie != null && !categorie.trim().isEmpty() ) {

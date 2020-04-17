@@ -42,8 +42,8 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	private static final String RQT_SELECT_BY_ID = "SELECT * FROM ARTICLES_VENDUS WHERE no_article = ?";
 	private static final String RQT_SELECT_ALL = "SELECT * FROM ARTICLES_VENDUS";
 	private static final String RQT_INSERT = "INSERT INTO ARTICLES_VENDUS "
-			+ "(no_final article, nom_article, description, date_debut_encheres, date_fin_encheres,"
-			+ " prifinal x_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?,?)";
+			+ "(nom_article, description, date_debut_encheres, date_fin_encheres,"
+			+ " prix_vente, prix_initial, no_utilisateur, no_categorie) VALUES(?,?,?,?,?,?,?,?)";
 	private static final String RQT_UPDATE_PRIX_VENTE = "UPDATE ARTICLES_VENDUS SET prix_vente = ? WHERE no_article = ?";
 	private static final String RQT_DELETE = "DELETE ARTICLES_VENDUS WHERE no_article = ?";
 	private static final String RQT_FIND = "SELECT * FROM ARTICLES_VENDUS WHERE nom_article LIKE ?";
@@ -52,7 +52,9 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
 			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
 			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
-			+ "WHERE GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
+			+ "Where GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
+			+ "Or A.date_debut_encheres = GETDATE() "
+			+ "Or date_fin_encheres = GETDATE() "
 			+ "ORDER BY A.date_fin_encheres ASC";
 	private static final String RQT_OUVERTE_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
 			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description, "
@@ -69,6 +71,33 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 			+ "WHERE GETDATE() > A.date_fin_encheres "
 			+ "ORDER BY A.date_fin_encheres ASC";
 
+	
+	private static final String RQT_EN_COURSVENDEUR_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description ,"
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "WHERE A.no_utilisateur = ? "
+			+ "AND( GETDATE() BETWEEN A.date_debut_encheres AND A.date_fin_encheres "
+			+ "Or A.date_debut_encheres = GETDATE() "
+			+ "Or A.date_fin_encheres = GETDATE()) "
+			+ "ORDER BY A.date_fin_encheres ASC";
+	private static final String RQT_OUVERTEVENDEUR_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description, "
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "WHERE  A.no_utilisateur = ? "
+			+ "AND GETDATE() < A.date_debut_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC";
+	private static final String RQT_TERMINEEVENDEUR_BY_ID_ARTICLE = "SELECT U.no_utilisateur, "
+			+ "A.no_article, A.nom_article, A.prix_initial, A.prix_vente, A.date_fin_encheres, A.date_debut_encheres,A.description ,"
+			+ "C.no_categorie " + "FROM ARTICLES_VENDUS as A "
+			+ "INNER JOIN UTILISATEURS as U on U.no_utilisateur = A.no_utilisateur "
+			+ "INNER JOIN CATEGORIES as C on C.no_categorie = A.no_categorie "
+			+ "WHERE  A.no_utilisateur = ? "
+			+ "AND GETDATE() > A.date_fin_encheres "
+			+ "ORDER BY A.date_fin_encheres ASC";
 	/**
 	 * Constructeur
 	 */
@@ -359,8 +388,25 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public List<Article> getEnCoursVendeur(int id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Article> articles = new ArrayList<Article>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_EN_COURSVENDEUR_BY_ID_ARTICLE);
+			requete.setInt(1, id);
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
 	}
 
 	/**
@@ -369,8 +415,25 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public List<Article> getOuverteVendeur(int id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Article> articles = new ArrayList<Article>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_OUVERTEVENDEUR_BY_ID_ARTICLE);
+			requete.setInt(1, id);
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
 	}
 
 	/**
@@ -379,8 +442,25 @@ public class ArticleDAOJdbcImpl implements ArticleDAO {
 	 */
 	@Override
 	public List<Article> getTermineeVendeur(int id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Article> articles = new ArrayList<Article>();
+
+		try (Connection connection = ConnectionProvider.getConnection()) {
+			PreparedStatement requete = connection.prepareStatement(RQT_TERMINEEVENDEUR_BY_ID_ARTICLE);
+			requete.setInt(1, id);
+			ResultSet rs = requete.executeQuery();
+
+			while (rs.next()) {
+				articles.add(itemBuilder(rs));
+			}
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
+					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
+			BusinessException businessException = new BusinessException();
+			businessException.ajouterErreur(CodesResultatDAL.SELECT_OBJET_ECHEC);
+			throw businessException;
+		}
+
+		return articles;
 	}
 	
 

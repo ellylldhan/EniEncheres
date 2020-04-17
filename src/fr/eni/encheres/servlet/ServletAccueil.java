@@ -97,13 +97,34 @@ public class ServletAccueil extends HttpServlet {
 						}
 					}
 					if (typeEnchere.equals("getOuverteVendre")) {
-
+						for (Article article:  articleManager.getOuverteVendeur(idUtilisateur,categorie)) {
+							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
+							if (enchere == null) {
+								enchere = new Enchere();
+								enchere.setArticle(article);
+							}
+							listeEncheresActives.add(enchere);
+						}
 					}
 					if (typeEnchere.equals("getEnCoursVendre")) {
-
+						for (Article article:  articleManager.getEnCoursVendeur(idUtilisateur,categorie)) {
+							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
+							if (enchere == null) {
+								enchere = new Enchere();
+								enchere.setArticle(article);
+							}
+							listeEncheresActives.add(enchere);
+						}
 					}
 					if (typeEnchere.equals("getTermineeVendre")) {
-
+						for (Article article:  articleManager.getTermineeVendeur(idUtilisateur,categorie)) {
+							Enchere enchere = enchereManager.getBestEnchereByIdArticle(article.getNoArticle());
+							if (enchere == null) {
+								enchere = new Enchere();
+								enchere.setArticle(article);
+							}
+							listeEncheresActives.add(enchere);
+						}
 					}
 
 
