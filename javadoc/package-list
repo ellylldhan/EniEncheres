@@ -1,0 +1,8 @@
+fr.eni.encheres.bll
+fr.eni.encheres.bo
+fr.eni.encheres.dal
+fr.eni.encheres.dal.jdbc
+fr.eni.encheres.exception
+fr.eni.encheres.log
+fr.eni.encheres.messages
+fr.eni.encheres.servlet
