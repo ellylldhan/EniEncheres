@@ -26,7 +26,7 @@
 						<h3 class="font-weight-bold">Vous avez remporté la vente</h3>
 					</c:if>
 					<c:if test="${!empty Enchere.utilisateur &&fini && !win}">
-						<h3 class="font-weight-bold">${Enchere.utilisateur.pseudo}à
+						<h3 class="font-weight-bold">${Enchere.utilisateur.pseudo} a
 							remporté la vente</h3>
 					</c:if>
 				</div>
@@ -73,7 +73,7 @@
 					</c:if>
 					<div>
 						<label>Retrait : </label>
-						<p>${Retrait.rue}${Retrait.codePostal}${Retrait.ville}</p>
+						<p>${Retrait.rue} ${Retrait.codePostal} ${Retrait.ville}</p>
 					</div>
 					<div>
 						<label>Vendeur : </label>
