@@ -186,7 +186,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le pseudo utilisateur est bien renseigné
+	 * Méthode en charge de vérifier si le pseudo utilisateur est bien renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -205,7 +205,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le prénom de l'utilisateur est bien renseigné
+	 * Méthode en charge de vérifier si le prénom de l'utilisateur est bien renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -224,7 +224,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le nom de l'utilisateur est bien renseigné
+	 * Méthode en charge de vérifier si le nom de l'utilisateur est bien renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -243,7 +243,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si l'email de l'utilisateur est bien renseigné
+	 * Méthode en charge de vérifier si l'email de l'utilisateur est bien renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -262,7 +262,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le numéro de téléphone est bien renseigné
+	 * Méthode en charge de vérifier si le numéro de téléphone est bien renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -280,7 +280,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si la rue est renseignée
+	 * Méthode en charge de vérifier si la rue est renseignée.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -299,7 +299,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si le code postal est renseigné
+	 * Méthode en charge de vérifier si le code postal est renseigné.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return
@@ -318,7 +318,7 @@ public class ServletCreationProfil extends HttpServlet {
 	}
 	
 	/**
-	 * Méthode en charge de vérifier si la ville est bien renseignée
+	 * Méthode en charge de vérifier si la ville est bien renseignée.
 	 * @param request
 	 * @param listeCodesErreur
 	 * @return

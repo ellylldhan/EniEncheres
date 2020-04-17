@@ -30,7 +30,7 @@ import fr.eni.encheres.exception.DalException;
 import fr.eni.encheres.log.MonLogger;
 
 /**
- * Classe en charge de
+ * Classe en charge de gérer la DAO d'Enchere.
  * 
  * @author thomas
  * @version EniEncheres - v1.0
@@ -57,6 +57,10 @@ public class EnchereManager {
 		nomMethodeCourante = stack.getMethodName();
 	}
 
+	/**
+	 * Méthode en charge de retourner une instance d'EnchereManager.
+	 * @return instance
+	 */
 	public static EnchereManager getInstance() {
 
 		if (INSTANCE == null) {
@@ -66,6 +70,13 @@ public class EnchereManager {
 		return INSTANCE;
 	}
 
+	/**
+	 * 
+	 * Méthode en charge de retrouner une liste d'enchères selectionnées en fonction d'un id d'article.
+	 * @param idArticle
+	 * @return Une liste d'enchères
+	 * @throws BusinessException
+	 */
 	public List<Enchere> getEnchereByIdArticle(int idArticle) throws BusinessException {
 		List<Enchere> encheres = null;
 		try {
@@ -79,6 +90,12 @@ public class EnchereManager {
 		return encheres;
 	}
 
+	/**
+	 * Méthode en charge de retourner l'enchère la plus haute pour un article donné.
+	 * @param idArticle
+	 * @return une enchère
+	 * @throws BusinessException
+	 */
 	public Enchere getBestEnchereByIdArticle(int idArticle) throws BusinessException {
 		Enchere encheres = null;
 		try {
@@ -92,6 +109,11 @@ public class EnchereManager {
 		return encheres;
 	}
 
+	/**
+	 * Méthode en charge de créer une enchère.
+	 * @param enchere
+	 * @throws BusinessException
+	 */
 	public void create(Enchere enchere) throws BusinessException {
 		BusinessException businessException = new BusinessException();
 		try {
@@ -111,7 +133,11 @@ public class EnchereManager {
 	}
 
 
-
+	/**
+	 * Méthode en charge de mettre à jour une enchère.
+	 * @param enchere
+	 * @throws BusinessException
+	 */
 	public void update(Enchere enchere) throws BusinessException {
 		try {
 			if (enchere.getUtilisateur().checkCredit(enchere.getMontant_enchere())) {
@@ -130,8 +156,6 @@ public class EnchereManager {
 				utilisateurDAO.updateCredit(meilleurEnchere.getUtilisateur());
 			}
 
-
-
 		} catch (BusinessException e) {
 			logger.log(Level.SEVERE, "Erreur dans {0} / {1} : {2}",
 					new Object[] { nomClasseCourante, nomMethodeCourante, e.getMessage() });
@@ -140,10 +164,15 @@ public class EnchereManager {
 
 	}
 
+	/**
+	 * Méthode en charge de contrôler une enchère.
+	 * @param enchere
+	 * @param businessException
+	 * @throws BusinessException
+	 */
 	private void checkEnchere(Enchere enchere, BusinessException businessException) throws BusinessException {
 
 		Enchere meilleurEnchere = enchereDAO.selectMustEnchereByIdArticle(enchere.getArticle().getNoArticle());
-
 
 		if (meilleurEnchere == null) {
 			meilleurEnchere = new Enchere();
