@@ -77,7 +77,6 @@ public class ServletGestionConnexionUtilisateur extends HttpServlet {
             LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + e.getMessage());
             doGet(request, response);
         }
-        response.sendRedirect(request.getContextPath() + "/accueil");
     }
 
 }
