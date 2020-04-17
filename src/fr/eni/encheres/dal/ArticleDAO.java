@@ -39,5 +39,31 @@ public interface ArticleDAO extends DAO<Article> {
 	 * @throws BusinessException
 	 */
 	public List<Article> getTerminee() throws BusinessException;
+	
+	/**
+	 * Retourne la liste des articles qui sont en cours de vente par l'utilisateur.
+	 * @param id
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getEnCoursVendeur(int id) throws BusinessException;
+	
+	/**
+	 * Retourne la liste des articles qui sont en pas encore en vente par l'utilisateur
+	 * @param id
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getOuverteVendeur(int id) throws BusinessException;
+	
+	/**
+	 * Retourne la liste des articles qui sont vendu par l'utilisateur
+	 * @param id
+	 * @return Une liste d'articles
+	 * @throws BusinessException
+	 */
+	public List<Article> getTermineeVendeur(int id) throws BusinessException;
+	
+	
 
 }
