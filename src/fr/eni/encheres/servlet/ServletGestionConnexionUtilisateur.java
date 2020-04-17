@@ -68,15 +68,15 @@ public class ServletGestionConnexionUtilisateur extends HttpServlet {
                 }
                 if (listeCodesErreur.size() > 0) {
                     request.setAttribute("listeCodesErreur", listeCodesErreur);
-                    doGet(request, response);
                 }
             }
         } catch (BusinessException e) {
             e.printStackTrace();
             request.setAttribute("listeCodesErreur", e.getListeCodesErreur());
             LOGGER.severe("Erreur dans ServletGestionConnexionUtilisateur lors de la tentative de connexion : " + e.getMessage());
-            doGet(request, response);
+           
         }
+        doGet(request, response);
     }
 
 }
