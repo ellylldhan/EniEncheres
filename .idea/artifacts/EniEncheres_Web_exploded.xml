@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="EniEncheres:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/EniEncheres_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="EniEncheres/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="EniEncheres" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="application" name="lib" />
+          <element id="library" level="project" name="sqljdbc42" />
+          <element id="library" level="project" name="jstl-1.2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
